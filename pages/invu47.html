@@ -1,0 +1,24 @@
+<!-- Login form -->
+<form id="invitation-confirm-form" class="form-login form-wrapper form-medium">
+    <h3 class="title-divider mb-3">
+        <span>Confirm Your iQueue Invitation</span>
+    </h3>
+
+    <div id="login-message" class="text-danger mb-2"></div>
+
+    <div class="form-group">
+        <label for="invitation-code-input">Invitation Code</label>
+        <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="text" id="invitation-code-input" class="form-control" placeholder="Your Invitation Code">
+    </div>
+    <div class="form-group">
+        <label for="invitation-lastname-input">Last Name</label>
+        <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="text" id="invitation-lastname-input" class="form-control" placeholder="Your Last Name">
+    </div>
+
+    <div class="float-right">
+        <button id="confirmInvitationBTN" type="button" class="btn btn-primary" onclick="invitationPage.confirmInvitation()">Confirm Invitation</button>
+    </div>
+
+    <br>
+
+</form>

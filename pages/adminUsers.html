@@ -1,0 +1,74 @@
+
+    <h2 class="title-divider">
+        <span>The <span class="font-weight-normal text-muted">Team</span></span>
+        <button class="btn btn-sm btn-outline-primary" type="button" data-toggle="collapse" data-target="#inviteMemberDiv" ><i class="fa fa-user-plus" aria-hidden="true"></i> Add Team Member </button>
+    </h2>
+
+    <div class="collapse" id="inviteMemberDiv">
+        <div class="card card-block">
+
+
+            <form id="inviteUserForm" class="form-horizontal">
+
+                <fieldset>
+
+                    <legend>Invite a New Team Member to iQueue</legend>
+
+                    <div class="form-group row">
+                        <label for="newUserEmailInput" class="col-sm-1 col-form-label">Email:</label>
+                        <div class="col-sm-11">
+                            <input type="email" class="form-control" id="newUserEmailInput" placeholder="Email" required="true">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="newUserFirstNameInput" class="col-sm-1 col-form-label">First:</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="newUserFirstNameInput" placeholder="First Name" required="true">
+                        </div>
+                        <label for="newUserLastNameInput" class="col-sm-1 col-form-label">Last:</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="newUserLastNameInput" placeholder="Last Name" required="true">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="newUserInviteRoleRadioAgent" class="col-sm-1 control-label">Role:</label>
+                        <div class="col-sm-11">
+                            <label class="radio-inline">
+                                <input type="radio" name="newUserInviteRadioOptions" id="newUserInviteRoleRadioAgent" value="Agent" checked onclick="$('#adminWarningText').removeClass('text-danger');"> Agent &nbsp;&nbsp;
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="newUserInviteRadioOptions" id="newUserInviteRoleRadioAdmin" value="Admin" onclick="$('#adminWarningText').addClass('text-danger');"> Admin
+                            </label>
+                            <br>
+                            <small id="adminWarningText" class="form-text text-muted ">A user with the role of Admin has full access to your iQueue setup, including adding other Admin users.<br />You should assign this role carefully.</small>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+            </form>
+
+            <div class="d-flex justify-content-between">
+                <div></div>
+                <div class="btn-toolbar mt-4" role="toolbar" aria-label="Invite User Toolbar">
+
+                    <div class="btn-group mr-2" role="group" aria-label="cancel button">
+                        <button type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#inviteMemberDiv"><i class="fa fa-ban"></i> Cancel</button>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="invite button">
+                        <button id="sendInvitationSubmitButton" type="button" class="btn btn-outline-primary" onclick="adminUsers.sendInvitationClick()" ><i class="fa fa-envelope"></i> Send Invitation</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr class="my-5" />
+
+    <div id="userList" class="team team-list mt-4">user list goes here</div>
+
+

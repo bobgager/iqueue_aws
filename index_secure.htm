@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>iQueue</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <meta name="description" content="Your Virtual Line Manager">
+    <meta name="author" content="cobaltfire.com">
+
+    <!-- Bootstrap 4.0.0-alpha.6 CSS via CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+
+    <!-- Font Awesome 4.7.0 via CDN -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Theme style -->
+<!--    <link href="assets/css/theme-style.min.css" rel="stylesheet">-->
+    <link href="assets/css/theme-style.css" rel="stylesheet">
+
+    <!--Your custom colour override-->
+    <link href="#" id="colour-scheme" rel="stylesheet">
+
+    <!-- Your custom override -->
+    <link href="assets/css/custom-style.css" rel="stylesheet">
+
+
+    <!-- Le fav and touch icons - @todo: fill with your icons or remove -->
+    <!--<link rel="shortcut icon" href="assets/assets/img/icons/favicon.png">-->
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/assets/img/icons/114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/assets/img/icons/72x72.png">
+    <link rel="apple-touch-icon" href="assets/assets/img/icons/default.png">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Rambla' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
+
+    <!--Plugin: Retina.js (high def image replacement) - @see: http://retinajs.com/-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/retina.js/1.3.0/retina.min.js"></script>
+
+</head>
+
+<!-- ======== @Region: body ======== -->
+<body class="page navbar-layout-default">
+
+<!-- @plugin: page loading indicator, delete to remove loader -->
+<div class="page-loader" data-toggle="page-loader"></div>
+
+<!-- ======== @Region: #header ======== -->
+<div id="header">
+
+
+
+
+    <div data-toggle="sticky">
+
+
+        <!--Header & Branding region-->
+        <div class="header">
+            <!-- all direct children of the .header-inner element will be vertically aligned with each other you can override all the behaviours using the flexbox utilities (flexbox.htm) All elements with .header-brand & .header-block-flex wrappers will automatically be aligned inline & vertically using flexbox, this can be overridden using the flexbox utilities (flexbox.htm) Use .header-block to stack elements within on small screen & "float" on larger screens use .flex-first or/and .flex-last classes to make an element show first or last within .header-inner or .headr-block elements -->
+            <div class="header-inner container">
+
+                <!--branding/logo -->
+                <div class="header-brand flex-first">
+                    <a class="header-brand-text" href="#" title="iQueue">
+                        <h1>
+                            <span>i</span>Q<span>ueue</span>
+                        </h1>
+                    </a>
+                    <div class="header-divider hidden-md-down"></div>
+                    <div class="header-slogan hidden-md-down">The Wait Is Over</div>
+                </div>
+
+                <!-- other header content -->
+                <div id="otherHeaderContent" class="header-block flex-last">
+
+                    <!-- mobile collapse menu button - data-toggle="collapse" = default BS menu - data-toggle="jpanel-menu" = jPanel Menu - data-toggle="overlay" = Overlay Menu -->
+                    <a  href="#top" class="btn btn-link btn-icon header-btn float-right hidden-lg-up" data-toggle="jpanel-menu" data-target=".navbar-main" data-direction="right"> <i class="fa fa-bars"></i> </a>
+                </div>
+
+                <div id="mainNavbar" class="navbar navbar-toggleable-md">
+                    <!--everything within this div is collapsed on mobile-->
+
+                    <div class="navbar-main collapse">
+                        <!--main navigation-->
+                        <ul class="nav navbar-nav float-lg-right dropdown-effect-fade">
+
+                            <li class="nav-item d-lg-flex dropdown">
+                                <a href="#" class="nav-link " data-toggle="dropdown" data-hover="dropdown" onclick="dashboardPage.render()">Dashboard</a>
+                            </li>
+
+                            <li class="nav-item d-lg-flex dropdown">
+                                <a href="#" class="nav-link " data-toggle="dropdown" data-hover="dropdown">Your Queue</a>
+                            </li>
+
+                            <li class="nav-item d-lg-flex dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">Reports</a>
+                                <!-- Dropdown menu -->
+                                <div id="reportMenu" class="dropdown-menu dropdown-menu-right dropdown-menu-nobullets">
+                                </div>
+                            </li>
+
+                            <li class="nav-item d-lg-flex dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">More</a>
+                                <!-- Dropdown menu -->
+                                <div id="moreMenu" class="dropdown-menu dropdown-menu-right dropdown-menu-nobullets">
+                                </div>
+                            </li>
+
+                            <li class="nav-item d-lg-flex dropdown">
+                                <a id="userMenuHeader" href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">User Menu</a>
+                                <!-- Dropdown menu -->
+                                <div id="userMenu" class="dropdown-menu dropdown-menu-right dropdown-menu-nobullets">
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!--/.navbar-collapse -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======== @Region: #content ======== -->
+<div id="content">
+
+
+    <div class="container mb-10">
+
+        <!-- Login form -->
+        <form id="login-form" class="form-login form-wrapper form-narrow">
+            <h3 class="title-divider mb-3">
+                <span>Secure Sign In</span>
+            </h3>
+
+            <div id="login-message" class="text-danger mb-2"></div>
+
+            <div class="form-group">
+                <label for="login-username">Username</label>
+                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="text" id="login-username" class="form-control" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="password" id="login-password" class="form-control password" placeholder="Password">
+            </div>
+
+            <div class="float-right">
+                <small><a href="#" onclick="forgotPassword()"><span id="forgotPWLink">Forgot Your Password?</span></a></small>
+                |
+                <button id="signInBTN" type="button" class="btn btn-primary" onclick="signIn()">Sign In</button>
+            </div>
+
+            <br>
+
+        </form>
+
+        <!--Loading Progress Bar-->
+        <div id="loading-iqueue-progress" class="progress">
+            <div id="loading-iqueue-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated w-30 progress-bar-lg " role="progressbar" >Sign In Success : Loading iQueue</div>
+        </div>
+
+        <div id="authenticatedContent"></div>
+
+    </div>
+
+</div>
+
+<!-- ======== @Region: #content-below ======== -->
+<div id="content-below">
+
+</div>
+
+<!-- ======== @Region: #footer ======== -->
+<footer id="footer" class="p-0">
+
+    <hr class="my-0 hr-blank op-2" />
+
+    <div class="bg-primary text-white text-sm py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">iQueue | Copyright 2017 &copy; <a href="http://cobaltfire.com" class="footer-link">Cobaltfire Software LLC</a></p>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-inline footer-links float-md-right mb-0">
+                        <li class="list-inline-item"><a href="http://cobaltfire.com">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <a href="#top" class="btn btn-icon btn-inverse pos-fixed pos-b pos-r mr-3 mb-3 scroll-state-hidden hidden-md-down" title="Back to top" data-scroll="scroll-state"><i class="fa fa-chevron-up"></i></a>
+        </div>
+    </div>
+</footer>
+
+
+
+<!--Hidden elements - excluded from jPanel Menu on mobile-->
+<div class="hidden-elements jpanel-menu-exclude">
+
+    <!--@modal - password reset required modal-->
+    <div class="modal fade" id="forced-password-reset-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        Password Reset Required
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div id="forced-password-reset-modal-message" class="text-danger mb-3"></div>
+
+                    <form >
+                        <div class="form-group">
+                            <label for="reset-password">New Password</label>
+                            <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="password" id="reset-password" class="form-control password" placeholder="New Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="reset-password-2">New Password (again)</label>
+                            <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="password" id="reset-password-2" class="form-control password" placeholder="New Password (again)">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="forceChangePasswordBTN" type="button" class="btn btn-primary" onclick="forcedPasswordResetSubmit ($('#reset-password').val(),$('#reset-password-2').val())">Change Password</button>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <!--@modal - password reset modal-->
+    <div class="modal fade" id="password-reset-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        Reset Your Password
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div id="password-reset-modal-message" class="text-info mb-3">We've sent an email to </div>
+
+                    <form >
+                        <div class="form-group">
+                            <label for="reset-password-verification-code">Verification Code</label>
+                            <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="text" id="reset-password-verification-code" class="form-control " placeholder="Verification Code">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password">New Password</label>
+                            <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="password" id="new-password" class="form-control password" placeholder="New Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password-2">New Password (again)</label>
+                            <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="password" id="new-password-2" class="form-control password" placeholder="New Password (again)">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="changePasswordBTN" type="button" class="btn btn-primary" onclick="passwordResetSubmit()">Change Password</button>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+</div>
+
+
+<!--jQuery 1.12.4 via CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<!-- Tether 1.1.1 via CDN, needed for Bootstrap Tooltips & Popovers -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.1.1/js/tether.min.js"></script>
+
+<!-- Bootstrap 4.0.0-alpha.6 JS via CDN -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+
+
+<!--Amazon Cognito SDK's-->
+<script src="assets/plugins/aws-cognito/aws-cognito-sdk.min.js"></script>
+<script src="assets/plugins/aws-cognito/amazon-cognito-identity.min.js"></script>
+
+<!--the Amazon AWS SDK (includes DynamoDB)-->
+<!--<script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.33.min.js"></script>-->
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.62.0.min.js"></script>
+
+
+
+<!--Custom scripts mainly used to trigger libraries/plugins -->
+<!--<script src="assets/js/script.min.js"></script>-->
+<script src="assets/js/script.js"></script>
+
+
+<!--Custom App Scripts-->
+<script type="text/javascript">
+
+    var currentDateTime = new Date().getTime();
+
+    document.write('<script type="text/javascript"src=" assets/js/AWSCognitoConnector.js?' + currentDateTime + '"> <\/script>');
+
+    document.write('<script type="text/javascript"src=" assets/js/utilities.js?' + currentDateTime + '"> <\/script>');
+
+    document.write('<script type="text/javascript"src=" assets/widgets/ModalMessage.js?' + currentDateTime + '"> <\/script>');
+
+    document.write('<script type="text/javascript"src=" assets/js/globals.js?' + currentDateTime + '"> <\/script>');
+
+    document.write('<script type="text/javascript"src=" assets/js/index.js?' + currentDateTime + '"> <\/script>');
+
+
+</script>
+
+
+</body>
+</html>
