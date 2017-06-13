@@ -68,6 +68,10 @@ var adminUsers = {
 
         });
 
+        if (userListHTML === ''){
+            userListHTML = "You don't have any Team Members yet. <br>Click the Add Team Member button above to add your first Team Member."
+        }
+
         $('#userList').html(userListHTML);
 
         $('#userList').fadeIn(5000);
@@ -131,7 +135,7 @@ var adminUsers = {
 
             var userDetails = {
                 customerID: globals.theCustomer.customerID,
-                userName:   adminUsers.inviteGUID,
+                userGUID:   adminUsers.inviteGUID,
                 email:      newUserEmail,
                 firstName:  newUserFirstName,
                 lastName:   newUserLastName,

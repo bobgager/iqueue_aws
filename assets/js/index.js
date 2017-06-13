@@ -38,11 +38,6 @@ function signIn() {
     var username = $('#login-username').val();
     var password = $('#login-password').val();
 
-/*    $('#signInBTN').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Signing In');
-    setTimeout(function () {
-        $('#signInBTN').html('Sign In');
-    }, 2000);*/
-
     utils.activeButton('signInBTN','Signing In' );
 
     awsCognitoConnector.signInUser(username, password, signInReturned);
