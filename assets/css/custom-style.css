@@ -146,3 +146,11 @@
 .title-divider {
     background: none;
 }
+
+/*overide the minimum width of the dropdown menu's*/
+.navbar-toggleable-md.navbar-main.collapse .dropdown-menu{
+    min-width: 150px; !important;
+}
+.navbar-toggleable-md .navbar-main.collapse .dropdown-menu{
+    min-width: 150px; !important;
+}
