@@ -22,6 +22,8 @@ var adminUsers = {
 
                 $('#authenticatedContent').hide().load("pages/adminUsers.html", function() {
 
+                    utils.writeDebug('adminUsers Page loaded',false);
+
                     $('#userList').fadeOut(1);
                     adminUsers.buildUserList();
 

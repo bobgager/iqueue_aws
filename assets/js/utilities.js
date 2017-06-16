@@ -7,11 +7,6 @@ var utils = {
     //******************************************************************************************************************
 
 
-    //******************************************************************************************************************
-    validateEmail: function (email) {
-        var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
-    },
 
     //******************************************************************************************************************
     activeButton: function (buttonID, activeText, timeout) {
@@ -31,18 +26,21 @@ var utils = {
     },
 
     //******************************************************************************************************************
-    guid: function () {
-        function _p8(s) {
-            var p = (Math.random().toString(16)+"000000000").substr(2,8);
-            return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
-        }
-        return _p8() + _p8(true) + _p8(true) + _p8();
+    fatalError:function (code, data) {
+        var options = {};
+        options.title = 'DOH: The Cloud is a little stormy today.';
+        options.message = "We're sorry, but there was a fatal error while trying to reach our server in The Cloud.<br><br>Error Code: " + code + "<br>Error: "+ data ;
+        options.size = 'large';
+        options.buttonName = 'Start Over';
+        options.callback = function () {
+            window.open("http://iqueue.cloud", '_self');
+        };
+        modalMessage.showMessage(options);
     },
 
     //******************************************************************************************************************
     // fetch a URL variable
-    GetURLParameter: function(sParam)
-    {
+    GetURLParameter: function(sParam) {
         var sPageURL = window.location.search.substring(1);
         var sURLVariables = sPageURL.split('&');
         for (var i = 0; i < sURLVariables.length; i++)
@@ -56,16 +54,36 @@ var utils = {
     },
 
     //******************************************************************************************************************
-    fatalError:function (code, data) {
-        var options = {};
-        options.title = 'DOH: The Cloud is a little stormy today.';
-        options.message = "We're sorry, but there was a fatal error while trying to reach our server in The Cloud.<br><br>Error Code: " + code + "<br>Error: "+ data ;
-        options.size = 'large';
-        options.buttonName = 'Start Over';
-        options.callback = function () {
-            window.open("http://iqueue.cloud", '_self');
-        };
-        modalMessage.showMessage(options);
+    guid: function () {
+        function _p8(s) {
+            var p = (Math.random().toString(16)+"000000000").substr(2,8);
+            return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
+        }
+        return _p8() + _p8(true) + _p8(true) + _p8();
+    },
+
+    //******************************************************************************************************************
+    validateEmail: function (email) {
+        var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    },
+
+    //******************************************************************************************************************
+    writeDebug: function (string,clear) {
+
+        if (globals.showDebug){
+            $('#debugDIV').show();
+        }
+        else {
+            $('#debugDIV').hide();
+        }
+
+        if (clear){
+            $('#debugDIV').html('version = ' + globals.version);
+        }
+
+        $('#debugDIV').html($('#debugDIV').html() + '<br>' + string);
+
     }
 
     //******************************************************************************************************************

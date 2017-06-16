@@ -12,7 +12,7 @@ var userDetailsPage = {
 
         $('#authenticatedContent').hide().load("pages/userDetails.html", function() {
 
-            console.log('userDetails Page loaded');
+            utils.writeDebug('userDetails Page loaded',false);
 
         }).fadeIn('1000');
 
@@ -23,7 +23,7 @@ var userDetailsPage = {
 
         //for now, there are no additional user parameters required that we don't collect at account creation
         //so, just return true
-        //if later we add additoanl required parameters, then return false
+        //if later we add additional required parameters, then return false
 
         return (true);
     }

@@ -43,6 +43,7 @@ var configure = {
 
         awsDynamoDBConnector.fetchCustomerConfig(awsCognitoConnector.cognitoUser.customerID, function (success, data) {
             if (success) {
+                console.log('about to try and write to globals.theCustomer');
                 globals.theCustomer = data;
                 configure.loadMoreScripts();
             }
@@ -172,7 +173,7 @@ var configure = {
 
         var moreMenuHTML = '' +
             '<a href="#" class="dropdown-item" onclick="adminUsers.render();"><i class="fa fa-users dropdown-icon" aria-hidden="true"></i> Manage Users</a>' +
-            '<a href="#" class="dropdown-item" onclick="alert()"><i class="fa fa-users dropdown-icon" aria-hidden="true"></i> What&#39;s New</a>' ;
+            '<a href="#" class="dropdown-item" onclick="alert()"><i class="fa fa-info dropdown-icon" aria-hidden="true"></i> What&#39;s New</a>' ;
 
         $('#moreMenu').html(moreMenuHTML);
 
@@ -182,7 +183,8 @@ var configure = {
         $('#userMenuHeader').html(awsCognitoConnector.cognitoUser.username);
 
         var userMenuHTML = '' +
-            '<a href="#" class="dropdown-item" onclick="alert()"><i class="fa fa-user dropdown-icon" aria-hidden="true"></i> Sign Out</a>' ;
+            '<a href="#" class="dropdown-item" onclick="userDetailsPage.render()"><i class="fa fa-user dropdown-icon" aria-hidden="true"></i> My Profile</a>' +
+            '<a href="#" class="dropdown-item" onclick="window.open(&#39;index_secure.htm?version=' + globals.version + '&#39;, &#39;_self&#39;);"><i class="fa fa-sign-out dropdown-icon" aria-hidden="true"></i> Sign Out</a>' ;
 
         $('#userMenu').html(userMenuHTML);
 

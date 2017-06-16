@@ -7,6 +7,8 @@ function initialize() {
 
     console.log('initialize called');
 
+    utils.writeDebug('index.js initializing',true);
+
     $('#loading-iqueue-progress').hide();
     $('#authenticatedContent').hide();
     $('#mainNavbar').hide();
