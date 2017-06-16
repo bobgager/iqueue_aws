@@ -254,9 +254,7 @@ function authConfigurationReturned (success, data){
         return;
     }
 
-    var currentDateTime = new Date().getTime();
-
-    $.getScript(data.authenticatedConfigurationScript +'?' + currentDateTime);
+    $.getScript(data.authenticatedConfigurationScript +'?version=' + globals.version);
 
 }
 

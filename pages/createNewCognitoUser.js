@@ -16,7 +16,7 @@ var newCognitoUser = {
         newCognitoUser.userInformation.customerID = user.customerID;
         newCognitoUser.userInformation.guidUserName = user.userGUID;
 
-        $('#authenticatedContent').hide().load("pages/createNewCognitoUser.html"+ globals.version, function() {
+        $('#authenticatedContent').hide().load("pages/createNewCognitoUser.html?version="+ globals.version, function() {
 
             $('#signup-email').val(user.email);
 

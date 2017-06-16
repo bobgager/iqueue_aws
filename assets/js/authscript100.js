@@ -26,7 +26,7 @@ var configure = {
         $('#loading-iqueue-progress-bar').html('Loading scripts');
 
         var progress = 0;
-        var scripts = ['assets/js/AWSDynamoDBConnector.js'];
+        var scripts = ['assets/js/AWSDynamoDBConnector.js?version='+globals.version];
         scripts.forEach(function(script) {
             $.getScript(script, function () {
                 if (++progress == scripts.length) configure.loadCustomerConfig();
@@ -48,15 +48,7 @@ var configure = {
                 configure.loadMoreScripts();
             }
             else {
-                var options = {};
-                options.title = 'DOH: The Cloud is a little stormy today.';
-                options.message = "We're sorry, but there was a fatal error while trying to reach our server in The Cloud.<br><br>Error Code: lcg001<br>Error: "+ data ;
-                options.size = 'large';
-                options.buttonName = 'Start Over';
-                options.callback = function () {
-                    window.open("http://iqueue.cloud", '_self');
-                };
-                modalMessage.showMessage(options);
+                utils.fatalError('lcc001', 'Initial fetchcustomerConfig failed.');
             }
         })
     },
@@ -68,7 +60,7 @@ var configure = {
         $('#loading-iqueue-progress-bar').addClass('w-70');
 
         var progress = 0;
-        var scripts = ['pages/dashboard.js','pages/adminUsers.js','assets/js/AWSsesConnector.js', 'pages/userDetails.js'];
+        var scripts = ['pages/dashboard.js?version='+globals.version,'pages/adminUsers.js?version='+globals.version,'assets/js/AWSsesConnector.js?version='+globals.version, 'pages/userDetails.js?version='+globals.version];
         scripts.forEach(function(script) {
             $.getScript(script, function () {
                 if (++progress == scripts.length) configure.testUserDetails();

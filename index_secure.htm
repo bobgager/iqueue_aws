@@ -26,10 +26,8 @@
 
         var currentDateTime = new Date().getTime();
 
-        document.write('<script type="text/javascript"src=" assets/js/globals.js?' + currentDateTime + '"> <\/script>');
-
         /*Your custom override*/
-        document.write('<link href="assets/css/custom-style.css?version=' + globals.version + '" rel="stylesheet">');
+        document.write('<link href="assets/css/custom-style.css?version=' + currentDateTime + '" rel="stylesheet">');
 
 
     </script>
@@ -109,14 +107,14 @@
                             <li class="nav-item d-lg-flex dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">Reports</a>
                                 <!-- Dropdown menu -->
-                                <div id="reportMenu" class="dropdown-menu  dropdown-menu-nobullets">
+                                <div id="reportMenu" class="dropdown-menu dropdown-menu-right dropdown-menu-nobullets">
                                 </div>
                             </li>
 
                             <li class="nav-item d-lg-flex dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">More</a>
                                 <!-- Dropdown menu -->
-                                <div id="moreMenu" class="dropdown-menu  dropdown-menu-nobullets">
+                                <div id="moreMenu" class="dropdown-menu dropdown-menu-right  dropdown-menu-nobullets">
                                 </div>
                             </li>
 
@@ -325,13 +323,17 @@
 <!--Custom App Scripts-->
 <script type="text/javascript">
 
-    document.write('<script type="text/javascript"src=" assets/js/AWSCognitoConnector.js?version=' + globals.version + '"> <\/script>');
+    var currentDateTime = new Date().getTime();
 
-    document.write('<script type="text/javascript"src=" assets/js/utilities.js?version=' + globals.version + '"> <\/script>');
+    document.write('<script type="text/javascript"src=" assets/js/globals.js?version=' + currentDateTime + '"> <\/script>');
 
-    document.write('<script type="text/javascript"src=" assets/widgets/ModalMessage.js?version=' + globals.version + '"> <\/script>');
+    document.write('<script type="text/javascript"src=" assets/js/AWSCognitoConnector.js?version=' + currentDateTime + '"> <\/script>');
 
-    document.write('<script type="text/javascript"src=" assets/js/index.js?version=' + globals.version + '"> <\/script>');
+    document.write('<script type="text/javascript"src=" assets/js/utilities.js?version=' + currentDateTime + '"> <\/script>');
+
+    document.write('<script type="text/javascript"src=" assets/widgets/ModalMessage.js?version=' + currentDateTime + '"> <\/script>');
+
+    document.write('<script type="text/javascript"src=" assets/js/index.js?version=' + currentDateTime + '"> <\/script>');
 
 
 </script>

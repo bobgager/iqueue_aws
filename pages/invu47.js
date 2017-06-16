@@ -13,7 +13,7 @@ var invitationPage = {
         invitationPage.customerID = customerID;
 
         var progress = 0;
-        var scripts = ['assets/js/AWSDynamoDBConnector.js'];
+        var scripts = ['assets/js/AWSDynamoDBConnector.js?version='+globals.version];
         scripts.forEach(function(script) {
             $.getScript(script, function () {
                 if (++progress == scripts.length) invitationPage.render();
@@ -25,7 +25,7 @@ var invitationPage = {
     //******************************************************************************************************************
     render: function () {
 
-        $('#authenticatedContent').hide().load("pages/invu47.html"+ globals.version, function() {
+        $('#authenticatedContent').hide().load("pages/invu47.html?version="+ globals.version, function() {
 
             invitationPage.failedAttempts = 0;
 
