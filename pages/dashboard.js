@@ -9,7 +9,7 @@ var dashboardPage = {
         jPM.close();
 
 
-        $('#authenticatedContent').hide().load("pages/dashboard.html", function() {
+        $('#authenticatedContent').hide().load("pages/dashboard.html"+ globals.version, function() {
 
             utils.writeDebug('dashboard Page loaded',false);
 

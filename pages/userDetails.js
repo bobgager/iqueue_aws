@@ -10,7 +10,7 @@ var userDetailsPage = {
         jPM.close();
 
 
-        $('#authenticatedContent').hide().load("pages/userDetails.html", function() {
+        $('#authenticatedContent').hide().load("pages/userDetails.html"+ globals.version, function() {
 
             utils.writeDebug('userDetails Page loaded',false);
 

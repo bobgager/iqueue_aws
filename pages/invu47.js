@@ -25,7 +25,7 @@ var invitationPage = {
     //******************************************************************************************************************
     render: function () {
 
-        $('#authenticatedContent').hide().load("pages/invu47.html", function() {
+        $('#authenticatedContent').hide().load("pages/invu47.html"+ globals.version, function() {
 
             invitationPage.failedAttempts = 0;
 

@@ -20,7 +20,7 @@ var adminUsers = {
 
                 adminUsers.userList = data;
 
-                $('#authenticatedContent').hide().load("pages/adminUsers.html", function() {
+                $('#authenticatedContent').hide().load("pages/adminUsers.html?version="+ globals.version, function() {
 
                     utils.writeDebug('adminUsers Page loaded',false);
 
