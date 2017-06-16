@@ -6,7 +6,7 @@ var globals = {
 
     showDebug: true,
 
-    version: '0.0.003',
+    version: '0.0.004',
 
     theUser: {},
 
