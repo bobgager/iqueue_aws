@@ -11,7 +11,7 @@ var dashboardPage = {
 
         $('#authenticatedContent').hide().load("pages/dashboard.html", function() {
 
-            console.log('Dashboard Page loaded');
+            utils.writeDebug('dashboard Page loaded',false);
 
         }).fadeIn('1000');
 

@@ -20,7 +20,7 @@ var awsCognitoConnector = {
 
 
     //******************************************************************************************************************
-    registerNewUser: function (email, role, username, guidUserName, password, customerID, callback) {
+    registerNewUser: function (email, role, username, guidusername, password, customerID, callback) {
 
 
         var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(awsCognitoConnector.poolData);
@@ -50,7 +50,7 @@ var awsCognitoConnector = {
 
         var dataguidUserName = {
             Name : 'custom:iqueue_guidusername',
-            Value : guidUserName
+            Value : guidusername
         };
         var attributeguidUserName = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataguidUserName);
         attributeList.push(attributeguidUserName);

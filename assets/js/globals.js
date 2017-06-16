@@ -4,6 +4,10 @@
 
 var globals = {
 
+    showDebug: true,
+
+    version: '0.0.003',
+
     theUser: {},
 
     cognitoUserAttributes: {},

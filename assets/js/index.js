@@ -7,6 +7,8 @@ function initialize() {
 
     console.log('initialize called');
 
+    utils.writeDebug('index.js initializing',true);
+
     $('#loading-iqueue-progress').hide();
     $('#authenticatedContent').hide();
     $('#mainNavbar').hide();
@@ -37,11 +39,6 @@ function signIn() {
 
     var username = $('#login-username').val();
     var password = $('#login-password').val();
-
-/*    $('#signInBTN').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Signing In');
-    setTimeout(function () {
-        $('#signInBTN').html('Sign In');
-    }, 2000);*/
 
     utils.activeButton('signInBTN','Signing In' );
 

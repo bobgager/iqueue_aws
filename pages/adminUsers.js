@@ -22,6 +22,8 @@ var adminUsers = {
 
                 $('#authenticatedContent').hide().load("pages/adminUsers.html", function() {
 
+                    utils.writeDebug('adminUsers Page loaded',false);
+
                     $('#userList').fadeOut(1);
                     adminUsers.buildUserList();
 
@@ -67,6 +69,10 @@ var adminUsers = {
                 '</div>'
 
         });
+
+        if (userListHTML === ''){
+            userListHTML = "You don't have any Team Members yet. <br>Click the Add Team Member button above to add your first Team Member."
+        }
 
         $('#userList').html(userListHTML);
 
@@ -131,7 +137,7 @@ var adminUsers = {
 
             var userDetails = {
                 customerID: globals.theCustomer.customerID,
-                userName:   adminUsers.inviteGUID,
+                userGUID:   adminUsers.inviteGUID,
                 email:      newUserEmail,
                 firstName:  newUserFirstName,
                 lastName:   newUserLastName,

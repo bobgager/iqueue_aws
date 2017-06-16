@@ -62,7 +62,7 @@ var awsDynamoDBConnector = {
     update_iqUsers: function (userDetails, callback) {
         var params = {
             TableName: 'iqUsers',
-            Key: { customerID : userDetails.customerID, userName: userDetails.userName },
+            Key: { customerID : userDetails.customerID, userGUID: userDetails.userGUID },
             UpdateExpression: "set userDetails=:userDetails",
             ExpressionAttributeValues:{
                 ":userDetails": userDetails
@@ -84,7 +84,7 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
-    fetchSingleUser: function(customerID, userName, callback){
+    fetchSingleUser: function(customerID, userGUID, callback){
 
         // set an unauthenticated config object
 
@@ -101,7 +101,7 @@ var awsDynamoDBConnector = {
         var params = {
             Key: {
                 "customerID": customerID ,
-                "userName": userName
+                "userGUID": userGUID
             },
             TableName: "iqUsers"
         };

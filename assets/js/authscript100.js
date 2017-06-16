@@ -6,6 +6,8 @@
 
 var configure = {
 
+    retryCount: 0,
+
     configure: function () {
 
         //show the other header content (which includes the mobile menu icon)
@@ -41,6 +43,7 @@ var configure = {
 
         awsDynamoDBConnector.fetchCustomerConfig(awsCognitoConnector.cognitoUser.customerID, function (success, data) {
             if (success) {
+                console.log('about to try and write to globals.theCustomer');
                 globals.theCustomer = data;
                 configure.loadMoreScripts();
             }
@@ -65,18 +68,88 @@ var configure = {
         $('#loading-iqueue-progress-bar').addClass('w-70');
 
         var progress = 0;
-        var scripts = ['pages/dashboard.js','pages/adminUsers.js','assets/js/AWSsesConnector.js'];
+        var scripts = ['pages/dashboard.js','pages/adminUsers.js','assets/js/AWSsesConnector.js', 'pages/userDetails.js'];
         scripts.forEach(function(script) {
             $.getScript(script, function () {
-                if (++progress == scripts.length) configure.determinePage();
+                if (++progress == scripts.length) configure.testUserDetails();
             });
         });
 
     },
 
     //******************************************************************************************************************
-    determinePage:function () {
+    testUserDetails: function () {
+        //need to verify that we have all the required information for this user, and if not, collect it from them.
 
+        configure.retryCount = 0;
+        //fetch this users details from DynamoDB
+        awsDynamoDBConnector.fetchSingleUser(globals.cognitoUserAttributes.customerID, globals.cognitoUserAttributes.guidUserName, configure.userReturned);
+
+    },
+
+    //******************************************************************************************************************
+    userReturned: function (success, results) {
+
+        //console.log('userReturned and success = ' + success + ' and configure.retryCount = ' + configure.retryCount );
+
+        if(!success){
+            if (configure.retryCount < 3){
+                configure.retryCount ++;
+                awsDynamoDBConnector.fetchSingleUser(globals.cognitoUserAttributes.customerID, globals.cognitoUserAttributes.guidUserName, configure.userReturned);
+                return;
+            }
+            else {
+                utils.fatalError('cur001', results);
+                return;
+            }
+        }
+
+        //seems we have a user
+        globals.theUser = results;
+
+        //if their status is still Invited, then it's the first time they have sucesfully signed in
+        if (globals.theUser.status === "Invited"){
+            //so, update their status to Active
+            globals.theUser.status = "Active";
+            //and store their username
+            globals.theUser.username = globals.cognitoUserAttributes.userName;
+            //and update the cloud
+            awsDynamoDBConnector.update_iqUsers(globals.theUser, configure.userUpdated);
+            return;
+        }
+
+        configure.userUpdated();
+
+    },
+
+    //******************************************************************************************************************
+    userUpdated: function () {
+
+        if (!userDetailsPage.userInfoComplete()){
+
+            var options = {};
+            options.title = "We'd like to get to know you better.";
+            options.message = "There's a little more information we need to complete your account." ;
+            options.buttonName = 'OK';
+            options.callback = function () {
+                $('#loading-iqueue-progress-bar').html('Initialization Complete');
+                $('#loading-iqueue-progress-bar').addClass('w-100');
+                $('#loading-iqueue-progress').fadeOut(1000);
+
+                setTimeout(function () {
+                    userDetailsPage.render();
+                },1000)
+
+            };
+            modalMessage.showMessage(options);
+            return;
+        }
+
+        configure.showDashboard();
+    },
+
+    //******************************************************************************************************************
+    showDashboard:function () {
 
         $('#loading-iqueue-progress-bar').html('Initialization Complete');
         $('#loading-iqueue-progress-bar').addClass('w-100');
@@ -86,12 +159,10 @@ var configure = {
             dashboardPage.render();
         },2000)
 
-
     },
 
     //******************************************************************************************************************
     buildMenus:function () {
-
 
         $('#mainNavbar').show();
 
@@ -102,7 +173,7 @@ var configure = {
 
         var moreMenuHTML = '' +
             '<a href="#" class="dropdown-item" onclick="adminUsers.render();"><i class="fa fa-users dropdown-icon" aria-hidden="true"></i> Manage Users</a>' +
-            '<a href="#" class="dropdown-item" onclick="alert()"><i class="fa fa-users dropdown-icon" aria-hidden="true"></i> What&#39;s New</a>' ;
+            '<a href="#" class="dropdown-item" onclick="alert()"><i class="fa fa-info dropdown-icon" aria-hidden="true"></i> What&#39;s New</a>' ;
 
         $('#moreMenu').html(moreMenuHTML);
 
@@ -112,7 +183,8 @@ var configure = {
         $('#userMenuHeader').html(awsCognitoConnector.cognitoUser.username);
 
         var userMenuHTML = '' +
-            '<a href="#" class="dropdown-item" onclick="alert()"><i class="fa fa-user dropdown-icon" aria-hidden="true"></i> Sign Out</a>' ;
+            '<a href="#" class="dropdown-item" onclick="userDetailsPage.render()"><i class="fa fa-user dropdown-icon" aria-hidden="true"></i> My Profile</a>' +
+            '<a href="#" class="dropdown-item" onclick="window.open(&#39;index_secure.htm?version=' + globals.version + '&#39;, &#39;_self&#39;);"><i class="fa fa-sign-out dropdown-icon" aria-hidden="true"></i> Sign Out</a>' ;
 
         $('#userMenu').html(userMenuHTML);
 

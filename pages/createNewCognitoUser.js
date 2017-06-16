@@ -14,7 +14,7 @@ var newCognitoUser = {
 
         newCognitoUser.userInformation.role = user.role;
         newCognitoUser.userInformation.customerID = user.customerID;
-        newCognitoUser.userInformation.guidUserName = user.userName;
+        newCognitoUser.userInformation.guidUserName = user.userGUID;
 
         $('#authenticatedContent').hide().load("pages/createNewCognitoUser.html", function() {
 
@@ -126,6 +126,9 @@ var newCognitoUser = {
 
     //*****************************************************************************************************************
     verifyUser: function () {
+
+        //remove any spaces from the verification code input
+        $('#signup-account-verification-code').val($('#signup-account-verification-code').val().replace(/\s+/g, ''));
 
         //make sure they entered a verification code
         if ($('#signup-account-verification-code').val().length === 0){
