@@ -72,7 +72,6 @@ var configure = {
         var progress = 0;
         var scripts = ['pages/dashboard.js?version='+globals.version,
             'pages/adminUsers.js?version='+globals.version,
-            'assets/js/AWSsesConnector.js?version='+globals.version,
             'pages/userDetails.js?version='+globals.version,
             'pages/adminDisplay.js?version='+globals.version,
             'pages/adminDisplay_test.js?version='+globals.version];

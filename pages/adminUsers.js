@@ -6,6 +6,7 @@ var adminUsersPage = {
 
     userList: null,
     inviteGUID: null,
+    invitedUserEmail: null,
 
     //******************************************************************************************************************
     render:function () {
@@ -65,7 +66,15 @@ var adminUsersPage = {
                             '</h4>' +
                             '<p class="role">' + user.userDetails.role + '</p>' +
                             '<p>' + user.userDetails.email + '</p>' +
-                            '<p>' + user.userDetails.status + '</p>' +
+                            '<p>' + user.userDetails.status + '</p>' ;
+
+            if (user.userDetails.status === 'Invited'){
+                userListHTML += '<button class="btn btn-sm btn-outline-primary" type="button" onclick=" adminUsersPage.invitedUserEmail = &#39;' + user.userDetails.email + '&#39;; adminUsersPage.inviteGUID = &#39;' + user.userGUID + '&#39;; adminUsersPage.sendInvitationEmail(&#39;' + user.userDetails.email + '&#39;)" ><i class="fa fa-send-o" aria-hidden="true"></i> Resend Invitation </button>';
+
+            }
+
+            userListHTML +='' +
+
                         '</div>' +
                     '</div>' +
                 '</div>'
@@ -169,6 +178,8 @@ var adminUsersPage = {
         if (success){
             //record created successfully
 
+            adminUsersPage.invitedUserEmail = $('#newUserEmailInput').val();
+
             adminUsersPage.sendInvitationEmail($('#newUserEmailInput').val());
 
             $('#newUserEmailInput').val('');
@@ -215,12 +226,32 @@ var adminUsersPage = {
 
 
 
-        awsSESConnector.sendEmail(to,"You've Been Invited To iQueue", htmlContent, plainContent);
+        awsSESConnector.sendEmail(to,"You've Been Invited To iQueue", htmlContent, plainContent,adminUsersPage.emailSent);
 
+
+
+
+    },
+
+    //******************************************************************************************************************
+    emailSent: function (success, data) {
+
+        if (!success){
+
+            options = {};
+            options.title = 'Email Sending Error';
+            options.message = "Something went wrong while trying to send an Email to " + adminUsersPage.invitedUserEmail + "<br>Click the Resend Invitation button to try again.<br>Error Code:es001<br>" + data ;
+            options.callback = function () {
+                adminUsersPage.render();
+            };
+            modalMessage.showMessage(options);
+
+            return;
+        }
 
         options = {};
-        options.title = to + ' has been invited to iQueue';
-        options.message = "We've sent an Email to " + to + " with instructions on how to access iQueue." ;
+        options.title = adminUsersPage.invitedUserEmail + ' has been invited to iQueue';
+        options.message = "We've sent an Email to " + adminUsersPage.invitedUserEmail + " with instructions on how to access iQueue." ;
         options.callback = function () {
             adminUsersPage.render();
         };

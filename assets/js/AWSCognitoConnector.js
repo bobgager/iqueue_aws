@@ -145,6 +145,8 @@ var awsCognitoConnector = {
                     // Instantiate AWS sdk service objects now that the credentials have been updated.
                     awsCognitoConnector.dynamodbEast = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 
+                    awsSESConnector.ses = new AWS.SES({apiVersion: '2010-12-01'});
+
                     //AWS authenticated access setup, so go back to the app
                     callback(true, result, result2);
 
