@@ -30,6 +30,41 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    fetchCustomerLocationsTable: function(customerID, callback){
+
+        var params = {
+            TableName: 'iqCustomerLocations',
+            KeyConditionExpression: 'customerID = :customerID ',
+            ExpressionAttributeValues: {
+                ':customerID': customerID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
+
+            if (err){
+                callback(false, err)
+            }
+            else {
+                // successful response
+
+                //aws doesn't support empty strings, so need to do some replacement
+                data.Items.forEach(function(location, index){
+                    if(location.kioskMessageHeader === '~'){
+                        location.kioskMessageHeader = '';
+                    }
+                    if(location.kioskMessageBody === '~'){
+                        location.kioskMessageBody = '';
+                    }
+                });
+
+                callback(true, data.Items);
+            }
+        });
+
+    },
+
+    //******************************************************************************************************************
     fetchCustomerUserTable: function(customerID, callback){
 
         var params = {
@@ -59,28 +94,26 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
-    update_iqUsers: function (userDetails, callback) {
+    fetchDisplayMessages: function(locationID, callback){
+
         var params = {
-            TableName: 'iqUsers',
-            Key: { customerID : userDetails.customerID, userGUID: userDetails.userGUID },
-            UpdateExpression: "set userDetails=:userDetails",
-            ExpressionAttributeValues:{
-                ":userDetails": userDetails
+            TableName: 'iqDisplayMessages',
+            KeyConditionExpression: 'locationID = :locationID ',
+            ExpressionAttributeValues: {
+                ':locationID': locationID
             }
         };
 
-        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
-            //console.log('returned from update with err = ' + err);
+        awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
+            //console.log('query returned: '+  err);
             if (err){
-                //console.log(err); // an error occurred
                 callback(false, err);
             }
             else {
                 //console.log(data);
-                callback(true, data);
+                callback(true, data.Items);
             }
         });
-
     },
 
     //******************************************************************************************************************
@@ -122,8 +155,57 @@ var awsDynamoDBConnector = {
             }
 
         });
+    },
+
+    //******************************************************************************************************************
+    update_iqUsers: function (userDetails, callback) {
+        var params = {
+            TableName: 'iqUsers',
+            Key: { customerID : userDetails.customerID, userGUID: userDetails.userGUID },
+            UpdateExpression: "set userDetails=:userDetails",
+            ExpressionAttributeValues:{
+                ":userDetails": userDetails
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
+            //console.log('returned from update with err = ' + err);
+            if (err){
+                //console.log(err); // an error occurred
+                callback(false, err);
+            }
+            else {
+                //console.log(data);
+                callback(true, data);
+            }
+        });
+
+    },
+
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    s3ReadBucketContents:function(bucket, callback){
+
+        // Configure your region
+        AWS.config.region = 'us-west-1';
+
+        var bucket = new AWS.S3({params: {Bucket: bucket}});
+        bucket.listObjects(function (err, data) {
+            //console.log(err)
+            if (err) {
+                callback(null);
+            }
+            else {
+                callback(data.Contents);
+            }
+        });
+
+
     }
 
+
+    //******************************************************************************************************************
     //******************************************************************************************************************
     //******************************************************************************************************************
 };

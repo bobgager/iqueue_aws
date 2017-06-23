@@ -25,6 +25,8 @@ var invitationPage = {
     //******************************************************************************************************************
     render: function () {
 
+        globals.currentPage = 'invitationPage';
+
         $('#authenticatedContent').hide().load("pages/invu47.html?version="+ globals.version, function() {
 
             invitationPage.failedAttempts = 0;
@@ -125,7 +127,7 @@ var invitationPage = {
             //now, we need to let the user create a cognito account
 
             $.getScript('pages/createNewCognitoUser.js', function () {
-                newCognitoUser.render(data);
+                newCognitoUserPage.render(data);
             });
 
         }

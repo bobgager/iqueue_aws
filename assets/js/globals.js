@@ -6,13 +6,22 @@ var globals = {
 
     showDebug: true,
 
-    version: '0.0.004',
+    version: '0.001.005',
 
-    theUser: {},
+    //******************************************************************************************************************
 
     cognitoUserAttributes: {},
 
-    theCustomer: {}
+    currentPage: null,
+
+    theCustomer: {},
+
+    //holds info about the customers locations
+    theLocationsArray:  [],
+    //and the location selected by this user
+    theLocation: null,
+
+    theUser: {}
 
 
 };

@@ -13,16 +13,7 @@ var configure = {
         //show the other header content (which includes the mobile menu icon)
         $('#otherHeaderContent').show();
 
-        //build the menu's
-        $('#loading-iqueue-progress-bar').html("Building Menu's");
-        configure.buildMenus();
         $('#loading-iqueue-progress-bar').addClass('w-50');
-
-        //need to cycle jPanelMenu to rebuild the side panel menu for smaller screens
-        jPM.off();
-        jPM.on();
-
-
         $('#loading-iqueue-progress-bar').html('Loading scripts');
 
         var progress = 0;
@@ -43,14 +34,33 @@ var configure = {
 
         awsDynamoDBConnector.fetchCustomerConfig(awsCognitoConnector.cognitoUser.customerID, function (success, data) {
             if (success) {
-                console.log('about to try and write to globals.theCustomer');
                 globals.theCustomer = data;
-                configure.loadMoreScripts();
+                configure.fetchLocations();
             }
             else {
                 utils.fatalError('lcc001', 'Initial fetchcustomerConfig failed.');
             }
         })
+    },
+
+    //******************************************************************************************************************
+    fetchLocations: function () {
+
+        awsDynamoDBConnector.fetchCustomerLocationsTable(awsCognitoConnector.cognitoUser.customerID,function (success, data) {
+            if (success) {
+                globals.theLocationsArray = data;
+                locationManager.showLocationPicker(configure.loadMoreScripts);
+            }
+            else {
+                utils.fatalError('fl001', 'Failed to fetch location information.<br>' + data);
+            }
+        });
+
+
+
+
+
+
     },
 
     //******************************************************************************************************************
@@ -60,7 +70,13 @@ var configure = {
         $('#loading-iqueue-progress-bar').addClass('w-70');
 
         var progress = 0;
-        var scripts = ['pages/dashboard.js?version='+globals.version,'pages/adminUsers.js?version='+globals.version,'assets/js/AWSsesConnector.js?version='+globals.version, 'pages/userDetails.js?version='+globals.version];
+        var scripts = ['pages/dashboard.js?version='+globals.version,
+            'pages/adminUsers.js?version='+globals.version,
+            'assets/js/AWSsesConnector.js?version='+globals.version,
+            'pages/userDetails.js?version='+globals.version,
+            'pages/adminDisplay.js?version='+globals.version,
+            'pages/adminDisplay_test.js?version='+globals.version];
+
         scripts.forEach(function(script) {
             $.getScript(script, function () {
                 if (++progress == scripts.length) configure.testUserDetails();
@@ -98,6 +114,9 @@ var configure = {
 
         //seems we have a user
         globals.theUser = results;
+
+        //build the menu's
+        configure.buildMenus();
 
         //if their status is still Invited, then it's the first time they have sucesfully signed in
         if (globals.theUser.status === "Invited"){
@@ -156,23 +175,27 @@ var configure = {
     //******************************************************************************************************************
     buildMenus:function () {
 
+        $('#loading-iqueue-progress-bar').html("Building Menu's");
+
         $('#mainNavbar').show();
 
-        //build the More menu
+        switch(globals.theUser.role) {
+            case 'Creator':
+                $('#admin-dropdown-menu').show();
+                break;
+            case 'Admin':
+                $('#admin-dropdown-menu').show();
+                break;
+            default:
+                //just a regular user
+                $('#admin-dropdown-menu').hide();
+        }
 
-        //TODO: only add an Admin Menu if the user is an Admin or greater
-        console.log('TODO: only add an Admin Menu if the user is an Admin or greater');
-
-        var moreMenuHTML = '' +
-            '<a href="#" class="dropdown-item" onclick="adminUsers.render();"><i class="fa fa-users dropdown-icon" aria-hidden="true"></i> Manage Users</a>' +
-            '<a href="#" class="dropdown-item" onclick="alert()"><i class="fa fa-info dropdown-icon" aria-hidden="true"></i> What&#39;s New</a>' ;
-
-        $('#moreMenu').html(moreMenuHTML);
-
+        //build the locations menu
+        locationManager.configureMenu();
 
         //build the user menu
-
-        $('#userMenuHeader').html(awsCognitoConnector.cognitoUser.username);
+        $('#userMenuHeader').html(globals.theUser.firstName);
 
         var userMenuHTML = '' +
             '<a href="#" class="dropdown-item" onclick="userDetailsPage.render()"><i class="fa fa-user dropdown-icon" aria-hidden="true"></i> My Profile</a>' +
@@ -180,14 +203,23 @@ var configure = {
 
         $('#userMenu').html(userMenuHTML);
 
+        //need to cycle jPanelMenu to rebuild the side panel menu for smaller screens
+        jPM.off();
+        jPM.on();
+
     }
-
-
-
-
-
 
 };
 
+var app = {
+
+    //******************************************************************************************************************
+    launchDisplay: function () {
+
+        window.open('display/display.htm?version='+ globals.version + '&configCode='+ globals.theCustomer.configCode + '&locationCode='+ globals.theLocation.locationID, '_self');
+
+    }
+
+};
 
 configure.configure();

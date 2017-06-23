@@ -1,0 +1,68 @@
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left">
+            <!--<a id="homeLocationBackLink" href="#" class="back link"> <i class="fa fa-angle-left"></i><span>Back</span></a>-->
+        </div>
+        <div id="displayHeaderTitle" class="center sliding">iQueue Display</div>
+
+        <div class="right">
+            <a href="#" onclick="app.reloadDisplay()" class="link icon-only" >
+                <span class="topNavBarRightIcon kkicon fa fa-home"></span>
+            </a>
+        </div>
+
+<!--        <div class="right">
+            <a href="#" class="link icon-only open-panel" data-panel="right">
+                <span class="topNavBarRightIcon kkicon fa fa-bars"></span>
+            </a>
+        </div>-->
+
+    </div>
+</div>
+
+
+
+<!-- Pages -->
+<div class="pages">
+    <div class="page navbar-fixed  page-bg " data-page="theDisplay">
+
+
+
+        <div class="toolbar tabbar">
+            <div class="toolbar-inner">
+
+            </div>
+        </div>
+
+        <div id="theDisplayPageContent" class="page-content">
+
+
+            <!-- Slider container -->
+            <div id="swiper-container" class="swiper-container">
+                <!-- Slides wrapper -->
+                <div id="displaySlideWrapper" class="swiper-wrapper">
+                    <!-- Slides -->
+                    <div class="swiper-slide" >
+                        <div class="swiper-slide-message swiper-slide-warning-message">
+                            <br>No Display Messages have been entered for this location.<br><br>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pagination, if required -->
+                <div class="swiper-pagination"></div>
+            </div>
+
+<!--            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>-->
+
+
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+

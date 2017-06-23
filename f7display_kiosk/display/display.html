@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8" />
+
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+
+        <title>iQueue Display</title>
+
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+
+        <!--Framework and Plugin CSS-->
+        <!--<link rel="stylesheet" href="fonts/font-awesome-4.4.0/css/font-awesome.min.css">-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+        <!--<link rel="stylesheet" href="frameworks/framework7-1.2.0/css/framework7.min.css">-->
+        <link rel="stylesheet" href="../common/frameworks/framework7_1.4.2_dist/css/framework7.ios.min.css">
+
+        <!--<link rel="stylesheet" href="plugins/framework7.3dpanels_1.0.0/framework7.3dpanels.min.css">-->
+
+
+
+        <!--the mAlpha css-->
+        <link rel="stylesheet" href="../common/frameworks/malpha_app.css">
+        <link rel="stylesheet" href="../common/frameworks/malphaOveride.css">
+
+        <!--the Swiper css-->
+        <link rel="stylesheet" href="../common/plugins/swiper-3.3.1/swiper.min.css">
+
+        <!--plug-in css-->
+        <link rel="stylesheet"  href="../common/plugins/animate.css" rel="stylesheet">
+
+
+
+        <!--our custom css-->
+        <script type="text/javascript">
+            var currentDateTime = new Date().getTime();
+            document.write('<link rel="stylesheet" href="display.css?' + currentDateTime + '">');
+
+        </script>
+
+
+
+    </head>
+    <body>
+
+
+        <div class="panel-overlay"></div>
+
+        <div id="announcementBackground" class="announcementBackground" ></div>
+
+
+        <!-- Views -->
+        <div class="views">
+            <div class="view view-main">
+
+                <!-- Top Navbar-->
+                <div class="navbar">
+                    <!-- Navbar inner for Index page-->
+                    <div data-page="index" class="navbar-inner">
+                        <!-- We have home navbar without left link-->
+                        <div  class="center sliding">iQueue Display</div>
+                    </div>
+
+                </div>
+
+
+                <div class="pages ">
+                    <div data-page="index" class="page navbar-fixed page-index-bg " >
+
+                        <div class="page-content">
+                            <br><br>
+                            <div class="well">
+                                <div class="text-center"><img src="images/icon-120.png"></div>
+                                <h1 id="index_LoadingMessage" class="text-center" >Loading<br>iQueue Display<br><i class="fa fa-spin fa-spinner"></i></h1>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!--a label to  show status of things-->
+                <div id="statusLabel" style="position: fixed; bottom: 5px; left: 10px; color: #f5f5f5;">
+                    <i class="fa fa-heartbeat"></i>
+                </div>
+
+                <!--a label to persistently show the version of the display that is running-->
+                <div id="versionLabel" style="position: fixed; bottom: 5px; right: 10px; color: #f5f5f5;">
+                    ???
+                </div>
+
+                <!--*************************************************************************************************************-->
+                <h3 id="bottomTickerBar" class="tlt" style="position: fixed; width: 100%; bottom: -20px; text-align: center; color: #f5f5f5;text-shadow: 1px 1px black; white-space: nowrap; overflow: hidden; display: none; font-size: 25px" >
+                    <ul class="texts" >
+                        <li id="waitTimeDisplay1" >Wait Time Will Be Displayed Here</li>
+                        <li id="waitTimeDisplay2" >Number Of Folks In Line Will Be Displayed Here</li>
+                        <li id="waitTimeDisplay3" >In certain situations, you may be called out of order</li>
+                    </ul>
+                </h3>
+
+
+                <div id="waitingListBackground" class="waitingListBackground" >
+                    <div id="waitingList" style="position: fixed; width: 100%; top: 44px;  "></div>
+                </div>
+
+
+
+                <!--*************************************************************************************************************-->
+                <div id="sizer" style="z-index: 100; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; background-color: #ffffff; display: none">
+
+                    <div id="sizerDialog" class="alert alert-warning " style="position: absolute; top: 30%; left: 30%">
+
+                        <div class="alert alert-danger h2 text-center" role="alert">ATTENTION!</div>
+
+                        <div style="margin: 20px">
+                            <p id="sizerMessage" class = "h4">Your display is not set to 1280x720 or 1920x1080</p>
+
+                            <p>Please resize your browser window to 1280x720 or 1920x1080</p>
+
+                            <div class="row">
+                                <div id="widthLabel" class="col-xs-6">Current Width: 1000</div>
+                                <div id="heightLabel" class="col-xs-6">Current Height: 1000</div>
+                            </div>
+                            <br />
+
+                            <button id="proceedAnywayBTN" type="button" class="btn btn-danger pull-right" onclick="app.proceedAnyway()">Proceed Anyway</button>
+                            <button id="letsGoBTN" type="button" class="btn btn-success pull-right" onclick="app.letsGo()">Let's Go</button>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+
+        <script type="text/javascript">
+
+            function freshStart(){
+                console.log('freshStart()');
+                var launchURL = $.jStorage.get('launchURL');
+                window.location = launchURL;
+            }
+
+        </script>
+
+
+        <!--Popovers-->
+        <!--need to put all the popovers here, and not on each page so they don't get darkened as part of the page-->
+        <!-- Configuration Code : used on configure page -->
+        <div class="popover popover-configCode">
+            <div class="popover-angle"></div>
+            <div class="popover-inner">
+                <div class="content-block">
+                    <p><strong>Configuration Code</strong></p>
+                    <p style="font-size: smaller">A Configuration Codes lets the iQueue Display know which iQueue installation you want to connect to.</p>
+                    <p style="font-size: smaller">You can get a Configuration Code from your iQueue Administrator</p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!--Google Analytics-->
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-48152033-4', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+
+        <script type="text/javascript">
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Page Load',
+                eventAction: 'Loaded',
+                eventLabel: 'display.html'
+            });
+        </script>
+
+
+        <!--some application frameworks-->
+        <script type="text/javascript" src="../common/frameworks/jquery-2.1.4.min.js"></script>
+        <script type="text/javascript" src="../common/frameworks/framework7_1.4.2_dist/js/framework7.min.js"></script>
+        <!--<script type="text/javascript" src="frameworks/parse-1.6.4.min.js"></script>-->
+
+        <!--the Amazon AWS SDK (includes DynamoDB)-->
+        <!--<script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.33.min.js"></script>-->
+        <script type="text/javascript" src="../common/frameworks/aws-sdk-2.2.39.min.js"></script>
+
+        <!--some 3rd party plug-ins-->
+        <!--<script type="text/javascript" src="plugins/framework7.3dpanels_1.0.0/framework7.3dpanels.js"></script>-->
+        <!--<script type="text/javascript" src="plugins/jquery_validate_1.13.1/jquery.validate.min.js"></script>-->
+        <script type="text/javascript" src="../common/plugins/jstorage.min.js"></script>
+        <script type="text/javascript" src="../common/plugins/swiper-3.3.1/swiper.jquery.min.js"></script>
+        <script type="text/javascript" src="../common/plugins/jquery.textillate.js"></script>
+        <script type="text/javascript" src="../common/plugins/jquery.lettering.js"></script>
+        <script type="text/javascript" src="../common/plugins/md5.js"></script>
+        <script type="text/javascript" src="../common/plugins/jquery.browser-fingerprint-1.1.min.js"></script>
+
+        <!--verge is used to measure viewport dimensions-->
+        <script type="text/javascript" src="../common/plugins/verge.min.js"></script>
+
+        <!--Custom App Scripts-->
+        <script type="text/javascript">
+            var currentDateTime = new Date().getTime();
+            document.write('<script type="text/javascript"src="globals.js?' + currentDateTime + '"> <\/script>');
+            document.write('<script type="text/javascript"src="../common/cobaltfireutils/awsconnector.js?' + currentDateTime + '"> <\/script>');
+            document.write('<script type="text/javascript"src="../common/cobaltfireutils/cobaltfireutils.js?' + currentDateTime + '"> <\/script>');
+            document.write('<script type="text/javascript"src="../common/cobaltfireutils/iqueueutils.js?' + currentDateTime + '"> <\/script>');
+            document.write('<script type="text/javascript"src="index_display.js?' + currentDateTime + '"> <\/script>');
+
+            <!--scripts for the pages (needs to come after the index_kiosk.js file)-->
+            document.write('<script type="text/javascript"src="pages/configure.js?' + currentDateTime + '"> <\/script>');
+            document.write('<script type="text/javascript"src="pages/locationPicker.js?' + currentDateTime + '"> <\/script>');
+            document.write('<script type="text/javascript"src="pages/theDisplay.js?' + currentDateTime + '"> <\/script>');
+
+        </script>
+
+        <!--scripts for the pages (needs to come after the index_kiosk.js file)-->
+        <!--<script type="text/javascript" src="pages/settings.js"></script>-->
+        <!--<script type="text/javascript" src="pages/about.js"></script>-->
+        <!--<script type="text/javascript" src="pages/developer.js"></script>-->
+
+        <script type="text/javascript">
+            //console.log('initializing from main html page');
+            app.initialize();
+        </script>
+
+
+
+    </body>
+</html>
