@@ -126,7 +126,7 @@ var invitationPage = {
 
             //now, we need to let the user create a cognito account
 
-            $.getScript('pages/createNewCognitoUser.js', function () {
+            $.getScript('pages/createNewCognitoUser.js?version='+ globals.version, function () {
                 newCognitoUserPage.render(data);
             });
 

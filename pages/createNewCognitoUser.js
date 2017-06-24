@@ -118,7 +118,7 @@ var newCognitoUserPage = {
             '<span class="text-primary-darkend font-weight-bold">Username:</span><span class="text-primary"> ' + newCognitoUserPage.userInformation.username + '</span><br>' +
             '<span class="text-primary-darkend font-weight-bold">Email:</span><span class="text-primary"> ' + newCognitoUserPage.userInformation.email + '</span>';
 
-        $('#content').hide().load("pages/new_account_verification.html", function() {
+        $('#content').hide().load("pages/new_account_verification.html?version=" + globals.version, function() {
 
 
             $('#newAccountInformation').html(newUserHTML);
@@ -172,7 +172,7 @@ var newCognitoUserPage = {
             '<span class="text-primary-darkend font-weight-bold">Username:</span><span class="text-primary"> ' + newCognitoUserPage.userInformation.username + '</span><br>' +
             '<span class="text-primary-darkend font-weight-bold">Email:</span><span class="text-primary"> ' + newCognitoUserPage.userInformation.email + '</span>';
 
-        $('#content').hide().load("pages/new_account_verified.html", function() {
+        $('#content').hide().load("pages/new_account_verified.html?version=" + globals.version, function() {
 
 
             $('#newAccountInformation').html(newUserHTML);
@@ -207,6 +207,15 @@ var newCognitoUserPage = {
 
         };
         modalMessage.showMessage(options);
+
+    },
+
+    //******************************************************************************************************************
+    reloadiQueue: function () {
+
+
+        window.open('index_secure.htm?version=' + globals.version, '_self');
+
 
     }
 

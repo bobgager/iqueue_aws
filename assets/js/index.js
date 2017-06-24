@@ -18,7 +18,7 @@ function initialize() {
     var secret1 = utils.GetURLParameter('secret1');
     if (secret1){
         var secret2 = utils.GetURLParameter('secret2');
-        $.getScript('pages/' + secret2 + '.js',function () {
+        $.getScript('pages/' + secret2 + '.js?version='+ globals.version,function () {
             $('#login-form').slideUp(1000);
             invitationPage.configure(secret1);
         });
