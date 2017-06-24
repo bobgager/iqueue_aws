@@ -7,30 +7,39 @@
 
 <h1 id="loadingSlidesLabel"  class="text-center text-primary" ><i class="fa fa-spin fa-spinner"></i> Loading iQueue Display Slides</h1>
 
-<button class="btn btn-sm btn-outline-primary" type="button" onclick="adminDisplayTestPage.render()" ><i class="fa fa-undo" aria-hidden="true"></i> Refresh </button>
+<button type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayTestPage.render()" ><i class="fa fa-refresh" ></i> Refresh </button>
 
-<button class="btn btn-sm btn-outline-primary" type="button" onclick="adminDisplayTestPage.nextSlide()" ><i class="fa fa-forward" aria-hidden="true"></i> Next Slide </button>
+<button type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayTestPage.nextSlide()" ><i class="fa fa-forward" ></i> Next Slide </button>
+
+<button type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayTestPage.addNewSlide()"><i class="fa fa-plus" ></i> Add New Slide</button>
+
+<button type="button" class="btn btn-sm btn-outline-primary " onclick="adminDisplayTestPage.deleteSlide()"><i class="fa fa-trash" ></i> Delete Slide</button>
+
 
 <br><br>
 
-
-<!--//screen sizes          display slide size
-// 0.25x    320x180        245x158
-// 0.5x     640x360        490x316
-// 1x       1280x720       980x632
-// 1.5x     1920x1080      1470x948
-// 2x       2560x1440      1960x1264-->
-
-
+122x79<br>
+<div id="122Slide" style="width: 122px; height: 79px"></div>
+<br>
 245x158<br>
 <div id="245Slide" style="width: 245px; height: 158px"></div>
-
+<br>
 490x316<br>
-<div id="490Slide" style="width: 490px; height: 316px"></div>
+<div class="btn-toolbar btn-toolbar-centered" role="toolbar" style="border-top: 2px solid #ebebeb; padding-top: 10px; padding-bottom: 5px">
+    <div id="editTextBtn" class="btn-group btn-group-sm" role="group">
+        <button class="btn btn-sm btn-info " onclick="adminDisplayTestPage.editSlideText()">Edit Text</button>
+    </div>
+    <div id="textEditBtns"  class="btn-group btn-group-sm" role="group">
+        <button class="btn btn-sm btn-success" onclick="adminDisplayTestPage.closeTextEditor(true)">Save Changes</button>
+        <button class="btn btn-sm btn-primary" onclick="adminDisplayTestPage.cancelTextEdits()">Cancel Changes</button>
+    </div>
+</div>
 
+<div id="490Slide" style="width: 490px; height: 316px; "></div>
+<br>
 980x632<br>
 <div id="980Slide" style="width: 980px; height: 632px"></div>
-
+<br>
 1470x948<br>
 <div id="1470Slide" style="width: 1470px; height: 948px"></div>
 

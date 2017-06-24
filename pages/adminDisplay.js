@@ -39,67 +39,53 @@ var adminDisplayPage = {
             //setup the proper button configuration
             adminDisplayPage.setupButtons('init');
 
-            //load in the needed plugins
-
-            var progress = 0;
-
-            var scripts = [ 'assets/plugins/summernote-0.8.2/summernote.min.js'];
-
-            scripts.forEach(function(script) {
-                $.getScript(script, function () {
-                    if (++progress == scripts.length) {
-
-                        //setup the slide swiper
-                        adminDisplayPage.swiper = new Swiper('.swiper-container-slides', {
-                            pagination: '.swiper-pagination',
-                            paginationClickable: true,
-                            effect: 'coverflow',
-                            grabCursor: false,
-                            nextButton: '.swiper-button-next-slides',
-                            prevButton: '.swiper-button-prev-slides',
-                            centeredSlides: true,
-                            slidesPerView: 'auto',
-                            coverflow: {
-                                rotate: 40,
-                                stretch: 0,
-                                depth: 100,
-                                modifier: 1,
-                                slideShadows : true
-                            }
-                        });
-
-                        adminDisplayPage.swiper.on('slideChangeEnd', adminDisplayPage.slideChanged);
-
-                        adminDisplayPage.swiper.removeAllSlides();
-
-                        //setup the background image library swiper
-                        adminDisplayPage.librarySwiper = new Swiper('.swiper-container-library', {
-                            effect: 'coverflow',
-                            grabCursor: false,
-                            nextButton: '.swiper-button-next-library',
-                            prevButton: '.swiper-button-prev-library',
-                            centeredSlides: true,
-                            slidesPerView: 'auto',
-                            coverflow: {
-                                rotate: 40,
-                                stretch: 0,
-                                depth: 100,
-                                modifier: 1,
-                                slideShadows : true
-                            }
-                        });
-
-                        //read the list of Display Messages from AWS
-                        awsDynamoDBConnector.fetchDisplayMessages(globals.theLocation.locationID,adminDisplayPage.displaySlidesReturned);
-
-                        //read the list of images in the S3 Display Bucket for this location
-                        var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
-
-                        awsDynamoDBConnector.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
-
-                    }
-                });
+            //setup the slide swiper
+            adminDisplayPage.swiper = new Swiper('.swiper-container-slides', {
+                pagination: '.swiper-pagination',
+                paginationClickable: true,
+                effect: 'coverflow',
+                grabCursor: false,
+                nextButton: '.swiper-button-next-slides',
+                prevButton: '.swiper-button-prev-slides',
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                coverflow: {
+                    rotate: 40,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows : true
+                }
             });
+
+            adminDisplayPage.swiper.on('slideChangeEnd', adminDisplayPage.slideChanged);
+
+            adminDisplayPage.swiper.removeAllSlides();
+
+            //setup the background image library swiper
+            adminDisplayPage.librarySwiper = new Swiper('.swiper-container-library', {
+                effect: 'coverflow',
+                grabCursor: false,
+                nextButton: '.swiper-button-next-library',
+                prevButton: '.swiper-button-prev-library',
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                coverflow: {
+                    rotate: 40,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows : true
+                }
+            });
+
+            //read the list of Display Messages from AWS
+            awsDynamoDBConnector.fetchDisplayMessages(globals.theLocation.locationID,adminDisplayPage.displaySlidesReturned);
+
+            //read the list of images in the S3 Display Bucket for this location
+            var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
+
+            awsDynamoDBConnector.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
 
 
         }).fadeIn('1000');

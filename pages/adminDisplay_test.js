@@ -26,6 +26,8 @@ var adminDisplayTestPage = {
             //read the list of Display Messages from AWS
             awsDynamoDBConnector.fetchDisplayMessages(globals.theLocation.locationID,adminDisplayTestPage.displaySlidesReturned);
 
+            $('#textEditBtns').hide();
+
 
 
         }).fadeIn('1000');
@@ -65,6 +67,7 @@ var adminDisplayTestPage = {
     //******************************************************************************************************************
     showSlide: function () {
 
+        $('#122Slide').html(adminDisplayTestPage.buildDisplaySlide(adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex],122));
         $('#245Slide').html(adminDisplayTestPage.buildDisplaySlide(adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex],245));
         $('#490Slide').html(adminDisplayTestPage.buildDisplaySlide(adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex],490));
         $('#980Slide').html(adminDisplayTestPage.buildDisplaySlide(adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex],980));
@@ -80,9 +83,51 @@ var adminDisplayTestPage = {
     },
 
     //******************************************************************************************************************
+    editSlideText: function () {
+
+        $('#textEditBtns').show();
+        $('#editTextBtn').hide();
+
+        $('#490SlideMessage').summernote({
+            focus: true,
+            fontSizes: ['12', '14', '18', '24', '36', '48' , '64', '82'],
+            width: 490,
+            callbacks: {
+                onInit: function() {
+                    //console.log('Summernote is launched');
+                    $('.note-editable').css("background-color", "grey")
+                }
+            },
+            toolbar: [
+                // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                //['height', ['height']],
+                ['para', ['ul', 'ol', 'paragraph']]
+            ]
+        });
+
+        //App.displaymanager3view.setupButtons('editingText');
+
+        //$('#verticalSpacer').show();
+    },
+
+    //******************************************************************************************************************
+    cancelTextEdits: function () {
+        $('#490SlideMessage').summernote('destroy');
+        $('#textEditBtns').hide();
+        $('#editTextBtn').show();
+        $('#490Slide').html(adminDisplayTestPage.buildDisplaySlide(adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex],490));
+
+    },
+
+    //******************************************************************************************************************
     buildDisplaySlide: function(theDisplaySlide, slideWidth){
 
         //screen sizes          display slide size
+        // 0.125    160x90         122x79
         // 0.25x    320x180        245x158
         // 0.5x     640x360        490x316
         // 1x       1280x720       980x632
@@ -112,9 +157,11 @@ var adminDisplayTestPage = {
             replaced = replaced.replace(regexp, 'line-heightS: ' );
         }
 
+        var messageID = slideWidth + 'SlideMessage';
+
         //build the slide HTML
         var slideHTML = '<div class="swiper-slide" style="background-image:url(' + theDisplaySlide.backgroundImageURL + ')">' +
-                            '<div class="swiper-slide-message"   >' +
+                            '<div id="' + messageID + '" class="swiper-slide-message"   >' +
                                 replaced +
                             '</div>' +
                         '</div>';
