@@ -158,6 +158,44 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+
+    saveDisplaySlide: function(theDisplaySlide, callback){
+
+        var params = {
+            TableName: 'iqDisplayMessages',
+            Key: { locationID : theDisplaySlide.locationID, messageID : theDisplaySlide.messageID },
+
+            UpdateExpression: "set message = :message, " +
+            "backgroundImageURL=:backgroundImageURL," +
+            "displayTime=:displayTime",
+            ExpressionAttributeValues:{
+                ":message":theDisplaySlide.message,
+                ":backgroundImageURL":theDisplaySlide.backgroundImageURL,
+                ":displayTime":theDisplaySlide.displayTime
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
+
+            //console.log('tried to update display slide and err= ' + err);
+
+            if (err){
+                //console.log(err);
+                callback(false);
+            }
+            else {
+                //console.log(data);
+                callback(true);
+            }
+        });
+
+
+
+    },
+
+
+
+    //******************************************************************************************************************
     update_iqUsers: function (userDetails, callback) {
         var params = {
             TableName: 'iqUsers',

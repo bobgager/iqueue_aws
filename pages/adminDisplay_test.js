@@ -58,8 +58,7 @@ var adminDisplayTestPage = {
 
         $('#loadingSlidesLabel').fadeOut();
 
-        //show the first slide
-        adminDisplayTestPage.currentIndex = 0;
+        //show the last shown slide
         adminDisplayTestPage.showSlide();
 
     },
@@ -80,6 +79,18 @@ var adminDisplayTestPage = {
         adminDisplayTestPage.currentIndex ++ ;
         if(adminDisplayTestPage.currentIndex > adminDisplayTestPage.theDisplaySlidesArray.length-1){adminDisplayTestPage.currentIndex=0};
         adminDisplayTestPage.showSlide();
+    },
+
+    //******************************************************************************************************************
+    resetSlideText: function () {
+        var theDisplaySlide = {};
+        theDisplaySlide.locationID = adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex].locationID;
+        theDisplaySlide.messageID = adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex].messageID;
+        theDisplaySlide.message = '<div style="text-align: right; color: #ffffff"><span style="font-size: 18px;">This is your New Slide</span></div><div style="text-align: right; color: #ffffff"><span style="font-size: 14px;">Click Edit Text to start customizing it</span></div>';
+        theDisplaySlide.backgroundImageURL = adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex].backgroundImageURL;
+        theDisplaySlide.displayTime = adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex].displayTime;
+
+        awsDynamoDBConnector.saveDisplaySlide(theDisplaySlide, adminDisplayTestPage.slideSaveReturned);
     },
 
     //******************************************************************************************************************
@@ -120,6 +131,37 @@ var adminDisplayTestPage = {
         $('#textEditBtns').hide();
         $('#editTextBtn').show();
         $('#490Slide').html(adminDisplayTestPage.buildDisplaySlide(adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex],490));
+
+    },
+
+    //******************************************************************************************************************
+    saveTextEdits : function () {
+
+        var markup = $('#490SlideMessage').summernote('code');
+
+        //strip any line-height tags that might have been added by the editor
+        for (i = 1; i < 50; i++) {
+            regexp = new RegExp("line-height: " + i,"g");
+            markup = markup.replace(regexp, 'line-heightS: ' );
+        }
+
+        $('#490SlideMessage').summernote('destroy');
+
+        var theDisplaySlide = {};
+        theDisplaySlide.locationID = adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex].locationID;
+        theDisplaySlide.messageID = adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex].messageID;
+        theDisplaySlide.message = markup;
+        theDisplaySlide.backgroundImageURL = adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex].backgroundImageURL;
+        theDisplaySlide.displayTime = adminDisplayTestPage.theDisplaySlidesArray[adminDisplayTestPage.currentIndex].displayTime;
+        awsDynamoDBConnector.saveDisplaySlide(theDisplaySlide, adminDisplayTestPage.slideSaveReturned);
+
+
+    },
+
+    //******************************************************************************************************************
+    slideSaveReturned:function (success) {
+
+        adminDisplayTestPage.render();
 
     },
 

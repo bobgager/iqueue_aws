@@ -11,9 +11,8 @@
 
 <button type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayTestPage.nextSlide()" ><i class="fa fa-forward" ></i> Next Slide </button>
 
-<button type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayTestPage.addNewSlide()"><i class="fa fa-plus" ></i> Add New Slide</button>
+<button type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayTestPage.resetSlideText()"><i class="fa fa-undo" ></i> Reset Slide Text</button>
 
-<button type="button" class="btn btn-sm btn-outline-primary " onclick="adminDisplayTestPage.deleteSlide()"><i class="fa fa-trash" ></i> Delete Slide</button>
 
 
 <br><br>
@@ -27,15 +26,15 @@
 490x316<br>
 <div class="btn-toolbar btn-toolbar-centered" role="toolbar" style="border-top: 2px solid #ebebeb; padding-top: 10px; padding-bottom: 5px">
     <div id="editTextBtn" class="btn-group btn-group-sm" role="group">
-        <button class="btn btn-sm btn-info " onclick="adminDisplayTestPage.editSlideText()">Edit Text</button>
+        <button class="btn btn-sm btn-outline-primary " onclick="adminDisplayTestPage.editSlideText()">Edit Text</button>
     </div>
     <div id="textEditBtns"  class="btn-group btn-group-sm" role="group">
-        <button class="btn btn-sm btn-success" onclick="adminDisplayTestPage.closeTextEditor(true)">Save Changes</button>
-        <button class="btn btn-sm btn-primary" onclick="adminDisplayTestPage.cancelTextEdits()">Cancel Changes</button>
+        <button class="btn btn-sm " onclick="adminDisplayTestPage.cancelTextEdits()">Cancel Changes</button>
+        <button class="btn btn-sm btn-primary" onclick="adminDisplayTestPage.saveTextEdits()">Save Changes</button>
     </div>
 </div>
 
-<div id="490Slide" style="width: 490px; height: 316px; "></div>
+<div id="490Slide" style="width: 490px; height: 316px; " onclick="adminDisplayTestPage.editSlideText()"></div>
 <br>
 980x632<br>
 <div id="980Slide" style="width: 980px; height: 632px"></div>
