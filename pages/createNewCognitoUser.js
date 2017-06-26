@@ -2,7 +2,7 @@
  * Created by bgager on 6/5/17.
  */
 
-var newCognitoUser = {
+var newCognitoUserPage = {
 
     userInformation: {},
     cognitoUser: null,
@@ -12,9 +12,11 @@ var newCognitoUser = {
 
     render: function (user) {
 
-        newCognitoUser.userInformation.role = user.role;
-        newCognitoUser.userInformation.customerID = user.customerID;
-        newCognitoUser.userInformation.guidUserName = user.userGUID;
+        globals.currentPage = 'newCognitoUserPage';
+
+        newCognitoUserPage.userInformation.role = user.role;
+        newCognitoUserPage.userInformation.customerID = user.customerID;
+        newCognitoUserPage.userInformation.guidUserName = user.userGUID;
 
         $('#authenticatedContent').hide().load("pages/createNewCognitoUser.html?version="+ globals.version, function() {
 
@@ -73,11 +75,11 @@ var newCognitoUser = {
 
         utils.activeButton('userAccountCreateBTN','Creating Account');
 
-        newCognitoUser.userInformation.email = $('#signup-email').val();
-        newCognitoUser.userInformation.username = $('#signup-username').val();
-        newCognitoUser.userInformation.password = $('#signup-password').val();
+        newCognitoUserPage.userInformation.email = $('#signup-email').val();
+        newCognitoUserPage.userInformation.username = $('#signup-username').val();
+        newCognitoUserPage.userInformation.password = $('#signup-password').val();
 
-        awsCognitoConnector.registerNewUser(newCognitoUser.userInformation.email, newCognitoUser.userInformation.role, newCognitoUser.userInformation.username, newCognitoUser.userInformation.guidUserName, newCognitoUser.userInformation.password, newCognitoUser.userInformation.customerID, newCognitoUser.registerNewUserReturned);
+        awsCognitoConnector.registerNewUser(newCognitoUserPage.userInformation.email, newCognitoUserPage.userInformation.role, newCognitoUserPage.userInformation.username, newCognitoUserPage.userInformation.guidUserName, newCognitoUserPage.userInformation.password, newCognitoUserPage.userInformation.customerID, newCognitoUserPage.registerNewUserReturned);
 
     },
 
@@ -110,13 +112,13 @@ var newCognitoUser = {
 
         //user created successfully
         //save the cognitio user locally so we can use it later if needed
-        newCognitoUser.cognitoUser = data;
+        newCognitoUserPage.cognitoUser = data;
 
          var newUserHTML = '' +
-            '<span class="text-primary-darkend font-weight-bold">Username:</span><span class="text-primary"> ' + newCognitoUser.userInformation.username + '</span><br>' +
-            '<span class="text-primary-darkend font-weight-bold">Email:</span><span class="text-primary"> ' + newCognitoUser.userInformation.email + '</span>';
+            '<span class="text-primary-darkend font-weight-bold">Username:</span><span class="text-primary"> ' + newCognitoUserPage.userInformation.username + '</span><br>' +
+            '<span class="text-primary-darkend font-weight-bold">Email:</span><span class="text-primary"> ' + newCognitoUserPage.userInformation.email + '</span>';
 
-        $('#content').hide().load("pages/new_account_verification.html", function() {
+        $('#content').hide().load("pages/new_account_verification.html?version=" + globals.version, function() {
 
 
             $('#newAccountInformation').html(newUserHTML);
@@ -145,7 +147,7 @@ var newCognitoUser = {
         utils.activeButton('userAccountVerifyBTN','Verifying Account');
 
         //ok, we have a verfication code so...
-        awsCognitoConnector.verifyNewUser(newCognitoUser.cognitoUser.username, $('#signup-account-verification-code').val(),newCognitoUser.verifyNewUserReturned);
+        awsCognitoConnector.verifyNewUser(newCognitoUserPage.cognitoUser.username, $('#signup-account-verification-code').val(),newCognitoUserPage.verifyNewUserReturned);
 
     },
 
@@ -167,10 +169,10 @@ var newCognitoUser = {
         }
 
         var newUserHTML = '' +
-            '<span class="text-primary-darkend font-weight-bold">Username:</span><span class="text-primary"> ' + newCognitoUser.userInformation.username + '</span><br>' +
-            '<span class="text-primary-darkend font-weight-bold">Email:</span><span class="text-primary"> ' + newCognitoUser.userInformation.email + '</span>';
+            '<span class="text-primary-darkend font-weight-bold">Username:</span><span class="text-primary"> ' + newCognitoUserPage.userInformation.username + '</span><br>' +
+            '<span class="text-primary-darkend font-weight-bold">Email:</span><span class="text-primary"> ' + newCognitoUserPage.userInformation.email + '</span>';
 
-        $('#content').hide().load("pages/new_account_verified.html", function() {
+        $('#content').hide().load("pages/new_account_verified.html?version=" + globals.version, function() {
 
 
             $('#newAccountInformation').html(newUserHTML);
@@ -181,7 +183,7 @@ var newCognitoUser = {
 
     //*****************************************************************************************************************
     resendVerificationCode: function () {
-        awsCognitoConnector.resendVerificationCode(newCognitoUser.cognitoUser, newCognitoUser.verficationCodeSent);
+        awsCognitoConnector.resendVerificationCode(newCognitoUserPage.cognitoUser, newCognitoUserPage.verficationCodeSent);
     },
 
     //*****************************************************************************************************************
@@ -205,6 +207,15 @@ var newCognitoUser = {
 
         };
         modalMessage.showMessage(options);
+
+    },
+
+    //******************************************************************************************************************
+    reloadiQueue: function () {
+
+
+        window.open('index_secure.htm?version=' + globals.version, '_self');
+
 
     }
 

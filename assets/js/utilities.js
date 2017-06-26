@@ -71,6 +71,8 @@ var utils = {
     //******************************************************************************************************************
     writeDebug: function (string,clear) {
 
+        var now = new Date();
+
         if (globals.showDebug){
             $('#debugDIV').show();
         }
@@ -79,10 +81,12 @@ var utils = {
         }
 
         if (clear){
-            $('#debugDIV').html('version = ' + globals.version);
+            $('#debugDIV').html( now.getMinutes() + ':' + now.getSeconds() + ': version = ' + globals.version);
         }
 
-        $('#debugDIV').html($('#debugDIV').html() + '<br>' + string);
+        if (string.length > 0){
+            $('#debugDIV').html($('#debugDIV').html() + '<br>' +  now.getMinutes() + ':' + now.getSeconds() + ': ' + string);
+        }
 
     }
 

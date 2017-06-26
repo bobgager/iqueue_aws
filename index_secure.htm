@@ -15,6 +15,12 @@
     <!-- Font Awesome 4.7.0 via CDN -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+    <!--the swiper css from CDN-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css">
+
+    <!--summernote text editor css-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.css" rel="stylesheet">
+
     <!-- Theme style -->
 <!--    <link href="assets/css/theme-style.min.css" rel="stylesheet">-->
     <link href="assets/css/theme-style.css" rel="stylesheet">
@@ -96,14 +102,17 @@
                         <!--main navigation-->
                         <ul class="nav navbar-nav float-lg-right dropdown-effect-fade">
 
+                            <!-- Dashboard Menu -->
                             <li class="nav-item d-lg-flex dropdown">
                                 <a href="#" class="nav-link " data-toggle="dropdown" data-hover="dropdown" onclick="dashboardPage.render()">Dashboard</a>
                             </li>
 
+                            <!-- Your Queue Menu -->
                             <li class="nav-item d-lg-flex dropdown">
                                 <a href="#" class="nav-link " data-toggle="dropdown" data-hover="dropdown">Your Queue</a>
                             </li>
 
+                            <!-- Reports Menu -->
                             <li class="nav-item d-lg-flex dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">Reports</a>
                                 <!-- Dropdown menu -->
@@ -111,13 +120,49 @@
                                 </div>
                             </li>
 
+                            <!-- Location Menu -->
                             <li class="nav-item d-lg-flex dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">More</a>
+                                <a id="locationMenuHeader" href="#" class="nav-link dropdown-toggle " data-toggle="dropdown" data-hover="dropdown">LOCATION</a>
                                 <!-- Dropdown menu -->
-                                <div id="moreMenu" class="dropdown-menu dropdown-menu-right  dropdown-menu-nobullets">
+                                <div id="locationMenu" class="dropdown-menu dropdown-menu-right dropdown-menu-nobullets" style="min-width: 200px; !important;">
                                 </div>
                             </li>
 
+                            <!-- Admin Menu -->
+                            <li id="admin-dropdown-menu"  class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle " id="admin-drop" data-toggle="dropdown" data-hover="dropdown">Admin</a>
+                                <!-- Menu -->
+                                <div class="dropdown-menu dropdown-menu-nobullets dropdown-menu-right">
+
+                                    <a href="#" class="dropdown-item" ><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> iQueue Setup</a>
+                                    <a href="#" class="dropdown-item" onclick="adminUsersPage.render()"><i class="fa fa-users dropdown-icon" aria-hidden="true"></i> Manage Users</a>
+                                    <a href="#" class="dropdown-item"onclick="adminDisplayPage.render()"><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> Manage Display</a>
+                                    <a href="#" class="dropdown-item"><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> Manage Kiosk</a>
+
+                                </div>
+                            </li>
+
+                            <!-- More Menu -->
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle " id="more-drop" data-toggle="dropdown" data-hover="dropdown">More</a>
+                                <!-- Menu -->
+                                <div id="more-dropdown-menu" class="dropdown-menu dropdown-menu-nobullets dropdown-menu-right">
+
+                                    <div id="launch-dropdown-menu" class="dropdown dropdown-submenu ">
+                                        <a href="#" class="dropdown-item dropdown-toggle" id="launch-drop" data-toggle="dropdown" data-hover="dropdown" data-close-others="false"><i class="fa fa-external-link dropdown-icon" aria-hidden="true"></i> Launch...</a>
+                                        <!-- Dropdown Menu -->
+                                        <div class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="admin-drop">
+                                            <a href="#" class="dropdown-item" ><i class="fa fa-tablet dropdown-icon" aria-hidden="true"></i> Kiosk</a>
+                                            <a href="#" class="dropdown-item" onclick="app.launchDisplay()" ><i class="fa fa-tv dropdown-icon" aria-hidden="true"></i> Display</a>
+                                        </div>
+                                    </div>
+
+                                    <a href="#" class="dropdown-item"><i class="fa fa-info dropdown-icon" aria-hidden="true"></i> What&#39;s New</a>
+
+                                </div>
+                            </li>
+
+                            <!-- User Menu -->
                             <li class="nav-item d-lg-flex dropdown">
                                 <a id="userMenuHeader" href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">User Menu</a>
                                 <!-- Dropdown menu -->
@@ -155,7 +200,7 @@
             </div>
             <div class="form-group">
                 <label for="login-password">Password</label>
-                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="password" id="login-password" class="form-control password" placeholder="Password">
+                <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="password" id="login-password" class="form-control password" placeholder="Password" onkeydown="if(event.keyCode == 13){signIn()}">
             </div>
 
             <div class="float-right">
@@ -204,7 +249,14 @@
             <a href="#top" class="btn btn-icon btn-inverse pos-fixed pos-b pos-r mr-3 mb-3 scroll-state-hidden hidden-md-down" title="Back to top" data-scroll="scroll-state"><i class="fa fa-chevron-up"></i></a>
         </div>
     </div>
-    <div id="debugDIV" class="container">this is where some debug info will go</div>
+
+    <div>
+        <div class="container mt-3 mb-2">
+            <button class="btn btn-sm btn-outline-primary" type="button" onclick="utils.writeDebug('',true)"><i class="fa fa-undo" aria-hidden="true"></i> Clear Debug </button>
+        </div>
+        <div id="debugDIV" class="container">this is where some debug info will go</div>
+    </div>
+
 </footer>
 
 
@@ -314,6 +366,13 @@
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.62.0.min.js"></script>
 
 
+<!--the swiper script from CDN-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.jquery.min.js"></script>
+
+<!--summernote text editor script-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.js"></script>
+
+
 
 <!--Custom scripts mainly used to trigger libraries/plugins -->
 <!--<script src="assets/js/script.min.js"></script>-->
@@ -329,9 +388,13 @@
 
     document.write('<script type="text/javascript"src=" assets/js/AWSCognitoConnector.js?version=' + currentDateTime + '"> <\/script>');
 
+    document.write('<script type="text/javascript"src=" assets/js/AWSsesConnector.js?version=' + currentDateTime + '"> <\/script>');
+
     document.write('<script type="text/javascript"src=" assets/js/utilities.js?version=' + currentDateTime + '"> <\/script>');
 
     document.write('<script type="text/javascript"src=" assets/widgets/ModalMessage.js?version=' + currentDateTime + '"> <\/script>');
+
+    document.write('<script type="text/javascript"src=" assets/widgets/locationManager.js?version=' + currentDateTime + '"> <\/script>');
 
     document.write('<script type="text/javascript"src=" assets/js/index.js?version=' + currentDateTime + '"> <\/script>');
 

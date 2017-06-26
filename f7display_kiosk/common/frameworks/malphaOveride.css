@@ -1,0 +1,46 @@
+
+/*body {
+    background-image: url('../img/app-body-bkgnd.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}*/
+
+.page-bg {
+    background: url("../../display/images/in-line_light.jpg") no-repeat top center/cover transparent;
+    background-color: white;
+}
+.page-index-bg {
+    background: url("../../display/images/in-line.jpg") no-repeat top center/cover transparent;
+    background-color: white;
+}
+
+h1 {
+    font-family: 'robotolight', sans-serif;
+    color: #3483A4;
+}
+
+.navbar {
+    background: #3483A4;
+    color: #ffffff;
+    font-family: 'robotolight', sans-serif;
+    text-transform: none;
+}
+
+.navbar:after {
+    background: #3b3930;
+}
+
+.topInstructionBlock {
+    color: #000000;
+    width: 100%;
+    background-color: white;
+    padding: 5px;
+}
+
+.popover {
+    width: 250px;
+}
+
+.panel .line {
+    background: rgba(0,0,0,.2);
+}

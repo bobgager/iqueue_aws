@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>iQueue Display</title>
+</head>
+<body>
+
+Someday, this will be the Bootstrap 4 iQueue Display
+
+<br>
+For now,
+<br>
+<a id="launchF7DisplayLink" href="#">Launch the Framework7 Display</a>
+
+<br>
+<br>
+<br>
+<div id="debug"></div>
+
+
+<!--jQuery 1.12.4 via CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<!--Custom App Scripts-->
+<script type="text/javascript">
+
+    var currentDateTime = new Date().getTime();
+
+    document.write('<script type="text/javascript"src=" ../assets/js/utilities.js?version=' + currentDateTime + '"> <\/script>');
+
+    function setupLaunchParameters() {
+
+        $('#debug').html('<span style="font-weight: bold">Debug Console</span><br>Reading Launch Parameters<br>');
+
+        var configCode = utils.GetURLParameter('configCode');
+        $('#debug').html( $('#debug').html() + 'configCode= '+ configCode + '<br>');
+
+        var locationCode = utils.GetURLParameter('locationCode');
+        $('#debug').html( $('#debug').html() + 'locationCode= '+ locationCode + '<br>');
+
+        var f7DisplayURL = '../f7display_kiosk/display/display.html?version=' + currentDateTime;
+
+        if (configCode){
+            f7DisplayURL += '&configCode='+ configCode;
+        }
+
+        if (locationCode){
+            f7DisplayURL += '&locationCode='+ locationCode;
+        }
+
+
+        $('#debug').html( $('#debug').html() + 'Setting the Display Launch URL to: '+ f7DisplayURL + '<br>');
+        $('#launchF7DisplayLink').attr("href", f7DisplayURL);
+
+    }
+
+    //******************************************************************************************************************
+
+    $( document ).ready(function() {
+        setupLaunchParameters();
+    });
+
+
+</script>
+
+
+
+
+
+
+</body>
+</html>

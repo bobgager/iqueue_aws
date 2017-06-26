@@ -1,0 +1,65 @@
+
+<!-- We don't need full layout here, because this page will be parsed with Ajax-->
+<!-- Top Navbar-->
+<div class="navbar">
+    <div class="navbar-inner">
+
+        <!--<div class="left"><a href="#" class="back link"> <i class="icon icon-back"></i><span>Back</span></a></div>-->
+
+        <div class="center sliding">iQueue Location Selection</div>
+
+        <div class="right">
+            <a href="#" onclick="app.reloadDisplay()" class="link icon-only" >
+                <span class="topNavBarRightIcon kkicon fa fa-home"></span>
+            </a>
+        </div>
+
+<!--        <div class="right">
+            <a href="#" class="link icon-only open-panel" data-panel="right">
+                <span class="topNavBarRightIcon kkicon fa fa-bars"></span>
+            </a>
+        </div>-->
+
+<!--        &lt;!&ndash; Sub navbar &ndash;&gt;
+        <div class="subnavbar">
+            <div class="text-center subnavbarInstructions" >
+                Please Select A Location
+            </div>
+        </div>-->
+
+    </div>
+</div>
+
+<!-- Pages -->
+<div class="pages">
+    <div class="page navbar-fixed " data-page="home">
+
+        <div id="homePageContent" class="page-content page-bg" >
+
+<!--            <div class="topInstructionBlock text-center">
+                Please Select A Location
+            </div>-->
+
+
+            <div class="max-width-center mt-50">
+
+                <div class="card">
+                    <div  class="card-header">
+                        <div id="home_card_header" class="text-center" style="width: 100%">Please Select A Display Location</div>
+                    </div>
+                    <div class="card-content">
+                        <div id="home_card_content_inner" class="card-content-inner"><i class="fa fa-spin fa-spinner"></i>&nbsp;&nbsp;Fetching Locations</div>
+                    </div>
+<!--                    <div class="card-footer card-footer-with-button">
+                        <div>&lt;!&ndash;an empty div to cause the middle item to be centered&ndash;&gt;</div>
+                        <a href="#" class="card-footer-button"  onclick="homeLocationPage.getInLine()">Get In Line</a>
+                        <div>&lt;!&ndash;an empty div to cause the middle item to be centered&ndash;&gt;</div>
+                    </div>-->
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+

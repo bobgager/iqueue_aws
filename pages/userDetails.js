@@ -9,6 +9,8 @@ var userDetailsPage = {
 
         jPM.close();
 
+        globals.currentPage = 'userDetailsPage';
+
 
         $('#authenticatedContent').hide().load("pages/userDetails.html?version="+ globals.version, function() {
 

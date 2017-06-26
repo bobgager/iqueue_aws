@@ -2,15 +2,18 @@
  * Created by bgager on 5/23/17.
  */
 
-var adminUsers = {
+var adminUsersPage = {
 
     userList: null,
     inviteGUID: null,
+    invitedUserEmail: null,
 
     //******************************************************************************************************************
     render:function () {
 
         jPM.close();
+
+        globals.currentPage = 'adminUsersPage';
 
 
         //fetch the users for this customer
@@ -18,14 +21,14 @@ var adminUsers = {
 
             if(success){
 
-                adminUsers.userList = data;
+                adminUsersPage.userList = data;
 
                 $('#authenticatedContent').hide().load("pages/adminUsers.html?version="+ globals.version, function() {
 
-                    utils.writeDebug('adminUsers Page loaded',false);
+                    utils.writeDebug('adminUsersPage Page loaded',false);
 
                     $('#userList').fadeOut(1);
-                    adminUsers.buildUserList();
+                    adminUsersPage.buildUserList();
 
                 }).fadeIn('1000');
 
@@ -47,7 +50,7 @@ var adminUsers = {
 
         var userListHTML = '';
 
-        adminUsers.userList.forEach(function (user, index) {
+        adminUsersPage.userList.forEach(function (user, index) {
 
             userListHTML += '' +
                 '<div class="team-member">' +
@@ -63,7 +66,15 @@ var adminUsers = {
                             '</h4>' +
                             '<p class="role">' + user.userDetails.role + '</p>' +
                             '<p>' + user.userDetails.email + '</p>' +
-                            '<p>' + user.userDetails.status + '</p>' +
+                            '<p>' + user.userDetails.status + '</p>' ;
+
+            if (user.userDetails.status === 'Invited'){
+                userListHTML += '<button class="btn btn-sm btn-outline-primary" type="button" onclick=" adminUsersPage.invitedUserEmail = &#39;' + user.userDetails.email + '&#39;; adminUsersPage.inviteGUID = &#39;' + user.userGUID + '&#39;; adminUsersPage.sendInvitationEmail(&#39;' + user.userDetails.email + '&#39;)" ><i class="fa fa-send-o" aria-hidden="true"></i> Resend Invitation </button>';
+
+            }
+
+            userListHTML +='' +
+
                         '</div>' +
                     '</div>' +
                 '</div>'
@@ -125,7 +136,7 @@ var adminUsers = {
         }
 
         //check if submitted email has already been used
-        var filtereduserList = adminUsers.userList.filter(function (user) {
+        var filtereduserList = adminUsersPage.userList.filter(function (user) {
             return user.userDetails.email === newUserEmail ;
         });
 
@@ -133,11 +144,11 @@ var adminUsers = {
             //email has not been used
             utils.activeButton('sendInvitationSubmitButton','Sending Invitation');
 
-            adminUsers.inviteGUID = utils.guid();
+            adminUsersPage.inviteGUID = utils.guid();
 
             var userDetails = {
                 customerID: globals.theCustomer.customerID,
-                userGUID:   adminUsers.inviteGUID,
+                userGUID:   adminUsersPage.inviteGUID,
                 email:      newUserEmail,
                 firstName:  newUserFirstName,
                 lastName:   newUserLastName,
@@ -145,7 +156,7 @@ var adminUsers = {
                 status:     'Invited'
             };
 
-            awsDynamoDBConnector.update_iqUsers(userDetails, adminUsers.invitationRecordCreated)
+            awsDynamoDBConnector.update_iqUsers(userDetails, adminUsersPage.invitationRecordCreated)
 
         }
         else {
@@ -167,7 +178,9 @@ var adminUsers = {
         if (success){
             //record created successfully
 
-            adminUsers.sendInvitationEmail($('#newUserEmailInput').val());
+            adminUsersPage.invitedUserEmail = $('#newUserEmailInput').val();
+
+            adminUsersPage.sendInvitationEmail($('#newUserEmailInput').val());
 
             $('#newUserEmailInput').val('');
             $('#newUserFirstNameInput').val('');
@@ -200,7 +213,7 @@ var adminUsers = {
             "<br>" +
             "<br>" +
             "<p>" +
-                'Your iQueue Invitation Code is:<span style="font-weight: bold"> ' + adminUsers.inviteGUID + '</span><br>' +
+                'Your iQueue Invitation Code is:<span style="font-weight: bold"> ' + adminUsersPage.inviteGUID + '</span><br>' +
                 "<br>" +
                 "Please visit <a href='https://d1eoip8vttmfc7.cloudfront.net/index_secure.htm?secret1=" + globals.theCustomer.customerID + "&secret2=invu47'>iQueue</a>  and enter this Invitation Code in the iQueue registration screen." +
             "</p>"
@@ -213,14 +226,34 @@ var adminUsers = {
 
 
 
-        awsSESConnector.sendEmail(to,"You've Been Invited To iQueue", htmlContent, plainContent);
+        awsSESConnector.sendEmail(to,"You've Been Invited To iQueue", htmlContent, plainContent,adminUsersPage.emailSent);
 
+
+
+
+    },
+
+    //******************************************************************************************************************
+    emailSent: function (success, data) {
+
+        if (!success){
+
+            options = {};
+            options.title = 'Email Sending Error';
+            options.message = "Something went wrong while trying to send an Email to " + adminUsersPage.invitedUserEmail + "<br>Click the Resend Invitation button to try again.<br>Error Code:es001<br>" + data ;
+            options.callback = function () {
+                adminUsersPage.render();
+            };
+            modalMessage.showMessage(options);
+
+            return;
+        }
 
         options = {};
-        options.title = to + ' has been invited to iQueue';
-        options.message = "We've sent an Email to " + to + " with instructions on how to access iQueue." ;
+        options.title = adminUsersPage.invitedUserEmail + ' has been invited to iQueue';
+        options.message = "We've sent an Email to " + adminUsersPage.invitedUserEmail + " with instructions on how to access iQueue." ;
         options.callback = function () {
-            adminUsers.render();
+            adminUsersPage.render();
         };
         modalMessage.showMessage(options);
 
