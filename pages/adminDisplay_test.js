@@ -120,9 +120,6 @@ var adminDisplayTestPage = {
             ]
         });
 
-        //App.displaymanager3view.setupButtons('editingText');
-
-        //$('#verticalSpacer').show();
     },
 
     //******************************************************************************************************************
