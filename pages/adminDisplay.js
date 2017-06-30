@@ -4,7 +4,9 @@
 
 var adminDisplayPage = {
 
-    swiper: null,
+    galleryThumbs: null,
+
+
     librarySwiper: null,
 
 
@@ -12,7 +14,7 @@ var adminDisplayPage = {
 
     theBackgroundImageLibraryArray: [],
 
-    lastSlideIndex: 0,
+    currentSlideIndex: 0,
     lastSlideID: null,
 
     newSlideText: '',
@@ -31,36 +33,10 @@ var adminDisplayPage = {
 
             utils.writeDebug('adminDisplay Page loaded',false);
 
-            //remove any swiper handlers that may have been previously set
-            if(adminDisplayPage.swiper){
-                adminDisplayPage.swiper.off('slideChangeEnd');
-            }
+            $('#verticalSpacer').hide('slow');
 
             //setup the proper button configuration
             adminDisplayPage.setupButtons('init');
-
-            //setup the slide swiper
-            adminDisplayPage.swiper = new Swiper('.swiper-container-slides', {
-                pagination: '.swiper-pagination',
-                paginationClickable: true,
-                effect: 'coverflow',
-                grabCursor: false,
-                nextButton: '.swiper-button-next-slides',
-                prevButton: '.swiper-button-prev-slides',
-                centeredSlides: true,
-                slidesPerView: 'auto',
-                coverflow: {
-                    rotate: 40,
-                    stretch: 0,
-                    depth: 100,
-                    modifier: 1,
-                    slideShadows : true
-                }
-            });
-
-            adminDisplayPage.swiper.on('slideChangeEnd', adminDisplayPage.slideChanged);
-
-            adminDisplayPage.swiper.removeAllSlides();
 
             //setup the background image library swiper
             adminDisplayPage.librarySwiper = new Swiper('.swiper-container-library', {
@@ -78,6 +54,26 @@ var adminDisplayPage = {
                     slideShadows : true
                 }
             });
+
+            //remove any swiper handlers that may have been previously set
+            if(adminDisplayPage.galleryThumbs){
+                adminDisplayPage.galleryThumbs.off('slideChangeEnd');
+            }
+
+            adminDisplayPage.galleryThumbs = new Swiper('.gallery-thumbs', {
+                spaceBetween: 10,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                touchRatio: 0.2,
+                slideToClickedSlide: true,
+                nextButton: ".swiper-button-next",
+                prevButton: ".swiper-button-prev"
+            });
+
+            adminDisplayPage.galleryThumbs.on('slideChangeEnd', adminDisplayPage.slideChanged);
+
+
+
 
             //read the list of Display Messages from AWS
             awsDynamoDBConnector.fetchDisplayMessages(globals.theLocation.locationID,adminDisplayPage.displaySlidesReturned);
@@ -163,13 +159,18 @@ var adminDisplayPage = {
     //******************************************************************************************************************
     slideChanged: function(swiper){
 
-        var activeSlide = 0;
+        $('#verticalSpacer').hide('slow');
+
+        var activeSlide = adminDisplayPage.currentSlideIndex;
 
         if(swiper){
             activeSlide = swiper.activeIndex;
+            adminDisplayPage.currentSlideIndex = activeSlide;
+        }
+        else {
+            adminDisplayPage.galleryThumbs.slideTo(activeSlide);
         }
 
-        adminDisplayPage.lastSlideIndex = activeSlide;
 
         //get rid of the text editor if it's open
         $('#slidePreviewText').summernote('destroy');
@@ -212,7 +213,6 @@ var adminDisplayPage = {
 
 
         if(theDisplaySlides.length === 0){
-            adminDisplayPage.swiper.appendSlide('<div class="swiper-slide" ><div class="swiper-slide-message swiper-slide-empty-message">You have not created any Display Slides for this location<br><br>Click the Add New Slide button below to get started.<br></div></div>');
             adminDisplayPage.setupButtons('noSlides');
             $('#slidePreviewText').html("No Display Slides");
             return;
@@ -220,29 +220,20 @@ var adminDisplayPage = {
 
         //build the slides
         for (i = 0; i < theDisplaySlides.length; i++) {
-            adminDisplayPage.swiper.appendSlide(adminDisplayPage.buildDisplaySlide(theDisplaySlides[i],245));
 
-            galleryTop.appendSlide(adminDisplayPage.buildDisplaySlide(theDisplaySlides[i],490));
-            galleryThumbs.appendSlide(adminDisplayPage.buildDisplaySlide(theDisplaySlides[i],245));
+            adminDisplayPage.galleryThumbs.appendSlide(adminDisplayPage.buildDisplaySlide(theDisplaySlides[i],245));
 
 
         }
-
-
 
         //save the slides for later editing
         adminDisplayPage.theDisplaySlidesArray = theDisplaySlides;
 
-        //switch to the last slide that was showing (useful after a Save or new)
-        adminDisplayPage.lastSlideIndex = 0;
-
         for (i = 0; i < theDisplaySlides.length; i++) {
             if(theDisplaySlides[i].messageID === adminDisplayPage.lastSlideID){
-                adminDisplayPage.lastSlideIndex = i;
+                adminDisplayPage.currentSlideIndex = i;
             }
         }
-
-        adminDisplayPage.swiper.slideTo(adminDisplayPage.lastSlideIndex, 1000, true);
 
         adminDisplayPage.slideChanged();
 
@@ -297,6 +288,7 @@ var adminDisplayPage = {
     buildDisplaySlide: function(theDisplaySlide, slideWidth){
 
         //screen sizes          display slide size
+        // 0.125    160x90         122x79
         // 0.25x    320x180        245x158
         // 0.5x     640x360        490x316
         // 1x       1280x720       980x632
@@ -326,11 +318,11 @@ var adminDisplayPage = {
             replaced = replaced.replace(regexp, 'line-heightS: ' );
         }
 
+        var messageID = slideWidth + 'SlideMessage';
 
-        var slideHTML = '';
-
-        slideHTML +=    '<div class="swiper-slide" style="background-image:url(' + theDisplaySlide.backgroundImageURL + ')">' +
-            '<div class="swiper-slide-message"   >' +
+        //build the slide HTML
+        var slideHTML = '<div class="swiper-slide" style="background-image:url(' + theDisplaySlide.backgroundImageURL + ')">' +
+            '<div id="' + messageID + '" class="swiper-slide-message"   >' +
             replaced +
             '</div>' +
             '</div>';
@@ -339,6 +331,79 @@ var adminDisplayPage = {
 
         return(slideHTML);
 
+
+    },
+
+    //******************************************************************************************************************
+    editSlideText: function () {
+
+        $('#verticalSpacer').show('slow');
+
+        adminDisplayPage.setupButtons('editingText');
+
+        $('#slidePreviewText').summernote({
+            focus: true,
+            fontSizes: ['12', '14', '18', '24', '36', '48' , '64', '82'],
+            width: 490,
+            callbacks: {
+                onInit: function() {
+                    //console.log('Summernote is launched');
+                    $('.note-editable').css("background-color", "grey")
+                    //$('.note-editor').css("top", "0px")
+                }
+            },
+            toolbar: [
+                // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                //['height', ['height']],
+                ['para', ['ul', 'ol', 'paragraph']]
+            ]
+        });
+
+    },
+
+    //******************************************************************************************************************
+    cancelTextEdits: function () {
+        $('#verticalSpacer').hide('slow');
+        $('#slidePreviewText').summernote('destroy');
+        adminDisplayPage.setupButtons('normal');
+
+    },
+
+    //******************************************************************************************************************
+    saveTextEdits : function () {
+
+
+        $('#verticalSpacer').hide('slow');
+
+        var markup = $('#slidePreviewText').summernote('code');
+
+        //strip any line-height tags that might have been added by the editor
+        for (i = 1; i < 50; i++) {
+            regexp = new RegExp("line-height: " + i,"g");
+            markup = markup.replace(regexp, 'line-heightS: ' );
+        }
+
+        $('#slidePreviewText').summernote('destroy');
+        adminDisplayPage.setupButtons('normal');
+
+        var theDisplaySlide = {};
+        theDisplaySlide.locationID = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].locationID;
+        theDisplaySlide.messageID = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].messageID;
+        theDisplaySlide.message = markup;
+        theDisplaySlide.backgroundImageURL = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].backgroundImageURL;
+        theDisplaySlide.displayTime = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].displayTime;
+        awsDynamoDBConnector.saveDisplaySlide(theDisplaySlide, adminDisplayPage.slideSaveReturned);
+
+    },
+
+    //******************************************************************************************************************
+    slideSaveReturned:function (success) {
+
+        adminDisplayPage.render();
 
     }
 

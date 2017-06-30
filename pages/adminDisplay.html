@@ -1,8 +1,11 @@
+<button class="btn btn-sm btn-outline-primary" type="button" onclick="adminDisplayTestPage.render()" >Load Display Test Page</button>
+<br><br>
+
 <h4 class="title-divider">
     <span>Manage your <span class="font-weight-normal text-muted"><span id="pageLocationLabel"></span>iQueue Display Slides</span></span>
 </h4>
 
-<button class="btn btn-sm btn-outline-primary" type="button" onclick="adminDisplayTestPage.render()" >Load Display Test Page</button>
+
 
 
 
@@ -12,22 +15,23 @@
     <h1 id="loadingSlidesLabel"  class="text-center text-primary" ><i class="fa fa-spin fa-spinner"></i> Loading iQueue Display Slides</h1>
 
 
-    <div class="btn-toolbar btn-toolbar-centered" role="toolbar" style="border-top: 2px solid #ebebeb; padding-top: 10px; padding-bottom: 5px">
+
+    <div class="btn-toolbar row justify-content-center" role="toolbar" style="border-top: 2px solid #ebebeb; padding-top: 10px; padding-bottom: 5px">
         <div id="editTextBtn" class="btn-group btn-group-sm" role="group">
-            <button class="btn btn-sm btn-info " onclick="adminDisplayPage.editSlideText()">Edit Text</button>
+            <button class="btn btn-sm btn-outline-primary " onclick="adminDisplayPage.editSlideText()">Edit Text</button>
         </div>
         <div id="textEditBtns"  class="btn-group btn-group-sm" role="group">
-            <button class="btn btn-sm btn-success" onclick="adminDisplayPage.closeTextEditor(true)">Save Changes</button>
-            <button class="btn btn-sm btn-primary" onclick="adminDisplayPage.closeTextEditor(false)">Cancel Changes</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.saveTextEdits()">Save Changes</button>
+            <button class="btn btn-sm btn-primary" onclick="adminDisplayPage.cancelTextEdits()">Cancel Changes</button>
         </div>
 
         <div id="changeBkgndBtn" class="btn-group btn-group-sm" role="group">
-            <button type="button" class="btn btn-sm btn-info" onclick="adminDisplayPage.showImagePicker()">Change Background</button>
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.showImagePicker()">Change Background</button>
         </div>
 
         <!--see http://bootsnipp.com/snippets/featured/multi-level-dropdown-menu-bs3-->
         <div id="moreBtn" class="dropdown btn-group btn-group-sm"  role="group">
-            <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-info" data-target="#" href="/page.html">
+            <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-outline-primary" data-target="#" href="/page.html">
                 Duration <span class="caret"></span>
             </a>
             <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
@@ -43,30 +47,41 @@
         </div>
 
         <div id="deleteSlideBtn" class="btn-group btn-group-sm" role="group">
-            <button class="btn btn-sm btn-danger " onclick="adminDisplayPage.deleteSlide()">Delete Slide</button>
+            <button class="btn btn-sm btn-outline-primary " onclick="adminDisplayPage.deleteSlide()">Delete Slide</button>
         </div>
         <div id="deleteSlideConfirmBtn" >
             <div class="h4">
                 Are you sure you want to delete this slide?
             </div>
             <div class="btn-group btn-group-sm" role="group">
-                <button class="btn btn-sm btn-danger " onclick="var messageID = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.lastSlideIndex].messageID; awsConnector.deleteDisplaySlide(messageID, adminDisplayPage.render);">Delete Slide</button>
+                <button class="btn btn-sm btn-danger " onclick="var messageID = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].messageID; awsConnector.deleteDisplaySlide(messageID, adminDisplayPage.render);">Delete Slide</button>
                 <button class="btn btn-sm btn-primary " onclick="adminDisplayPage.setupButtons('normal');">Cancel</button>
             </div>
         </div>
 
         <div id="newSlideBtn" class="btn-group btn-group-sm" role="group">
-            <button type="button" class="btn btn-sm btn-success" onclick="adminDisplayPage.addNewSlide();">Add New Slide</button>
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.addNewSlide();">Add New Slide</button>
         </div>
 
 
     </div>
 
-    <!-- Swiper -->
-    <div class="swiper-container swiper-container-top gallery-top">
-        <div class="swiper-wrapper ">
+    <div id="verticalSpacer" style="height: 40px"></div>
+
+    <div id="singleSlideDiv" class="row justify-content-center" >
+
+
+
+        <div id="slidePreviewContainer" class="slidePreviewContainer" >
+            <div id="slidePreviewImage" class="slidePreviewImage"></div>
+            <div id="slidePreviewText" class="slidePreviewText"  onclick="adminDisplayPage.editSlideText()">Loading Slides</div>
         </div>
+
+
+
     </div>
+
+
     <div class="swiper-container swiper-container-thumbs gallery-thumbs">
         <div class="swiper-wrapper">
         </div>
@@ -76,85 +91,14 @@
     </div>
 
 
-    <script>
-        var galleryTop = new Swiper('.gallery-top', {
-            nextButton: '.swiper-button-next',
-            prevButton: '.swiper-button-prev',
-            spaceBetween: 10,
-        });
-        var galleryThumbs = new Swiper('.gallery-thumbs', {
-            spaceBetween: 10,
-            centeredSlides: true,
-            slidesPerView: 'auto',
-            touchRatio: 0.2,
-            slideToClickedSlide: true
-        });
-        galleryTop.params.control = galleryThumbs;
-        galleryThumbs.params.control = galleryTop;
-
-    </script>
 
 
 
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
 
-    <div class="swiper-container swiper-container-slides">
-        <div class="swiper-wrapper">
-        </div>
-        <!-- Add Pagination -->
-        <div class="swiper-pagination"></div>
-        <!-- Add Arrows -->
-        <div class="swiper-button-next swiper-button-next-slides"></div>
-        <div class="swiper-button-prev swiper-button-prev-slides"></div>
-    </div>
+    <div id="singleSlideDiv_old" class="row justify-content-center" >
 
 
-
-
-    <style>
-        .slidePreviewContainer {
-            position: relative;
-            width: 100%;
-            padding-top: 10px;
-            padding-bottom: 50px;
-        }
-        .slidePreviewImage {
-            background-position: center;
-            background-size: cover;
-            width: 490px;
-            height: 316px;
-        }
-
-        .slidePreviewText {
-            position: relative;
-            top: -316px;
-            width: 490px;
-            padding: 10px;
-            color: #000000;
-            background-color: rgba(0, 0, 0, 0.60);
-        }
-        .note-editor {
-            position: relative;
-            top: -356px;
-            margin: auto;
-        }
-
-    </style>
-
-    <div id="singleSlideDiv" style="position: relative ">
-
-        <div id="slidePreviewContainer" class="slidePreviewContainer swing swingShow">
-            <div id="verticalSpacer" style="height: 40px"></div>
-            <div id="slidePreviewImage" src="" class="slidePreviewImage center-block " ></div>
-            <div id="slidePreviewText"  class=" slidePreviewText center-block" onclick="adminDisplayPage.editSlideText()">Loading Slides</div>
-        </div>
 
 
         <div id="awsImageManager" class="awsImageManager swing"  >
