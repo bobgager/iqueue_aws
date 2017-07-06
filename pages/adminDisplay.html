@@ -91,6 +91,39 @@
     </div>
 
 
+    <div id="slideBackgroundPicker" class="slideBackgroundPicker" >
+
+        <h4 class="text-center">Change Background Image</h4>
+
+        <div class="swiper-container swiper-container-library" style="padding-bottom: 10px">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/1)"></div>
+            </div>
+            <!-- Add Arrows -->
+            <div  class="swiper-button-next swiper-button-next-library"></div>
+            <div  class="swiper-button-prev swiper-button-prev-library"></div>
+        </div>
+
+        <div class="btn-toolbar btn-toolbar-centered" role="toolbar">
+
+            <div class="btn-group btn-group-sm" role="group" >
+                <button id="displayUploadImageBTN" type="button" class="btn btn-info" onclick="$('#nonJPEGErrorMessage').addClass('hidden'); $('#largeFileErrorMessage').addClass('hidden'); $('#uploadNewOverlay').addClass('swingShow');">Upload New</button>
+            </div>
+            <div class="btn-group btn-group-sm" role="group" >
+                <button id="displaySelectImageBTN" type="button" class="btn btn-success" onclick="adminDisplayPage.newBackgroundSlideSelected()">Select</button>
+                <button id="displayCancelImageBTN" type="button" class="btn btn-primary" onclick="$('#awsImageManager').removeClass('swingShow'); $('#slidePreviewContainer').addClass('swingShow'); adminDisplayPage.setupButtons('normal');">Cancel</button>
+            </div>
+            <div class="btn-group btn-group-sm" role="group" >
+                <button id="displayDeleteImageBTN" type="button" class="btn btn-danger" onclick="adminDisplayPage.backgroundSlideDelete()">Delete</button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
 
 
 
@@ -101,36 +134,10 @@
 
 
 
-        <div id="awsImageManager" class="awsImageManager swing"  >
-            <h4 class="text-center">Change Background Image</h4>
+        <div id="awsImageManager" class="awsImageManager"  >
 
-            <div>
 
-                <div class="swiper-container swiper-container-library" style="padding-bottom: 10px">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/1)"></div>
-                    </div>
-                    <!-- Add Arrows -->
-                    <div  class="swiper-button-next swiper-button-next-library"></div>
-                    <div  class="swiper-button-prev swiper-button-prev-library"></div>
-                </div>
 
-                <div class="btn-toolbar btn-toolbar-centered" role="toolbar">
-
-                    <div class="btn-group btn-group-sm" role="group" >
-                        <button id="displayUploadImageBTN" type="button" class="btn btn-info" onclick="$('#nonJPEGErrorMessage').addClass('hidden'); $('#largeFileErrorMessage').addClass('hidden'); $('#uploadNewOverlay').addClass('swingShow');">Upload New</button>
-                    </div>
-                    <div class="btn-group btn-group-sm" role="group" >
-                        <button id="displaySelectImageBTN" type="button" class="btn btn-success" onclick="adminDisplayPage.newBackgroundSlideSelected()">Select</button>
-                        <button id="displayCancelImageBTN" type="button" class="btn btn-primary" onclick="$('#awsImageManager').removeClass('swingShow'); $('#slidePreviewContainer').addClass('swingShow'); adminDisplayPage.setupButtons('normal');">Cancel</button>
-                    </div>
-                    <div class="btn-group btn-group-sm" role="group" >
-                        <button id="displayDeleteImageBTN" type="button" class="btn btn-danger" onclick="adminDisplayPage.backgroundSlideDelete()">Delete</button>
-                    </div>
-
-                </div>
-
-            </div>
 
             <div id="confirmOverlay" class="display-delete-dialog-backdrop swing" >
 

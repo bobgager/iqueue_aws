@@ -55,6 +55,9 @@ var adminDisplayPage = {
                 }
             });
 
+            //hide the background picker
+            //$('#slideBackgroundPicker').hide();
+
             //remove any swiper handlers that may have been previously set
             if(adminDisplayPage.galleryThumbs){
                 adminDisplayPage.galleryThumbs.off('slideChangeEnd');
@@ -73,8 +76,6 @@ var adminDisplayPage = {
             adminDisplayPage.galleryThumbs.on('slideChangeEnd', adminDisplayPage.slideChanged);
 
 
-
-
             //read the list of Display Messages from AWS
             awsDynamoDBConnector.fetchDisplayMessages(globals.theLocation.locationID,adminDisplayPage.displaySlidesReturned);
 
@@ -85,6 +86,8 @@ var adminDisplayPage = {
 
 
         }).fadeIn('1000');
+
+
 
     },
 
@@ -404,6 +407,15 @@ var adminDisplayPage = {
     slideSaveReturned:function (success) {
 
         adminDisplayPage.render();
+
+    },
+
+    //******************************************************************************************************************
+    showImagePicker: function () {
+
+        //show the background picker
+        $('#slideBackgroundPicker').fadeIn();
+
 
     }
 

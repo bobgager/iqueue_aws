@@ -1,5 +1,5 @@
 /*/////////////////////////////////////////////////////////////////////
- // 
+ //
  // Custom theme code styles
  // Written by Themelize.me (http://themelize.me)
  // 
@@ -155,6 +155,8 @@
     min-width: 150px; !important;
 }
 
+/*CSS for Display Slide Admin Page Components*/
+
 .swiper-container {
     width: 100%;
     padding-top: 10px;
@@ -207,7 +209,6 @@
     width: 100%;
     font-size: 12px;
 }
-
 
 .swiper-container-top {
     height: 316px;
@@ -267,4 +268,12 @@
     position: relative;
     top: -356px;
     margin: auto;
+}
+
+.slideBackgroundPicker {
+    background-color: blue;
+    position: absolute;
+    top: 150px;
+    left: 0px;
+    width: 100%;
 }
