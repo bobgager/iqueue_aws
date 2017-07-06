@@ -43,7 +43,7 @@ var adminDisplayTestPage = {
 
     //******************************************************************************************************************
     displaySlidesReturned: function(success, theDisplaySlides){
-        //if success =  false, it means there was an error communicating with the cloud. The Error information wil be in theDisplaySlides
+        //if success =  false, it means there was an error communicating with the cloud. The Error information will be in theDisplaySlides
 
         if(!success){
 
@@ -166,7 +166,7 @@ var adminDisplayTestPage = {
     buildDisplaySlide: function(theDisplaySlide, slideWidth){
 
         //screen sizes          display slide size
-        // 0.125    160x90         122x79
+        // 0.125x   160x90         122x79
         // 0.25x    320x180        245x158
         // 0.5x     640x360        490x316
         // 1x       1280x720       980x632
@@ -174,34 +174,17 @@ var adminDisplayTestPage = {
         // 2x       2560x1440      1960x1264
 
 
-        //modify the font sizes to fit the specified width
-
+        //calculate the slide scaling factor
         var scaleFactor = slideWidth/490;
-
-
-        var replaced = theDisplaySlide.message;
-
-        for (var i = 10; i < 100; i++) {
-            var regexp = new RegExp("font-size: " + i + "px","g");
-            replaced = replaced.replace(regexp, 'font-size: '+ i*scaleFactor + 'Spx');
-        }
-
-
-        replaced = replaced.replace(/Spx/g, 'px');
-
-
-        //strip any line-height tags that might be in the message HTML
-        for (i = 1; i < 50; i++) {
-            regexp = new RegExp("line-height: " + i,"g");
-            replaced = replaced.replace(regexp, 'line-heightS: ' );
-        }
 
         var messageID = slideWidth + 'SlideMessage';
 
-        //build the slide HTML
-        var slideHTML = '<div class="swiper-slide" style="background-image:url(' + theDisplaySlide.backgroundImageURL + ')">' +
+
+        //build the slide HTML, scaling size by the 490px slide
+        ////transform-origin may be changed depending on the desired rendering of the slide////
+        var slideHTML = '<div class="swiper-slide" style="background-image:url(' + theDisplaySlide.backgroundImageURL + ');transform: scale(' + scaleFactor + ', ' + scaleFactor + ');transform-origin: top left>' +
                             '<div id="' + messageID + '" class="swiper-slide-message"   >' +
-                                replaced +
+                                theDisplaySlide.message +
                             '</div>' +
                         '</div>';
 
