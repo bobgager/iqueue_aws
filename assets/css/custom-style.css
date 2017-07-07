@@ -271,9 +271,10 @@
 }
 
 .slideBackgroundPicker {
-    background-color: blue;
+    /*background-color: blue;*/
     position: absolute;
     top: 150px;
     left: 0px;
     width: 100%;
+    opacity: 0;
 }

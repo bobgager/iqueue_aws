@@ -52,7 +52,8 @@ var adminDisplayPage = {
                     depth: 100,
                     modifier: 1,
                     slideShadows : true
-                }
+                },
+                onInit: adminDisplayPage.librarySwiperInitialized
             });
 
             //hide the background picker
@@ -110,6 +111,7 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').hide('slow');
                 $('#moreBtn').show('slow');
                 $('#newSlideBtn').show('slow');
+                $('#backgroundPickerButtons').hide('slow');
                 break;
             case 'editingText':
                 $('#editTextBtn').hide('slow');
@@ -119,6 +121,7 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').hide('slow');
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
+                $('#backgroundPickerButtons').hide('slow');
                 break;
             case 'changingBackground':
                 $('#editTextBtn').hide('slow');
@@ -128,6 +131,7 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').hide('slow');
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
+                $('#backgroundPickerButtons').show('slow');
                 break;
             case 'confirmDelete':
                 $('#editTextBtn').hide('slow');
@@ -137,6 +141,7 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').show('slow');
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
+                $('#backgroundPickerButtons').hide('slow');
                 break;
             case 'noSlides':
                 $('#editTextBtn').hide('slow');
@@ -146,6 +151,7 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').hide('slow');
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').show('slow');
+                $('#backgroundPickerButtons').hide('slow');
                 break;
             default:
                 $('#editTextBtn').show();
@@ -155,6 +161,7 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').hide();
                 $('#moreBtn').show();
                 $('#newSlideBtn').show();
+                $('#backgroundPickerButtons').hide('slow');
         }
 
     },
@@ -413,10 +420,33 @@ var adminDisplayPage = {
     //******************************************************************************************************************
     showImagePicker: function () {
 
+        adminDisplayPage.setupButtons('changingBackground');
+
+        //hide the slide swiper
+        $('#liveSlidesDiv').fadeOut();
+
         //show the background picker
+        $('#slideBackgroundPicker').fadeTo(1000, 1); //in case it still has the default opacity of 0
         $('#slideBackgroundPicker').fadeIn();
 
+    },
 
+    //******************************************************************************************************************
+    cancelBackgroundChange: function () {
+
+        adminDisplayPage.setupButtons('normal');
+
+        //hide the background picker
+        $('#slideBackgroundPicker').fadeOut();
+
+        //show the slide swiper
+        $('#liveSlidesDiv').fadeIn();
+
+    },
+
+    //******************************************************************************************************************
+    librarySwiperInitialized: function (swiper) {
+        //$('#slideBackgroundPicker').fadeOut();
     }
 
     //******************************************************************************************************************

@@ -6,20 +6,16 @@
 </h4>
 
 
-
-
-
-
 <div id="slidePanels3Div">
 
     <h1 id="loadingSlidesLabel"  class="text-center text-primary" ><i class="fa fa-spin fa-spinner"></i> Loading iQueue Display Slides</h1>
 
-
-
     <div class="btn-toolbar row justify-content-center" role="toolbar" style="border-top: 2px solid #ebebeb; padding-top: 10px; padding-bottom: 5px">
+
         <div id="editTextBtn" class="btn-group btn-group-sm" role="group">
             <button class="btn btn-sm btn-outline-primary " onclick="adminDisplayPage.editSlideText()">Edit Text</button>
         </div>
+
         <div id="textEditBtns"  class="btn-group btn-group-sm" role="group">
             <button class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.saveTextEdits()">Save Changes</button>
             <button class="btn btn-sm btn-primary" onclick="adminDisplayPage.cancelTextEdits()">Cancel Changes</button>
@@ -49,6 +45,7 @@
         <div id="deleteSlideBtn" class="btn-group btn-group-sm" role="group">
             <button class="btn btn-sm btn-outline-primary " onclick="adminDisplayPage.deleteSlide()">Delete Slide</button>
         </div>
+
         <div id="deleteSlideConfirmBtn" >
             <div class="h4">
                 Are you sure you want to delete this slide?
@@ -63,73 +60,75 @@
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.addNewSlide();">Add New Slide</button>
         </div>
 
+        <div id="backgroundPickerButtons">
+
+            <div class="btn-group btn-group-sm" role="group" >
+                <button id="displayUploadImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="$('#nonJPEGErrorMessage').addClass('hidden'); $('#largeFileErrorMessage').addClass('hidden'); $('#uploadNewOverlay').addClass('swingShow');">Upload New</button>
+            </div>
+            <div class="btn-group btn-group-sm" role="group" >
+                <button id="displaySelectImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.newBackgroundSlideSelected()">Select</button>
+                <button id="displayCancelImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.cancelBackgroundChange(); ">Cancel</button>
+            </div>
+            <div class="btn-group btn-group-sm" role="group" >
+                <button id="displayDeleteImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.backgroundSlideDelete()">Delete</button>
+            </div>
+
+        </div>
+
 
     </div>
 
     <div id="verticalSpacer" style="height: 40px"></div>
 
-    <div id="singleSlideDiv" class="row justify-content-center" >
+    <div id="liveSlidesDiv">
 
 
 
-        <div id="slidePreviewContainer" class="slidePreviewContainer" >
-            <div id="slidePreviewImage" class="slidePreviewImage"></div>
-            <div id="slidePreviewText" class="slidePreviewText"  onclick="adminDisplayPage.editSlideText()">Loading Slides</div>
+        <div id="singleSlideDiv" class="row justify-content-center" >
+
+            <div id="slidePreviewContainer" class="slidePreviewContainer" >
+                <div id="slidePreviewImage" class="slidePreviewImage"></div>
+                <div id="slidePreviewText" class="slidePreviewText"  onclick="adminDisplayPage.editSlideText()">Loading Slides</div>
+            </div>
+
         </div>
 
 
+        <div class="swiper-container swiper-container-thumbs gallery-thumbs">
+            <div class="swiper-wrapper">
+            </div>
+            <!-- Add Arrows -->
+            <div class="swiper-button-next swiper-button-black"></div>
+            <div class="swiper-button-prev swiper-button-black"></div>
+        </div>
 
     </div>
 
 
-    <div class="swiper-container swiper-container-thumbs gallery-thumbs">
-        <div class="swiper-wrapper">
-        </div>
-        <!-- Add Arrows -->
-        <div class="swiper-button-next swiper-button-black"></div>
-        <div class="swiper-button-prev swiper-button-black"></div>
-    </div>
 
 
     <div id="slideBackgroundPicker" class="slideBackgroundPicker" >
 
-        <h4 class="text-center">Change Background Image</h4>
-
         <div class="swiper-container swiper-container-library" style="padding-bottom: 10px">
             <div class="swiper-wrapper">
-                <div class="swiper-slide" style="background-image:url(http://lorempixel.com/600/600/nature/1)"></div>
+                <div class="swiper-slide" ></div>
             </div>
             <!-- Add Arrows -->
             <div  class="swiper-button-next swiper-button-next-library"></div>
             <div  class="swiper-button-prev swiper-button-prev-library"></div>
         </div>
 
-        <div class="btn-toolbar btn-toolbar-centered" role="toolbar">
-
-            <div class="btn-group btn-group-sm" role="group" >
-                <button id="displayUploadImageBTN" type="button" class="btn btn-info" onclick="$('#nonJPEGErrorMessage').addClass('hidden'); $('#largeFileErrorMessage').addClass('hidden'); $('#uploadNewOverlay').addClass('swingShow');">Upload New</button>
-            </div>
-            <div class="btn-group btn-group-sm" role="group" >
-                <button id="displaySelectImageBTN" type="button" class="btn btn-success" onclick="adminDisplayPage.newBackgroundSlideSelected()">Select</button>
-                <button id="displayCancelImageBTN" type="button" class="btn btn-primary" onclick="$('#awsImageManager').removeClass('swingShow'); $('#slidePreviewContainer').addClass('swingShow'); adminDisplayPage.setupButtons('normal');">Cancel</button>
-            </div>
-            <div class="btn-group btn-group-sm" role="group" >
-                <button id="displayDeleteImageBTN" type="button" class="btn btn-danger" onclick="adminDisplayPage.backgroundSlideDelete()">Delete</button>
-            </div>
-
-        </div>
-
     </div>
 
 
 
 
 
+    <div  style="height: 400px"></div>
 
 
 
-
-    <div id="singleSlideDiv_old" class="row justify-content-center" >
+    <div id="singleSlideDiv_old" class="row justify-content-center" style="background-color: red" >
 
 
 
