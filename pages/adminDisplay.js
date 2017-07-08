@@ -52,8 +52,7 @@ var adminDisplayPage = {
                     depth: 100,
                     modifier: 1,
                     slideShadows : true
-                },
-                onInit: adminDisplayPage.librarySwiperInitialized
+                }
             });
 
             //hide the background picker
@@ -432,7 +431,7 @@ var adminDisplayPage = {
     },
 
     //******************************************************************************************************************
-    cancelBackgroundChange: function () {
+    hideImagePicker: function () {
 
         adminDisplayPage.setupButtons('normal');
 
@@ -445,8 +444,138 @@ var adminDisplayPage = {
     },
 
     //******************************************************************************************************************
-    librarySwiperInitialized: function (swiper) {
-        //$('#slideBackgroundPicker').fadeOut();
+    newBackgroundSlideSelected: function(){
+
+        adminDisplayPage.hideImagePicker();
+
+        var slideIndex = adminDisplayPage.librarySwiper.activeIndex;
+        var activeSlide = adminDisplayPage.currentSlideIndex ;
+
+        adminDisplayPage.theDisplaySlidesArray[activeSlide].backgroundImageURL= adminDisplayPage.theBackgroundImageLibraryArray[slideIndex].url;
+
+        awsDynamoDBConnector.saveDisplaySlide(adminDisplayPage.theDisplaySlidesArray[activeSlide], adminDisplayPage.slideSaveReturned);
+
+    },
+
+    //******************************************************************************************************************
+    uploadNewBackgroundStart: function () {
+       $('#upload-new-background-modal').modal();
+        $('#largeFileErrorMessage').hide();
+        $('#nonJPEGErrorMessage').hide();
+        $('#backgroundUploadProgressbar').hide();
+        $('#backgroundUploadButtons').show();
+    },
+
+    //******************************************************************************************************************
+    uploadNew: function(){
+
+        $('#largeFileErrorMessage').hide();
+        $('#nonJPEGErrorMessage').hide();
+        $('#backgroundUploadProgressbar').hide();
+
+        var fileChooser = document.getElementById('file-chooser');
+
+        var file = fileChooser.files[0];
+
+        if(file){
+
+            var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
+
+            var fileName = file.name;
+            var fileType = file.type;
+            var fileSize = file.size;
+
+            if(fileType != 'image/jpeg'){
+                //it's not a jpeg file
+                $('#nonJPEGErrorMessage').show();
+                return;
+            }
+
+            if(fileSize > 1000000){
+                //the file is too large
+                $('#largeFileErrorMessage').show();
+                return;
+            }
+
+            fileName = utils.guid()+ '.jpg';
+
+            AWSS3.s3UploadFile(bucketName, fileName, file, adminDisplayPage.uploadComplete);
+
+            $('#backgroundUploadProgressbar').show();
+            $('#backgroundUploadButtons').hide();
+
+        }
+
+    },
+
+    //******************************************************************************************************************
+    uploadComplete: function(results){
+        console.log('Upload Complete with Results = ' + results);
+
+        //reload the images
+
+        //read the list of images in the S3 Display Bucket for this location
+        var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
+
+        awsDynamoDBConnector.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
+
+        //hide the upload dialog
+        $('#upload-new-background-modal').modal('hide');
+
+    },
+
+    //******************************************************************************************************************
+    backgroundSlideDelete: function(){
+        var slideIndex = adminDisplayPage.librarySwiper.activeIndex;
+        var theURL = adminDisplayPage.theBackgroundImageLibraryArray[slideIndex].url;
+
+        //figure out if the image is being used in a slide
+        var imageUsed = false;
+        adminDisplayPage.theDisplaySlidesArray.forEach(function(slide){
+            if(slide.backgroundImageURL === theURL){
+                //slide is being used
+                imageUsed = true;
+            }
+        });
+
+        if(imageUsed){
+            var options = {};
+            options.title = 'Sorry!';
+            options.message = "That image cannot be deleted as it is being used in one or more of your slides.<br>Please remove it from all your slides and try again.";
+
+            modalMessage.showMessage(options);
+            return;
+        }
+
+        $('#imageToDelete').css('background-image','url('+ theURL +')');
+
+        //show the confirm dialog
+        $('#confirm-delete-modal').modal();
+
+    },
+
+    //******************************************************************************************************************
+    deleteBackgroundConfirmed: function(){
+
+        //hide the confirm dialog
+        $('#confirm-delete-modal').modal('hide');
+
+        var slideIndex = adminDisplayPage.librarySwiper.activeIndex;
+        var theKey = adminDisplayPage.theBackgroundImageLibraryArray[slideIndex].Key;
+        var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
+
+        AWSS3.s3DeleteObject(bucketName, theKey, adminDisplayPage.deleteBackgroundComplete);
+
+    },
+
+    //******************************************************************************************************************
+    deleteBackgroundComplete: function(){
+
+        //reload the images
+        //read the list of images in the S3 Display Bucket for this location
+        var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
+
+        awsDynamoDBConnector.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
     }
 
     //******************************************************************************************************************

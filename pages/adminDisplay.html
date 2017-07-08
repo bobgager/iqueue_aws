@@ -6,11 +6,11 @@
 </h4>
 
 
-<div id="slidePanels3Div">
+<div>
 
     <h1 id="loadingSlidesLabel"  class="text-center text-primary" ><i class="fa fa-spin fa-spinner"></i> Loading iQueue Display Slides</h1>
 
-    <div class="btn-toolbar row justify-content-center" role="toolbar" style="border-top: 2px solid #ebebeb; padding-top: 10px; padding-bottom: 5px">
+    <div class="btn-toolbar row justify-content-center" role="toolbar" style="border-top: 1px solid #ebebeb; padding-top: 10px; padding-bottom: 5px">
 
         <div id="editTextBtn" class="btn-group btn-group-sm" role="group">
             <button class="btn btn-sm btn-outline-primary " onclick="adminDisplayPage.editSlideText()">Edit Text</button>
@@ -63,11 +63,11 @@
         <div id="backgroundPickerButtons">
 
             <div class="btn-group btn-group-sm" role="group" >
-                <button id="displayUploadImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="$('#nonJPEGErrorMessage').addClass('hidden'); $('#largeFileErrorMessage').addClass('hidden'); $('#uploadNewOverlay').addClass('swingShow');">Upload New</button>
+                <button id="displayUploadImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.uploadNewBackgroundStart()">Upload New</button>
             </div>
             <div class="btn-group btn-group-sm" role="group" >
                 <button id="displaySelectImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.newBackgroundSlideSelected()">Select</button>
-                <button id="displayCancelImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.cancelBackgroundChange(); ">Cancel</button>
+                <button id="displayCancelImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.hideImagePicker(); ">Cancel</button>
             </div>
             <div class="btn-group btn-group-sm" role="group" >
                 <button id="displayDeleteImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.backgroundSlideDelete()">Delete</button>
@@ -75,14 +75,11 @@
 
         </div>
 
-
     </div>
 
     <div id="verticalSpacer" style="height: 40px"></div>
 
     <div id="liveSlidesDiv">
-
-
 
         <div id="singleSlideDiv" class="row justify-content-center" >
 
@@ -93,7 +90,6 @@
 
         </div>
 
-
         <div class="swiper-container swiper-container-thumbs gallery-thumbs">
             <div class="swiper-wrapper">
             </div>
@@ -103,9 +99,6 @@
         </div>
 
     </div>
-
-
-
 
     <div id="slideBackgroundPicker" class="slideBackgroundPicker" >
 
@@ -121,98 +114,90 @@
     </div>
 
 
+    <!--Hidden elements - excluded from jPanel Menu on mobile-->
+    <div class="hidden-elements jpanel-menu-exclude">
 
-
-
-    <div  style="height: 400px"></div>
-
-
-
-    <div id="singleSlideDiv_old" class="row justify-content-center" style="background-color: red" >
-
-
-
-
-        <div id="awsImageManager" class="awsImageManager"  >
-
-
-
-
-            <div id="confirmOverlay" class="display-delete-dialog-backdrop swing" >
-
-                <div id="cannotDeleteImagePanel" class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title text-center">This image cannot be deleted because it is being used in one of your Display Slides</h3>
+        <!--@modal - upload new image modal-->
+        <div class="modal fade" id="upload-new-background-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            Upload New Background
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     </div>
-                    <div class="panel-body">
-                        <div class="text-center">
-                            Remove it from all slides and then try again
-                        </div>
-                    </div>
-                    <div class="panel-footer" style="height: 50px;">
-                        <div class="pull-right">
-                            <button id="cannotDeleteOKBTN" type="button" class="btn btn-sm btn-primary " onclick="$('#confirmOverlay').removeClass('swingShow');" >OK</button>
-                        </div>
+
+                    <div class="modal-body">
+
+                                <div>
+                                    Backgrounds must be:
+                                    <ul type="circle">
+                                        <li>JPEG (.jpg) format</li>
+                                        <li>Smaller than 1MB</li>
+                                        <li>Suggested dimensions: 1470 pixels wide x 948 pixels high</li>
+                                    </ul>
+                                    <input type="file" id="file-chooser" accept="image/jpeg" onclick="$('#largeFileErrorMessage').hide();$('#nonJPEGErrorMessage').hide();" />
+                                    <div id="largeFileErrorMessage"  style="color: red">Your file is too large. It must be smaller than 1MB.</div>
+                                    <div id="nonJPEGErrorMessage"  style="color: red">Your can only upload JPEG (.jpg) files.</div>
+                                </div>
 
                     </div>
-                </div>
 
-                <div id="deleteImageConfirmPanel" class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title text-center">Are you sure you want to delete this image?</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div id="imageToDelete" class="swiper-slide center-block" style="background-image:url(http://lorempixel.com/600/600/nature/1);width: 122px; height: 79px;"></div>
-                    </div>
-                    <div class="panel-footer" style="height: 50px;">
-                        <div class="pull-right">
-                            <button id="deleteConfirmBTN" type="button" class="btn btn-sm btn-warning" onclick="adminDisplayPage.deleteBackgroundConfirmed()" >Delete</button>
-                            <button id="deleteCancelImageBTN" type="button" class="btn btn-sm btn-primary " onclick="$('#confirmOverlay').removeClass('swingShow');" >Cancel</button>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-
-            <div id="uploadNewOverlay" class="display-delete-dialog-backdrop swing" >
-
-                <div id="uploadNewPanel" class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title text-center">Upload a new Background Image</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div>
-                            Backgrounds must be:
-                            <ul type="circle">
-                                <li>JPEG (.jpg) format</li>
-                                <li>Smaller than 1MB</li>
-                                <li>Suggested dimensions: 1470 pixels wide x 948 pixels high</li>
-                            </ul>
-                            <input type="file" id="file-chooser" accept="image/jpeg" onclick="$('#largeFileErrorMessage').addClass('hidden');" />
-                            <div id="largeFileErrorMessage" class="hidden" style="color: red">Your file is too large. It must be smaller than 1MB.</div>
-                            <div id="nonJPEGErrorMessage" class="hidden" style="color: red">Your can only upload JPEG (.jpg) files.</div>
-                        </div>
-                    </div>
-                    <div class="panel-footer" style="height: 50px;">
-                        <div id="backgroundUploadProgressbar" class="progress hidden">
+                    <div class="modal-footer">
+                        <div id="backgroundUploadProgressbar" class="progress" style="width: 100%">
                             <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
                                 Uploading
                             </div>
                         </div>
-                        <div id="backgroundUploadButtons" class="pull-right">
-                            <button id="uploadConfirmBTN" type="button" class="btn btn-sm btn-info" onclick="adminDisplayPage.uploadNew()" >Upload</button>
-                            <button id="uploadCancelBTN" type="button" class="btn btn-sm btn-primary " onclick="$('#uploadNewOverlay').removeClass('swingShow');" >Cancel</button>
+                        <div id="backgroundUploadButtons">
+                            <button id="uploadCancelBTN" type="button" class="btn btn-sm btn-outline-primary " onclick="$('#upload-new-background-modal').modal('hide');" >Cancel</button>
+                            <button id="uploadConfirmBTN" type="button" class="btn btn-sm btn-primary" onclick="adminDisplayPage.uploadNew()" >Upload</button>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <!--@modal - confirm delete image modal-->
+        <div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            Are you sure you want to delete this image?
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+
+                    <div class="modal-body ">
+
+                        <div class="row justify-content-center">
+                            <div id="imageToDelete" class="swiper-slide" style="width: 122px; height: 79px;"></div>
                         </div>
 
+
                     </div>
+
+                    <div class="modal-footer">
+
+                        <button id="deleteCancelImageBTN" type="button" class="btn btn-sm btn-outline-primary " onclick="$('#confirm-delete-modal').modal('hide');" >Cancel</button>
+                        <button id="deleteConfirmBTN" type="button" class="btn btn-sm btn-primary" onclick="adminDisplayPage.deleteBackgroundConfirmed()" >Delete</button>
+
+                    </div>
+
                 </div>
-
+                <!-- /.modal-content -->
             </div>
-
+            <!-- /.modal-dialog -->
         </div>
+        <!-- /.modal -->
 
+    </div>
 
-    </div> <!--end of singleSlideDiv-->
 
 </div>
