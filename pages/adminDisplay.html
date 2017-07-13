@@ -12,6 +12,10 @@
 
     <div class="btn-toolbar row justify-content-center" role="toolbar" style="border-top: 1px solid #ebebeb; padding-top: 10px; padding-bottom: 5px">
 
+        <div id="previousSlideBtn" class="btn-group btn-group-sm" role="group">
+            <button class="btn btn-sm btn-outline-primary " onclick="adminDisplayPage.galleryThumbs.slidePrev()"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+        </div>
+
         <div id="editTextBtn" class="btn-group btn-group-sm" role="group">
             <button class="btn btn-sm btn-outline-primary " onclick="adminDisplayPage.editSlideText()">Edit Text</button>
         </div>
@@ -60,7 +64,15 @@
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.addNewSlide();">Add New Slide</button>
         </div>
 
+        <div id="nextSlideBtn" class="btn-group btn-group-sm" role="group">
+            <button class="btn btn-sm btn-outline-primary " onclick="adminDisplayPage.galleryThumbs.slideNext()"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+
         <div id="backgroundPickerButtons">
+
+            <div id="previousBackgroundBtn" class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-sm btn-outline-primary " onclick="adminDisplayPage.librarySwiper.slidePrev()"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+            </div>
 
             <div class="btn-group btn-group-sm" role="group" >
                 <button id="displayUploadImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.uploadNewBackgroundStart()">Upload New</button>
@@ -71,6 +83,10 @@
             </div>
             <div class="btn-group btn-group-sm" role="group" >
                 <button id="displayDeleteImageBTN" type="button" class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.backgroundSlideDelete()">Delete</button>
+            </div>
+
+            <div id="nextBackgroundBtn" class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-sm btn-outline-primary " onclick="adminDisplayPage.librarySwiper.slideNext()"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
             </div>
 
         </div>

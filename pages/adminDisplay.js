@@ -111,6 +111,8 @@ var adminDisplayPage = {
                 $('#moreBtn').show('slow');
                 $('#newSlideBtn').show('slow');
                 $('#backgroundPickerButtons').hide('slow');
+                $('#previousSlideBtn').show('slow');
+                $('#nextSlideBtn').show('slow');
                 break;
             case 'editingText':
                 $('#editTextBtn').hide('slow');
@@ -121,6 +123,8 @@ var adminDisplayPage = {
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
                 $('#backgroundPickerButtons').hide('slow');
+                $('#previousSlideBtn').show('slow');
+                $('#nextSlideBtn').show('slow');
                 break;
             case 'changingBackground':
                 $('#editTextBtn').hide('slow');
@@ -131,6 +135,8 @@ var adminDisplayPage = {
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
                 $('#backgroundPickerButtons').show('slow');
+                $('#previousSlideBtn').hide('slow');
+                $('#nextSlideBtn').hide('slow');
                 break;
             case 'confirmDelete':
                 $('#editTextBtn').hide('slow');
@@ -141,6 +147,8 @@ var adminDisplayPage = {
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
                 $('#backgroundPickerButtons').hide('slow');
+                $('#previousSlideBtn').hide('slow');
+                $('#nextSlideBtn').hide('slow');
                 break;
             case 'noSlides':
                 $('#editTextBtn').hide('slow');
@@ -151,6 +159,8 @@ var adminDisplayPage = {
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').show('slow');
                 $('#backgroundPickerButtons').hide('slow');
+                $('#previousSlideBtn').hide('slow');
+                $('#nextSlideBtn').hide('slow');
                 break;
             default:
                 $('#editTextBtn').show();
@@ -161,6 +171,8 @@ var adminDisplayPage = {
                 $('#moreBtn').show();
                 $('#newSlideBtn').show();
                 $('#backgroundPickerButtons').hide('slow');
+                $('#previousSlideBtn').show('slow');
+                $('#nextSlideBtn').show('slow');
         }
 
     },
@@ -481,11 +493,11 @@ var adminDisplayPage = {
 
             var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
 
-            var fileName = file.name;
+            //var fileName = file.name;
             var fileType = file.type;
             var fileSize = file.size;
 
-            if(fileType != 'image/jpeg'){
+            if(fileType !== 'image/jpeg'){
                 //it's not a jpeg file
                 $('#nonJPEGErrorMessage').show();
                 return;
@@ -497,7 +509,7 @@ var adminDisplayPage = {
                 return;
             }
 
-            fileName = utils.guid()+ '.jpg';
+            var fileName = utils.guid()+ '.jpg';
 
             AWSS3.s3UploadFile(bucketName, fileName, file, adminDisplayPage.uploadComplete);
 
