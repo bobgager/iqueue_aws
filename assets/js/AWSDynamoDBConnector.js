@@ -4,6 +4,30 @@
 
 var awsDynamoDBConnector = {
 
+
+    //******************************************************************************************************************
+    deleteDisplaySlide: function(theSlide, callback){
+
+        var params = {
+            TableName : 'iqDisplayMessages',
+            Key: {
+                locationID: theSlide.locationID,
+                messageID: theSlide.messageID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.delete(params, function(err, data) {
+            //console.log('delete returned: '+  err);
+            if (err){
+                console.log('Error deleting slide from AWS: ' + err);
+                callback();
+            }
+            else{
+                callback();
+            }
+        });
+    },
+
     //******************************************************************************************************************
     fetchCustomerConfig: function(customerID, callback){
 
@@ -158,7 +182,6 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
-
     saveDisplaySlide: function(theDisplaySlide, callback){
 
         var params = {
@@ -193,8 +216,6 @@ var awsDynamoDBConnector = {
 
     },
 
-
-
     //******************************************************************************************************************
     update_iqUsers: function (userDetails, callback) {
         var params = {
@@ -217,28 +238,6 @@ var awsDynamoDBConnector = {
                 callback(true, data);
             }
         });
-
-    },
-
-    //******************************************************************************************************************
-    //******************************************************************************************************************
-    //******************************************************************************************************************
-    s3ReadBucketContents:function(bucket, callback){
-
-        // Configure your region
-        AWS.config.region = 'us-west-1';
-
-        var bucket = new AWS.S3({params: {Bucket: bucket}});
-        bucket.listObjects(function (err, data) {
-            //console.log(err)
-            if (err) {
-                callback(null);
-            }
-            else {
-                callback(data.Contents);
-            }
-        });
-
 
     }
 

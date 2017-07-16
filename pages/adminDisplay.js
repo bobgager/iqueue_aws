@@ -82,7 +82,7 @@ var adminDisplayPage = {
             //read the list of images in the S3 Display Bucket for this location
             var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
 
-            awsDynamoDBConnector.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
+            AWSS3.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
 
 
         }).fadeIn('1000');
@@ -529,7 +529,7 @@ var adminDisplayPage = {
         //read the list of images in the S3 Display Bucket for this location
         var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
 
-        awsDynamoDBConnector.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
+        AWSS3.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
 
         //hide the upload dialog
         $('#upload-new-background-modal').modal('hide');
@@ -587,7 +587,36 @@ var adminDisplayPage = {
         //read the list of images in the S3 Display Bucket for this location
         var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
 
-        awsDynamoDBConnector.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
+        AWSS3.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
+    },
+
+    //******************************************************************************************************************
+    setSlideDuration: function(time){
+
+        var activeSlide = adminDisplayPage.currentSlideIndex ;
+        adminDisplayPage.theDisplaySlidesArray[activeSlide].displayTime = time;
+
+        awsDynamoDBConnector.saveDisplaySlide(adminDisplayPage.theDisplaySlidesArray[activeSlide], adminDisplayPage.slideSaveReturned);
+
+    },
+
+    //******************************************************************************************************************
+    deleteSlide: function(){
+
+        adminDisplayPage.setupButtons('confirmDelete');
+
+    },
+
+    //******************************************************************************************************************
+    addNewSlide: function(){
+        var theDisplaySlide = {};
+        theDisplaySlide.locationID = globals.theLocation.locationID;
+        theDisplaySlide.messageID = utils.guid();
+        theDisplaySlide.message = '<div style="text-align: right; color: #ffffff"><span style="font-size: 18px;">This is your New Slide</span></div><div style="text-align: right; color: #ffffff"><span style="font-size: 14px;">Click Edit Text to start customizing it</span></div>';
+        theDisplaySlide.backgroundImageURL = 'https://d1eoip8vttmfc7.cloudfront.net/assets/img/queue_image_display.jpg';
+        theDisplaySlide.displayTime = '60';
+        adminDisplayPage.lastSlideID = theDisplaySlide.messageID;
+        awsDynamoDBConnector.saveDisplaySlide(theDisplaySlide, adminDisplayPage.slideSaveReturned);
     }
 
     //******************************************************************************************************************

@@ -42,6 +42,26 @@ var AWSS3 = {
                 callback();
             }
         });
+    },
+
+    //******************************************************************************************************************
+    s3ReadBucketContents:function(bucket, callback){
+
+        // Configure your region
+        AWS.config.region = 'us-west-1';
+
+        var bucket = new AWS.S3({params: {Bucket: bucket}});
+        bucket.listObjects(function (err, data) {
+            //console.log(err)
+            if (err) {
+                callback(null);
+            }
+            else {
+                callback(data.Contents);
+            }
+        });
+
+
     }
 
 };
