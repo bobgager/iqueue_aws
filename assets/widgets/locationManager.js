@@ -33,9 +33,9 @@ document.write('' +
                             '</a>' +
                         '</div>' +
                     '</div>' +
-                    '<div class="modal-footer">' +
+/*                    '<div class="modal-footer">' +
                         'nothing in the footer' +
-                    '</div>' +
+                    '</div>' +*/
                 '</div>' +
             '</div>' +
         '</div>'+
