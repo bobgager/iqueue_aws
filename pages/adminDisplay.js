@@ -4,7 +4,9 @@
 
 var adminDisplayPage = {
 
-    swiper: null,
+    galleryThumbs: null,
+
+
     librarySwiper: null,
 
 
@@ -12,7 +14,7 @@ var adminDisplayPage = {
 
     theBackgroundImageLibraryArray: [],
 
-    lastSlideIndex: 0,
+    currentSlideIndex: 0,
     lastSlideID: null,
 
     newSlideText: '',
@@ -31,36 +33,10 @@ var adminDisplayPage = {
 
             utils.writeDebug('adminDisplay Page loaded',false);
 
-            //remove any swiper handlers that may have been previously set
-            if(adminDisplayPage.swiper){
-                adminDisplayPage.swiper.off('slideChangeEnd');
-            }
+            $('#verticalSpacer').hide('slow');
 
             //setup the proper button configuration
             adminDisplayPage.setupButtons('init');
-
-            //setup the slide swiper
-            adminDisplayPage.swiper = new Swiper('.swiper-container-slides', {
-                pagination: '.swiper-pagination',
-                paginationClickable: true,
-                effect: 'coverflow',
-                grabCursor: false,
-                nextButton: '.swiper-button-next-slides',
-                prevButton: '.swiper-button-prev-slides',
-                centeredSlides: true,
-                slidesPerView: 'auto',
-                coverflow: {
-                    rotate: 40,
-                    stretch: 0,
-                    depth: 100,
-                    modifier: 1,
-                    slideShadows : true
-                }
-            });
-
-            adminDisplayPage.swiper.on('slideChangeEnd', adminDisplayPage.slideChanged);
-
-            adminDisplayPage.swiper.removeAllSlides();
 
             //setup the background image library swiper
             adminDisplayPage.librarySwiper = new Swiper('.swiper-container-library', {
@@ -79,16 +55,39 @@ var adminDisplayPage = {
                 }
             });
 
+            //hide the background picker
+            //$('#slideBackgroundPicker').hide();
+
+            //remove any swiper handlers that may have been previously set
+            if(adminDisplayPage.galleryThumbs){
+                adminDisplayPage.galleryThumbs.off('slideChangeEnd');
+            }
+
+            adminDisplayPage.galleryThumbs = new Swiper('.gallery-thumbs', {
+                spaceBetween: 10,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                touchRatio: 0.2,
+                slideToClickedSlide: true,
+                nextButton: ".swiper-button-next",
+                prevButton: ".swiper-button-prev"
+            });
+
+            adminDisplayPage.galleryThumbs.on('slideChangeEnd', adminDisplayPage.slideChanged);
+
+
             //read the list of Display Messages from AWS
             awsDynamoDBConnector.fetchDisplayMessages(globals.theLocation.locationID,adminDisplayPage.displaySlidesReturned);
 
             //read the list of images in the S3 Display Bucket for this location
             var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
 
-            awsDynamoDBConnector.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
+            AWSS3.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
 
 
         }).fadeIn('1000');
+
+
 
     },
 
@@ -111,6 +110,9 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').hide('slow');
                 $('#moreBtn').show('slow');
                 $('#newSlideBtn').show('slow');
+                $('#backgroundPickerButtons').hide('slow');
+                $('#previousSlideBtn').show('slow');
+                $('#nextSlideBtn').show('slow');
                 break;
             case 'editingText':
                 $('#editTextBtn').hide('slow');
@@ -120,6 +122,9 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').hide('slow');
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
+                $('#backgroundPickerButtons').hide('slow');
+                $('#previousSlideBtn').show('slow');
+                $('#nextSlideBtn').show('slow');
                 break;
             case 'changingBackground':
                 $('#editTextBtn').hide('slow');
@@ -129,6 +134,9 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').hide('slow');
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
+                $('#backgroundPickerButtons').show('slow');
+                $('#previousSlideBtn').hide('slow');
+                $('#nextSlideBtn').hide('slow');
                 break;
             case 'confirmDelete':
                 $('#editTextBtn').hide('slow');
@@ -138,6 +146,9 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').show('slow');
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
+                $('#backgroundPickerButtons').hide('slow');
+                $('#previousSlideBtn').hide('slow');
+                $('#nextSlideBtn').hide('slow');
                 break;
             case 'noSlides':
                 $('#editTextBtn').hide('slow');
@@ -147,6 +158,9 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').hide('slow');
                 $('#moreBtn').hide('slow');
                 $('#newSlideBtn').show('slow');
+                $('#backgroundPickerButtons').hide('slow');
+                $('#previousSlideBtn').hide('slow');
+                $('#nextSlideBtn').hide('slow');
                 break;
             default:
                 $('#editTextBtn').show();
@@ -156,6 +170,9 @@ var adminDisplayPage = {
                 $('#deleteSlideConfirmBtn').hide();
                 $('#moreBtn').show();
                 $('#newSlideBtn').show();
+                $('#backgroundPickerButtons').hide('slow');
+                $('#previousSlideBtn').show('slow');
+                $('#nextSlideBtn').show('slow');
         }
 
     },
@@ -163,13 +180,18 @@ var adminDisplayPage = {
     //******************************************************************************************************************
     slideChanged: function(swiper){
 
-        var activeSlide = 0;
+        $('#verticalSpacer').hide('slow');
+
+        var activeSlide = adminDisplayPage.currentSlideIndex;
 
         if(swiper){
             activeSlide = swiper.activeIndex;
+            adminDisplayPage.currentSlideIndex = activeSlide;
+        }
+        else {
+            adminDisplayPage.galleryThumbs.slideTo(activeSlide);
         }
 
-        adminDisplayPage.lastSlideIndex = activeSlide;
 
         //get rid of the text editor if it's open
         $('#slidePreviewText').summernote('destroy');
@@ -212,7 +234,6 @@ var adminDisplayPage = {
 
 
         if(theDisplaySlides.length === 0){
-            adminDisplayPage.swiper.appendSlide('<div class="swiper-slide" ><div class="swiper-slide-message swiper-slide-empty-message">You have not created any Display Slides for this location<br><br>Click the Add New Slide button below to get started.<br></div></div>');
             adminDisplayPage.setupButtons('noSlides');
             $('#slidePreviewText').html("No Display Slides");
             return;
@@ -220,29 +241,20 @@ var adminDisplayPage = {
 
         //build the slides
         for (i = 0; i < theDisplaySlides.length; i++) {
-            adminDisplayPage.swiper.appendSlide(adminDisplayPage.buildDisplaySlide(theDisplaySlides[i],245));
 
-            galleryTop.appendSlide(adminDisplayPage.buildDisplaySlide(theDisplaySlides[i],490));
-            galleryThumbs.appendSlide(adminDisplayPage.buildDisplaySlide(theDisplaySlides[i],245));
+            adminDisplayPage.galleryThumbs.appendSlide(adminDisplayPage.buildDisplaySlide(theDisplaySlides[i],245));
 
 
         }
-
-
 
         //save the slides for later editing
         adminDisplayPage.theDisplaySlidesArray = theDisplaySlides;
 
-        //switch to the last slide that was showing (useful after a Save or new)
-        adminDisplayPage.lastSlideIndex = 0;
-
         for (i = 0; i < theDisplaySlides.length; i++) {
             if(theDisplaySlides[i].messageID === adminDisplayPage.lastSlideID){
-                adminDisplayPage.lastSlideIndex = i;
+                adminDisplayPage.currentSlideIndex = i;
             }
         }
-
-        adminDisplayPage.swiper.slideTo(adminDisplayPage.lastSlideIndex, 1000, true);
 
         adminDisplayPage.slideChanged();
 
@@ -297,6 +309,7 @@ var adminDisplayPage = {
     buildDisplaySlide: function(theDisplaySlide, slideWidth){
 
         //screen sizes          display slide size
+        // 0.125    160x90         122x79
         // 0.25x    320x180        245x158
         // 0.5x     640x360        490x316
         // 1x       1280x720       980x632
@@ -326,11 +339,11 @@ var adminDisplayPage = {
             replaced = replaced.replace(regexp, 'line-heightS: ' );
         }
 
+        var messageID = slideWidth + 'SlideMessage';
 
-        var slideHTML = '';
-
-        slideHTML +=    '<div class="swiper-slide" style="background-image:url(' + theDisplaySlide.backgroundImageURL + ')">' +
-            '<div class="swiper-slide-message"   >' +
+        //build the slide HTML
+        var slideHTML = '<div class="swiper-slide" style="background-image:url(' + theDisplaySlide.backgroundImageURL + ')">' +
+            '<div id="' + messageID + '" class="swiper-slide-message"   >' +
             replaced +
             '</div>' +
             '</div>';
@@ -340,6 +353,270 @@ var adminDisplayPage = {
         return(slideHTML);
 
 
+    },
+
+    //******************************************************************************************************************
+    editSlideText: function () {
+
+        $('#verticalSpacer').show('slow');
+
+        adminDisplayPage.setupButtons('editingText');
+
+        $('#slidePreviewText').summernote({
+            focus: true,
+            fontSizes: ['12', '14', '18', '24', '36', '48' , '64', '82'],
+            width: 490,
+            callbacks: {
+                onInit: function() {
+                    //console.log('Summernote is launched');
+                    $('.note-editable').css("background-color", "grey")
+                    //$('.note-editor').css("top", "0px")
+                }
+            },
+            toolbar: [
+                // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                //['height', ['height']],
+                ['para', ['ul', 'ol', 'paragraph']]
+            ]
+        });
+
+    },
+
+    //******************************************************************************************************************
+    cancelTextEdits: function () {
+        $('#verticalSpacer').hide('slow');
+        $('#slidePreviewText').summernote('destroy');
+        adminDisplayPage.setupButtons('normal');
+
+    },
+
+    //******************************************************************************************************************
+    saveTextEdits : function () {
+
+
+        $('#verticalSpacer').hide('slow');
+
+        var markup = $('#slidePreviewText').summernote('code');
+
+        //strip any line-height tags that might have been added by the editor
+        for (i = 1; i < 50; i++) {
+            regexp = new RegExp("line-height: " + i,"g");
+            markup = markup.replace(regexp, 'line-heightS: ' );
+        }
+
+        $('#slidePreviewText').summernote('destroy');
+        adminDisplayPage.setupButtons('normal');
+
+        var theDisplaySlide = {};
+        theDisplaySlide.locationID = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].locationID;
+        theDisplaySlide.messageID = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].messageID;
+        theDisplaySlide.message = markup;
+        theDisplaySlide.backgroundImageURL = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].backgroundImageURL;
+        theDisplaySlide.displayTime = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].displayTime;
+        awsDynamoDBConnector.saveDisplaySlide(theDisplaySlide, adminDisplayPage.slideSaveReturned);
+
+    },
+
+    //******************************************************************************************************************
+    slideSaveReturned:function (success) {
+
+        adminDisplayPage.render();
+
+    },
+
+    //******************************************************************************************************************
+    showImagePicker: function () {
+
+        adminDisplayPage.setupButtons('changingBackground');
+
+        //hide the slide swiper
+        $('#liveSlidesDiv').fadeOut();
+
+        //show the background picker
+        $('#slideBackgroundPicker').fadeTo(1000, 1); //in case it still has the default opacity of 0
+        $('#slideBackgroundPicker').fadeIn();
+
+    },
+
+    //******************************************************************************************************************
+    hideImagePicker: function () {
+
+        adminDisplayPage.setupButtons('normal');
+
+        //hide the background picker
+        $('#slideBackgroundPicker').fadeOut();
+
+        //show the slide swiper
+        $('#liveSlidesDiv').fadeIn();
+
+    },
+
+    //******************************************************************************************************************
+    newBackgroundSlideSelected: function(){
+
+        adminDisplayPage.hideImagePicker();
+
+        var slideIndex = adminDisplayPage.librarySwiper.activeIndex;
+        var activeSlide = adminDisplayPage.currentSlideIndex ;
+
+        adminDisplayPage.theDisplaySlidesArray[activeSlide].backgroundImageURL= adminDisplayPage.theBackgroundImageLibraryArray[slideIndex].url;
+
+        awsDynamoDBConnector.saveDisplaySlide(adminDisplayPage.theDisplaySlidesArray[activeSlide], adminDisplayPage.slideSaveReturned);
+
+    },
+
+    //******************************************************************************************************************
+    uploadNewBackgroundStart: function () {
+       $('#upload-new-background-modal').modal();
+        $('#largeFileErrorMessage').hide();
+        $('#nonJPEGErrorMessage').hide();
+        $('#backgroundUploadProgressbar').hide();
+        $('#backgroundUploadButtons').show();
+    },
+
+    //******************************************************************************************************************
+    uploadNew: function(){
+
+        $('#largeFileErrorMessage').hide();
+        $('#nonJPEGErrorMessage').hide();
+        $('#backgroundUploadProgressbar').hide();
+
+        var fileChooser = document.getElementById('file-chooser');
+
+        var file = fileChooser.files[0];
+
+        if(file){
+
+            var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
+
+            //var fileName = file.name;
+            var fileType = file.type;
+            var fileSize = file.size;
+
+            if(fileType !== 'image/jpeg'){
+                //it's not a jpeg file
+                $('#nonJPEGErrorMessage').show();
+                return;
+            }
+
+            if(fileSize > 1000000){
+                //the file is too large
+                $('#largeFileErrorMessage').show();
+                return;
+            }
+
+            var fileName = utils.guid()+ '.jpg';
+
+            AWSS3.s3UploadFile(bucketName, fileName, file, adminDisplayPage.uploadComplete);
+
+            $('#backgroundUploadProgressbar').show();
+            $('#backgroundUploadButtons').hide();
+
+        }
+
+    },
+
+    //******************************************************************************************************************
+    uploadComplete: function(results){
+        console.log('Upload Complete with Results = ' + results);
+
+        //reload the images
+
+        //read the list of images in the S3 Display Bucket for this location
+        var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
+
+        AWSS3.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
+
+        //hide the upload dialog
+        $('#upload-new-background-modal').modal('hide');
+
+    },
+
+    //******************************************************************************************************************
+    backgroundSlideDelete: function(){
+        var slideIndex = adminDisplayPage.librarySwiper.activeIndex;
+        var theURL = adminDisplayPage.theBackgroundImageLibraryArray[slideIndex].url;
+
+        //figure out if the image is being used in a slide
+        var imageUsed = false;
+        adminDisplayPage.theDisplaySlidesArray.forEach(function(slide){
+            if(slide.backgroundImageURL === theURL){
+                //slide is being used
+                imageUsed = true;
+            }
+        });
+
+        if(imageUsed){
+            var options = {};
+            options.title = 'Sorry!';
+            options.message = "That image cannot be deleted as it is being used in one or more of your slides.<br>Please remove it from all your slides and try again.";
+
+            modalMessage.showMessage(options);
+            return;
+        }
+
+        $('#imageToDelete').css('background-image','url('+ theURL +')');
+
+        //show the confirm dialog
+        $('#confirm-delete-modal').modal();
+
+    },
+
+    //******************************************************************************************************************
+    deleteBackgroundConfirmed: function(){
+
+        //hide the confirm dialog
+        $('#confirm-delete-modal').modal('hide');
+
+        var slideIndex = adminDisplayPage.librarySwiper.activeIndex;
+        var theKey = adminDisplayPage.theBackgroundImageLibraryArray[slideIndex].Key;
+        var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
+
+        AWSS3.s3DeleteObject(bucketName, theKey, adminDisplayPage.deleteBackgroundComplete);
+
+    },
+
+    //******************************************************************************************************************
+    deleteBackgroundComplete: function(){
+
+        //reload the images
+        //read the list of images in the S3 Display Bucket for this location
+        var bucketName = 'iqueuedisplay'+ globals.theLocation.locationID.toLowerCase();
+
+        AWSS3.s3ReadBucketContents(bucketName, adminDisplayPage.displayImagesReturned);
+    },
+
+    //******************************************************************************************************************
+    setSlideDuration: function(time){
+
+        var activeSlide = adminDisplayPage.currentSlideIndex ;
+        adminDisplayPage.theDisplaySlidesArray[activeSlide].displayTime = time;
+
+        awsDynamoDBConnector.saveDisplaySlide(adminDisplayPage.theDisplaySlidesArray[activeSlide], adminDisplayPage.slideSaveReturned);
+
+    },
+
+    //******************************************************************************************************************
+    deleteSlide: function(){
+
+        adminDisplayPage.setupButtons('confirmDelete');
+
+    },
+
+    //******************************************************************************************************************
+    addNewSlide: function(){
+        var theDisplaySlide = {};
+        theDisplaySlide.locationID = globals.theLocation.locationID;
+        theDisplaySlide.messageID = utils.guid();
+        theDisplaySlide.message = '<div style="text-align: right; color: #ffffff"><span style="font-size: 18px;">This is your New Slide</span></div><div style="text-align: right; color: #ffffff"><span style="font-size: 14px;">Click Edit Text to start customizing it</span></div>';
+        theDisplaySlide.backgroundImageURL = 'https://d1eoip8vttmfc7.cloudfront.net/assets/img/queue_image_display.jpg';
+        theDisplaySlide.displayTime = '60';
+        adminDisplayPage.lastSlideID = theDisplaySlide.messageID;
+        awsDynamoDBConnector.saveDisplaySlide(theDisplaySlide, adminDisplayPage.slideSaveReturned);
     }
 
     //******************************************************************************************************************

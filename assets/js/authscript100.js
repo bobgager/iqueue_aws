@@ -17,7 +17,7 @@ var configure = {
         $('#loading-iqueue-progress-bar').html('Loading scripts');
 
         var progress = 0;
-        var scripts = ['assets/js/AWSDynamoDBConnector.js?version='+globals.version];
+        var scripts = ['assets/js/AWSDynamoDBConnector.js?version='+globals.version, 'assets/js/AWSS3Connector.js?version='+globals.version];
         scripts.forEach(function(script) {
             $.getScript(script, function () {
                 if (++progress == scripts.length) configure.loadCustomerConfig();

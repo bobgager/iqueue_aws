@@ -1,5 +1,5 @@
 /*/////////////////////////////////////////////////////////////////////
- // 
+ //
  // Custom theme code styles
  // Written by Themelize.me (http://themelize.me)
  // 
@@ -155,7 +155,8 @@
     min-width: 150px; !important;
 }
 
-/*
+/*CSS for Display Slide Admin Page Components*/
+
 .swiper-container {
     width: 100%;
     padding-top: 10px;
@@ -175,11 +176,8 @@
     border-radius: 5px;
     border-color: rgba(255,255,255,0.9);
 }
-*/
 
 .swiper-slide-message {
-    text-align: center;
-    display:block;
     padding: 5px;
     color: #000000;
     background-color: rgba(0, 0, 0, 0.60);
@@ -212,7 +210,6 @@
     font-size: 12px;
 }
 
-
 .swiper-container-top {
     height: 316px;
     width: 100%;
@@ -232,10 +229,6 @@
     background-position: center;
 
 }
-.gallery-top {
-    height: 316px;
-    width: 490px;
-}
 .gallery-thumbs {
     height: 178px;
     box-sizing: border-box;
@@ -248,4 +241,40 @@
 }
 .gallery-thumbs .swiper-slide-active {
     opacity: 1;
+}
+
+.slidePreviewContainer {
+    width: 490px;
+    height: 316px;
+/*    padding-top: 10px;
+    padding-bottom: 50px;*/
+}
+.slidePreviewImage {
+    background-position: center;
+    background-size: cover;
+    width: 490px;
+    height: 316px;
+}
+
+.slidePreviewText {
+    position: relative;
+    top: -316px;
+    width: 490px;
+    color: #000000;
+    background-color: rgba(0, 0, 0, 0.60);
+    padding: 5px;
+}
+.note-editor {
+    position: relative;
+    top: -356px;
+    margin: auto;
+}
+
+.slideBackgroundPicker {
+    /*background-color: blue;*/
+    position: absolute;
+    top: 150px;
+    left: 0px;
+    width: 100%;
+    opacity: 0;
 }
