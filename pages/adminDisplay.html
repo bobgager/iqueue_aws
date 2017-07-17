@@ -21,8 +21,8 @@
         </div>
 
         <div id="textEditBtns"  class="btn-group btn-group-sm" role="group">
-            <button class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.saveTextEdits()">Save Changes</button>
-            <button class="btn btn-sm btn-primary" onclick="adminDisplayPage.cancelTextEdits()">Cancel Changes</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="adminDisplayPage.cancelTextEdits()">Cancel Changes</button>
+            <button class="btn btn-sm btn-primary" onclick="adminDisplayPage.saveTextEdits()">Save Changes</button>
         </div>
 
         <div id="changeBkgndBtn" class="btn-group btn-group-sm" role="group">
@@ -30,16 +30,33 @@
         </div>
 
         <!--see http://bootsnipp.com/snippets/featured/multi-level-dropdown-menu-bs3-->
-        <div id="moreBtn" class="dropdown btn-group btn-group-sm"  role="group">
-            <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-outline-primary" data-target="#" href="/page.html">
-                Duration <span class="caret"></span>
+        <div id="durationBtn" class="dropdown btn-group btn-group-sm"  role="group">
+            <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-outline-primary" href="#">
+                Duration <i class="fa fa-caret-down" aria-hidden="true"></i>
             </a>
             <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
 
                 <li class="dropdown-menu">
-                <li><a href="#" onclick="adminDisplayPage.setSlideDuration(30)"><i id="slideDuration30Menu" class="fa fa-check"></i> 30 Seconds</a></li>
-                <li><a href="#" onclick="adminDisplayPage.setSlideDuration(60)"><i id="slideDuration60Menu" class="fa fa-check"></i> 60 Seconds</a></li>
-                <li><a href="#" onclick="adminDisplayPage.setSlideDuration(90)"><i id="slideDuration90Menu" class="fa fa-check"></i> 90 Seconds</a></li>
+                    <li><a href="#" onclick="adminDisplayPage.setSlideDuration(30)"><i id="slideDuration30Menu" class="fa fa-check"></i> 30 Seconds</a></li>
+                    <li><a href="#" onclick="adminDisplayPage.setSlideDuration(60)"><i id="slideDuration60Menu" class="fa fa-check"></i> 60 Seconds</a></li>
+                    <li><a href="#" onclick="adminDisplayPage.setSlideDuration(90)"><i id="slideDuration90Menu" class="fa fa-check"></i> 90 Seconds</a></li>
+                </li>
+
+
+            </ul>
+        </div>
+
+        <!--see http://bootsnipp.com/snippets/featured/multi-level-dropdown-menu-bs3-->
+        <div id="positionBtn" class="dropdown btn-group btn-group-sm"  role="group">
+            <a  role="button" data-toggle="dropdown" class="btn btn-outline-primary" href="#">
+                Position <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </a>
+            <ul id="positionMenuContents" class="dropdown-menu multi-level" role="menu" >
+
+                <li  class="dropdown-menu">
+                    <li><a href="#" onclick="adminDisplayPage.setSlideDuration(30)"><i id="slideDuration30Menu1" class="fa fa-check"></i> 30 Seconds</a></li>
+                    <li><a href="#" onclick="adminDisplayPage.setSlideDuration(60)"><i id="slideDuration60Menu1" class="fa fa-check"></i> 60 Seconds</a></li>
+                    <li><a href="#" onclick="adminDisplayPage.setSlideDuration(90)"><i id="slideDuration90Menu1" class="fa fa-check"></i> 90 Seconds</a></li>
                 </li>
 
 

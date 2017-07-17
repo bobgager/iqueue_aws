@@ -317,6 +317,19 @@ var theDisplayPage = {
             return;
         }
 
+        //make sure all the slides have a slidePosition value
+        //needed since slidePosition was added later, and some DB records might not have a value.
+        for (i = 0; i < displayMessages.length; i++) {
+
+            if (!displayMessages[i].slidePosition ){
+                displayMessages[i].slidePosition = i+1;
+            }
+
+        }
+
+        //sort theDisplaySlides by position
+        displayMessages.sort(function(a, b){return a.slidePosition-b.slidePosition});
+
         //store what was returned so we can use it in other functions
         theDisplayPage.displayMessagesArray = displayMessages;
 

@@ -190,11 +190,13 @@ var awsDynamoDBConnector = {
 
             UpdateExpression: "set message = :message, " +
             "backgroundImageURL=:backgroundImageURL," +
-            "displayTime=:displayTime",
+            "displayTime=:displayTime," +
+            "slidePosition=:slidePosition",
             ExpressionAttributeValues:{
                 ":message":theDisplaySlide.message,
                 ":backgroundImageURL":theDisplaySlide.backgroundImageURL,
-                ":displayTime":theDisplaySlide.displayTime
+                ":displayTime":theDisplaySlide.displayTime,
+                ":slidePosition":theDisplaySlide.slidePosition
             }
         };
 
