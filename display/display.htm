@@ -39,7 +39,10 @@ For now,
         var locationCode = utils.GetURLParameter('locationCode');
         $('#debug').html( $('#debug').html() + 'locationCode= '+ locationCode + '<br>');
 
-        var f7DisplayURL = '../f7display_kiosk/display/display.html?version=' + currentDateTime;
+        var f7DisplayURL = 'https://cobaltfire.com/iqueue3/display.html?version=' + currentDateTime;
+
+
+        //var f7DisplayURL = '../f7display_kiosk/display/display.html?version=' + currentDateTime;
 
         if (configCode){
             f7DisplayURL += '&configCode='+ configCode;
