@@ -108,7 +108,8 @@ var adminDisplayPage = {
                 $('#textEditBtns').hide('slow');
                 $('#changeBkgndBtn').show('slow');
                 $('#deleteSlideConfirmBtn').hide('slow');
-                $('#moreBtn').show('slow');
+                $('#durationBtn').show('slow');
+                $('#positionBtn').show('slow');
                 $('#newSlideBtn').show('slow');
                 $('#backgroundPickerButtons').hide('slow');
                 $('#previousSlideBtn').show('slow');
@@ -120,7 +121,8 @@ var adminDisplayPage = {
                 $('#textEditBtns').show('slow');
                 $('#changeBkgndBtn').hide('slow');
                 $('#deleteSlideConfirmBtn').hide('slow');
-                $('#moreBtn').hide('slow');
+                $('#durationBtn').hide('slow');
+                $('#positionBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
                 $('#backgroundPickerButtons').hide('slow');
                 $('#previousSlideBtn').show('slow');
@@ -132,7 +134,8 @@ var adminDisplayPage = {
                 $('#textEditBtns').hide('slow');
                 $('#changeBkgndBtn').hide('slow');
                 $('#deleteSlideConfirmBtn').hide('slow');
-                $('#moreBtn').hide('slow');
+                $('#durationBtn').hide('slow');
+                $('#positionBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
                 $('#backgroundPickerButtons').show('slow');
                 $('#previousSlideBtn').hide('slow');
@@ -144,7 +147,8 @@ var adminDisplayPage = {
                 $('#textEditBtns').hide('slow');
                 $('#changeBkgndBtn').hide('slow');
                 $('#deleteSlideConfirmBtn').show('slow');
-                $('#moreBtn').hide('slow');
+                $('#durationBtn').hide('slow');
+                $('#positionBtn').hide('slow');
                 $('#newSlideBtn').hide('slow');
                 $('#backgroundPickerButtons').hide('slow');
                 $('#previousSlideBtn').hide('slow');
@@ -156,7 +160,8 @@ var adminDisplayPage = {
                 $('#textEditBtns').hide('slow');
                 $('#changeBkgndBtn').hide('slow');
                 $('#deleteSlideConfirmBtn').hide('slow');
-                $('#moreBtn').hide('slow');
+                $('#durationBtn').hide('slow');
+                $('#positionBtn').hide('slow');
                 $('#newSlideBtn').show('slow');
                 $('#backgroundPickerButtons').hide('slow');
                 $('#previousSlideBtn').hide('slow');
@@ -168,7 +173,8 @@ var adminDisplayPage = {
                 $('#textEditBtns').hide();
                 $('#changeBkgndBtn').show();
                 $('#deleteSlideConfirmBtn').hide();
-                $('#moreBtn').show();
+                $('#durationBtn').show();
+                $('#positionBtn').show('slow');
                 $('#newSlideBtn').show();
                 $('#backgroundPickerButtons').hide('slow');
                 $('#previousSlideBtn').show('slow');
@@ -216,6 +222,9 @@ var adminDisplayPage = {
         $('#slideDuration60Menu').hide();
         $('#slideDuration90Menu').hide();
 
+        //setup the position menu
+        adminDisplayPage.setupPositionMenu();
+
         $('#slideDuration'+ adminDisplayPage.theDisplaySlidesArray[activeSlide].displayTime +'Menu').show();
 
 
@@ -239,17 +248,31 @@ var adminDisplayPage = {
             return;
         }
 
-        //build the slides
+        //make sure all the slides have a position value
+        //needed since position was added later, and some DB records might not have a value.
+        for (i = 0; i < theDisplaySlides.length; i++) {
+
+            if (!theDisplaySlides[i].slidePosition ){
+                theDisplaySlides[i].slidePosition = i+1;
+            }
+
+        }
+
+        //sort theDisplaySlides by position
+        theDisplaySlides.sort(function(a, b){return a.slidePosition-b.slidePosition});
+
+        //build the slides thumbnail swiper
+        adminDisplayPage.galleryThumbs.removeAllSlides();
         for (i = 0; i < theDisplaySlides.length; i++) {
 
             adminDisplayPage.galleryThumbs.appendSlide(adminDisplayPage.buildDisplaySlide(theDisplaySlides[i],245));
-
 
         }
 
         //save the slides for later editing
         adminDisplayPage.theDisplaySlidesArray = theDisplaySlides;
 
+        //store the index of the last slide that was showing
         for (i = 0; i < theDisplaySlides.length; i++) {
             if(theDisplaySlides[i].messageID === adminDisplayPage.lastSlideID){
                 adminDisplayPage.currentSlideIndex = i;
@@ -411,13 +434,16 @@ var adminDisplayPage = {
         $('#slidePreviewText').summernote('destroy');
         adminDisplayPage.setupButtons('normal');
 
-        var theDisplaySlide = {};
+        /*var theDisplaySlide = {};
         theDisplaySlide.locationID = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].locationID;
         theDisplaySlide.messageID = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].messageID;
         theDisplaySlide.message = markup;
         theDisplaySlide.backgroundImageURL = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].backgroundImageURL;
-        theDisplaySlide.displayTime = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].displayTime;
-        awsDynamoDBConnector.saveDisplaySlide(theDisplaySlide, adminDisplayPage.slideSaveReturned);
+        theDisplaySlide.displayTime = adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].displayTime;*/
+
+        adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].message = markup;
+
+        awsDynamoDBConnector.saveDisplaySlide(adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex], adminDisplayPage.slideSaveReturned);
 
     },
 
@@ -615,8 +641,72 @@ var adminDisplayPage = {
         theDisplaySlide.message = '<div style="text-align: right; color: #ffffff"><span style="font-size: 18px;">This is your New Slide</span></div><div style="text-align: right; color: #ffffff"><span style="font-size: 14px;">Click Edit Text to start customizing it</span></div>';
         theDisplaySlide.backgroundImageURL = 'https://d1eoip8vttmfc7.cloudfront.net/assets/img/queue_image_display.jpg';
         theDisplaySlide.displayTime = '60';
+        theDisplaySlide.slidePosition = adminDisplayPage.theDisplaySlidesArray.length+1;
         adminDisplayPage.lastSlideID = theDisplaySlide.messageID;
         awsDynamoDBConnector.saveDisplaySlide(theDisplaySlide, adminDisplayPage.slideSaveReturned);
+    },
+
+    //******************************************************************************************************************
+    setupPositionMenu: function () {
+
+        var menuHTML = '<li  class="dropdown-menu">';
+
+        menuHTML += '<li class="text-primary">Move slide to position:</li>'
+
+        adminDisplayPage.theDisplaySlidesArray.forEach(function (slide, index) {
+
+            var indexp1 = index + 1;
+
+            if (index === adminDisplayPage.currentSlideIndex){
+                menuHTML += '<li><a href="#" onclick="adminDisplayPage.setSlidePosition('+ indexp1 +')"><i class="fa fa-check"></i> '+ indexp1 +'</a></li>'
+
+            }
+            else{
+                menuHTML += '<li><a href="#" onclick="adminDisplayPage.setSlidePosition('+ indexp1 +')">&nbsp;&nbsp;'+ indexp1 +'</a></li>'
+
+            }
+        });
+
+        menuHTML += '</li>';
+
+        $('#positionMenuContents').html(menuHTML);
+
+    },
+
+    //******************************************************************************************************************
+    setSlidePosition: function (newPosition) {
+
+        //are we moving it up or down?
+        if (adminDisplayPage.currentSlideIndex > newPosition - 1){
+            newPosition = newPosition - 0.5;
+        }
+        else {
+            newPosition = newPosition + 0.5;
+        }
+
+        //set the new position of the current slide
+        adminDisplayPage.theDisplaySlidesArray[adminDisplayPage.currentSlideIndex].slidePosition = newPosition;
+
+        //sort the slides by the new positions
+        adminDisplayPage.theDisplaySlidesArray.sort(function(a, b){return a.slidePosition-b.slidePosition});
+
+        //re-index slide positions to integers
+        for (i = 0; i < adminDisplayPage.theDisplaySlidesArray.length; i++) {
+
+            adminDisplayPage.theDisplaySlidesArray[i].slidePosition = i+1;
+
+        }
+
+        //save all the slides
+        adminDisplayPage.theDisplaySlidesArray.forEach(function (slide, index) {
+            awsDynamoDBConnector.saveDisplaySlide(slide, function () {
+                console.log('re-ordered slide saved');
+            });
+        });
+
+        //show the local version
+        adminDisplayPage.displaySlidesReturned(true, adminDisplayPage.theDisplaySlidesArray)
+
     }
 
     //******************************************************************************************************************
