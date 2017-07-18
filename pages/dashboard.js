@@ -4,6 +4,8 @@
 
 var dashboardPage = {
 
+    refreshTimer:  0 ,
+
     //******************************************************************************************************************
     render: function () {
 
@@ -18,6 +20,8 @@ var dashboardPage = {
 
             utils.writeDebug('dashboard Page loaded',false);
 
+            dashboardPage.refreshAll();
+
         }).fadeIn('1000');
 
     },
@@ -27,6 +31,37 @@ var dashboardPage = {
 
         dashboardPage.render();
 
+    },
+
+    //******************************************************************************************************************
+    refreshAll: function(){
+
+        //make sure the previously set timer is stopped
+        clearTimeout(dashboardPage.refreshTimer);
+
+        //just exit if we're no longer on the Dashboard page
+        if (globals.currentPage !== 'dashboardPage'){
+            return;
+        }
+
+        //and restart a timer so we'll fetch again soon
+        dashboardPage.refreshTimer = setTimeout(function(){dashboardPage.refreshAll()},1000*30);
+
+
+        dashboardPage.updateRealtimeStats();
+        dashboardPage.updateTodayStats();
+    },
+
+    //******************************************************************************************************************
+    updateRealtimeStats: function () {
+        utils.writeDebug('updateRealtimeStats() called',false);
+        //TODO
+    },
+
+    //******************************************************************************************************************
+    updateTodayStats: function () {
+        utils.writeDebug('updateTodayStats() called',false);
+        //TODO
     }
 
 //******************************************************************************************************************
