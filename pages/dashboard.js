@@ -55,7 +55,35 @@ var dashboardPage = {
     //******************************************************************************************************************
     updateRealtimeStats: function () {
         utils.writeDebug('updateRealtimeStats() called',false);
-        //TODO
+        awsDynamoDBConnector.fetchWaitTime(globals.theLocation.locationID, dashboardPage.drawRealtimeStats);
+    },
+
+    //******************************************************************************************************************
+    drawRealtimeStats: function(success, theQueue){
+
+        if (!success){
+
+            //the call failed, but since this is a recurring refresh, let's show a ? and assume the next call will work
+            $('#studentsInLine_Dash').html('?');
+
+            return;
+        }
+
+        $('#studentsInLine_Dash').html(theQueue.length);
+
+        if(theQueue.length === 1){
+            $('#studentsInLineLabel_Dash').html('Student In Line');
+        }
+        else{
+            $('#studentsInLineLabel_Dash').html('Students In Line');
+        }
+
+        if(theQueue.length === 0){
+            $('#currentWaitTime_Dash').html('0 Minutes');
+            return;
+        }
+        $('#currentWaitTime_Dash').html(Math.round(theQueue[0].waitTime/1000/60)+ ' Minutes');
+
     },
 
     //******************************************************************************************************************

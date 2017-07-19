@@ -25,6 +25,71 @@ var utils = {
 
     },
 
+
+    //******************************************************************************************************************
+    calibratedDateTime: function(){
+
+         //this function needs to return a claibrated Date/Time value so that different agents
+        //will all be using the same clock even though they are on different machines that could be sent differently
+
+        //if we don't have the server offset, get it.
+        if(globals.serverTimeOffset === 0){
+
+            var currentDateTime = new Date().getTime();
+            utils.writeDebug('Local Time = ' + currentDateTime, false);
+
+            $.get("pages/time.html?version=" + currentDateTime, function(data, status, request){
+                var st = request.getResponseHeader("Date");
+                var serverDate = new Date(st);
+                utils.writeDebug('Server Time = ' + serverDate.getTime(), false);
+
+                var now = new Date();
+
+                globals.serverTimeOffset = now.getTime() - serverDate.getTime();
+
+            });
+
+
+
+/*            $.ajax({
+                dataType : 'json',
+                url: 'https://cobaltfire.com/iqueue3/backbone_php/servertime.php',
+                type: 'get',
+                success: function(results) {
+
+                    //TODO stop using cobaltfire.com to get a common time
+                    console.log('TODO stop using cobaltfire.com to get a common time  (utils.calibratedDateTime)');
+                    utils.writeDebug('<span class="text-warning">TODO stop using cobaltfire.com to get a common time. (utils.calibratedDateTime)</span>', false);
+
+                    var serverTime = results * 1000;
+
+                    var now = new Date();
+                    var localTime = now.getTime();
+
+                    globals.serverTimeOffset = localTime - serverTime;
+
+                },
+                error: function (request, status, error) {
+
+                    //TODO stop using cobaltfire.com to get a common time
+                    console.log('TODO stop using cobaltfire.com to get a common time  (utils.calibratedDateTime)');
+                    utils.writeDebug('<span class="text-warning">TODO stop using cobaltfire.com to get a common time.  (utils.calibratedDateTime)</span>', false);
+
+                }
+            });*/
+
+
+        }
+
+        var now = new Date();
+
+        var calibratedTime = now.getTime() - globals.serverTimeOffset;
+
+        var calibratedDateTime = new Date(calibratedTime);
+
+        return calibratedDateTime;
+    },
+
     //******************************************************************************************************************
     fatalError:function (code, data) {
         var options = {};

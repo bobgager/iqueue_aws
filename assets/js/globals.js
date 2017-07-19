@@ -14,6 +14,8 @@ var globals = {
 
     currentPage: null,
 
+    serverTimeOffset: 0,
+
     theCustomer: {},
 
     //holds info about the customers locations
