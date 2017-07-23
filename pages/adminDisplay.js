@@ -465,6 +465,12 @@ var adminDisplayPage = {
         //show the background picker
         $('#slideBackgroundPicker').fadeTo(1000, 1); //in case it still has the default opacity of 0
         $('#slideBackgroundPicker').fadeIn();
+        setTimeout(function () {
+            adminDisplayPage.librarySwiper.update();
+            adminDisplayPage.librarySwiper.slideTo(adminDisplayPage.theBackgroundImageLibraryArray.length);
+            adminDisplayPage.librarySwiper.slideTo(0);
+        },500);
+
 
     },
 
