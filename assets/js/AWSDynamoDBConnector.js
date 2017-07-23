@@ -143,18 +143,6 @@ var awsDynamoDBConnector = {
     //******************************************************************************************************************
     fetchSingleUser: function(customerID, userGUID, callback){
 
-        // set an unauthenticated config object
-
-        var creds = new AWS.CognitoIdentityCredentials({
-            IdentityPoolId: 'us-east-1:f769f5d7-6530-4e45-a689-27226bb6d05e'
-        });
-        AWS.config.credentials = creds;
-
-        AWS.config.region = 'us-east-1';
-
-        var dynamodbEast = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
-
-
         var params = {
             Key: {
                 "customerID": customerID ,
@@ -162,7 +150,7 @@ var awsDynamoDBConnector = {
             },
             TableName: "iqUsers"
         };
-        dynamodbEast.get(params, function(err, data) {
+        awsCognitoConnector.dynamodbEast.get(params, function(err, data) {
             if (err) {
                 console.log(err, err.stack); // an error occurred
                 callback(false, err)

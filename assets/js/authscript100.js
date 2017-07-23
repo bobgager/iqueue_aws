@@ -100,8 +100,10 @@ var configure = {
         //console.log('userReturned and success = ' + success + ' and configure.retryCount = ' + configure.retryCount );
 
         if(!success){
+            utils.writeDebug('<span class="text-warning">fetchSingleUser failed</span>');
             if (configure.retryCount < 3){
                 configure.retryCount ++;
+                utils.writeDebug('<span class="text-info">retrying fetchSingleUser</span>');
                 awsDynamoDBConnector.fetchSingleUser(globals.cognitoUserAttributes.customerID, globals.cognitoUserAttributes.guidUserName, configure.userReturned);
                 return;
             }
@@ -117,7 +119,7 @@ var configure = {
         //build the menu's
         configure.buildMenus();
 
-        //if their status is still Invited, then it's the first time they have sucesfully signed in
+        //if their status is still Invited, then it's the first time they have successfully signed in
         if (globals.theUser.status === "Invited"){
             //so, update their status to Active
             globals.theUser.status = "Active";
