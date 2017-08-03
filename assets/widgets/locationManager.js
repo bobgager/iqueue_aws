@@ -5,6 +5,7 @@
 //create the modal html element
 document.write('' +
     '<div class="hidden-elements jpanel-menu-exclude">'+
+
         '<div id="locationPickerModal" class="modal fade" tabindex="-1" role="dialog">' +
             '<div id="locationPickerModalDialog" class="modal-dialog" >' +
                 '<div class="modal-content">' +
@@ -39,6 +40,7 @@ document.write('' +
                 '</div>' +
             '</div>' +
         '</div>'+
+
     '</div>');
 
 //**********************************************************************************************************************

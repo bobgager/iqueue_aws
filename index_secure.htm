@@ -184,7 +184,7 @@
 <div id="content">
 
 
-    <div class="container mb-10">
+    <div class="container mb-3">
 
         <!-- Login form -->
         <form id="login-form" class="form-login form-wrapper form-narrow">
@@ -372,6 +372,11 @@
 <!--summernote text editor script-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.js"></script>
 
+<!--Highcharts-->
+<script src="assets/plugins/highcharts_v4.1.8/js/highcharts.js"></script>
+<script src="assets/plugins/highcharts_v4.1.8/js/modules/drilldown.js"></script>
+<script src="assets/plugins/highcharts_v4.1.8/js/modules/exporting.js"></script>
+
 
 
 <!--Custom scripts mainly used to trigger libraries/plugins -->
@@ -389,6 +394,8 @@
     document.write('<script type="text/javascript"src=" assets/js/AWSCognitoConnector.js?version=' + currentDateTime + '"> <\/script>');
 
     document.write('<script type="text/javascript"src=" assets/js/AWSsesConnector.js?version=' + currentDateTime + '"> <\/script>');
+
+    document.write('<script type="text/javascript"src=" assets/js/AWSS3Connector.js?version=' + currentDateTime + '"> <\/script>');
 
     document.write('<script type="text/javascript"src=" assets/js/utilities.js?version=' + currentDateTime + '"> <\/script>');
 

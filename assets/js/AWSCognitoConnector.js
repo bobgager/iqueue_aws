@@ -147,6 +147,10 @@ var awsCognitoConnector = {
 
                     awsSESConnector.ses = new AWS.SES({apiVersion: '2010-12-01'});
 
+                    // Configure your region
+                    //AWS.config.region = 'us-west-1';
+                    AWSS3.s3West = new AWS.S3({apiVersion: '2006-03-01', region: 'us-west-1'});
+
                     //AWS authenticated access setup, so go back to the app
                     callback(true, result, result2);
 

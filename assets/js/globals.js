@@ -6,13 +6,15 @@ var globals = {
 
     showDebug: true,
 
-    version: '0.001.015',
+    version: '0.001.017',
 
     //******************************************************************************************************************
 
     cognitoUserAttributes: {},
 
     currentPage: null,
+
+    serverTimeOffset: 0,
 
     theCustomer: {},
 

@@ -17,7 +17,7 @@ var configure = {
         $('#loading-iqueue-progress-bar').html('Loading scripts');
 
         var progress = 0;
-        var scripts = ['assets/js/AWSDynamoDBConnector.js?version='+globals.version, 'assets/js/AWSS3Connector.js?version='+globals.version];
+        var scripts = ['assets/js/AWSDynamoDBConnector.js?version='+globals.version];
         scripts.forEach(function(script) {
             $.getScript(script, function () {
                 if (++progress == scripts.length) configure.loadCustomerConfig();
@@ -32,7 +32,7 @@ var configure = {
         $('#loading-iqueue-progress-bar').addClass('w-60');
         $('#loading-iqueue-progress-bar').html("Fetching Customer Configuration");
 
-        awsDynamoDBConnector.fetchCustomerConfig(awsCognitoConnector.cognitoUser.customerID, function (success, data) {
+        awsDynamoDBConnector.fetchCustomerConfig(globals.cognitoUserAttributes.customerID, function (success, data) {
             if (success) {
                 globals.theCustomer = data;
                 configure.fetchLocations();
@@ -46,7 +46,8 @@ var configure = {
     //******************************************************************************************************************
     fetchLocations: function () {
 
-        awsDynamoDBConnector.fetchCustomerLocationsTable(awsCognitoConnector.cognitoUser.customerID,function (success, data) {
+
+        awsDynamoDBConnector.fetchCustomerLocationsTable(globals.cognitoUserAttributes.customerID,function (success, data) {
             if (success) {
                 globals.theLocationsArray = data;
                 locationManager.showLocationPicker(configure.loadMoreScripts);
@@ -55,11 +56,6 @@ var configure = {
                 utils.fatalError('fl001', 'Failed to fetch location information.<br>' + data);
             }
         });
-
-
-
-
-
 
     },
 
@@ -100,8 +96,10 @@ var configure = {
         //console.log('userReturned and success = ' + success + ' and configure.retryCount = ' + configure.retryCount );
 
         if(!success){
+            utils.writeDebug('<span class="text-warning">fetchSingleUser failed</span>');
             if (configure.retryCount < 3){
                 configure.retryCount ++;
+                utils.writeDebug('<span class="text-info">retrying fetchSingleUser</span>');
                 awsDynamoDBConnector.fetchSingleUser(globals.cognitoUserAttributes.customerID, globals.cognitoUserAttributes.guidUserName, configure.userReturned);
                 return;
             }
@@ -114,10 +112,11 @@ var configure = {
         //seems we have a user
         globals.theUser = results;
 
+
         //build the menu's
         configure.buildMenus();
 
-        //if their status is still Invited, then it's the first time they have sucesfully signed in
+        //if their status is still Invited, then it's the first time they have successfully signed in
         if (globals.theUser.status === "Invited"){
             //so, update their status to Active
             globals.theUser.status = "Active";

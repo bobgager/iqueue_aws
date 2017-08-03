@@ -156,6 +156,10 @@ var adminUsersPage = {
                 status:     'Invited'
             };
 
+            //overide some values to create a new Creator account for a specific customer
+            //userDetails.customerID = 'Stanford1001';
+            //userDetails.role = 'Creator';
+
             awsDynamoDBConnector.update_iqUsers(userDetails, adminUsersPage.invitationRecordCreated)
 
         }
