@@ -49,17 +49,6 @@ function signInReturned(success, data, userAttributes) {
     if (success){
         //console.log('user signed in successfully');
 
-        if (!awsCognitoConnector.cognitoUser.customerID){
-            //if the cognitoUser does not yet have a customerID, it means we're still in early development
-            //and haven't started putting customerID in there yet
-            //so put one in
-            awsCognitoConnector.cognitoUser.customerID = 'Cobalt1001';
-        }
-        else {
-            //TODO Remove this if/else section once customerID is being put in congnito user on signup
-            console.log('TODO Remove this if/else section once customerID is being put in congnito user on signup')
-        }
-
         userAttributes.forEach(function (attribute) {
 
             switch(attribute.Name) {

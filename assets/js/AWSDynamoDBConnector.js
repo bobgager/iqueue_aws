@@ -141,6 +141,54 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    fetchHelpedToday: function(locationID, callback){
+
+        var thisMorning = new Date();
+        thisMorning.setHours(0);
+        thisMorning.setMinutes(1);
+
+        thisMorning = thisMorning.getTime();
+
+        var params = {
+            TableName: 'iqClosedQueue',
+            KeyConditionExpression: 'locationID = :locationID and createTime > :thisMorning ',
+            ExpressionAttributeValues: {
+                ':locationID': locationID,
+                ':thisMorning': thisMorning
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
+
+
+            if (err){
+
+                callback(false, err);
+            }
+            else {
+                // successful response
+
+                //sort ascending by the create time
+                data.Items.sort(function(a, b){
+                    var createTimeA=a.createTime, createTimeB=b.createTime
+                    if (createTimeA < createTimeB) //sort  ascending
+                        return -1
+                    if (createTimeA > createTimeB)
+                        return 1
+                    return 0 //default return value (no sorting)
+                });
+
+                var filteredResults = data.Items.filter(function(item){
+                    return item.issueStatus === 'Closed';
+                });
+
+
+                callback(true, filteredResults);
+            }
+        });
+    },
+
+    //******************************************************************************************************************
     fetchSingleUser: function(customerID, userGUID, callback){
 
         var params = {

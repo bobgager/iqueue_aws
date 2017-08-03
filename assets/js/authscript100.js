@@ -32,7 +32,7 @@ var configure = {
         $('#loading-iqueue-progress-bar').addClass('w-60');
         $('#loading-iqueue-progress-bar').html("Fetching Customer Configuration");
 
-        awsDynamoDBConnector.fetchCustomerConfig(awsCognitoConnector.cognitoUser.customerID, function (success, data) {
+        awsDynamoDBConnector.fetchCustomerConfig(globals.cognitoUserAttributes.customerID, function (success, data) {
             if (success) {
                 globals.theCustomer = data;
                 configure.fetchLocations();
@@ -46,7 +46,8 @@ var configure = {
     //******************************************************************************************************************
     fetchLocations: function () {
 
-        awsDynamoDBConnector.fetchCustomerLocationsTable(awsCognitoConnector.cognitoUser.customerID,function (success, data) {
+
+        awsDynamoDBConnector.fetchCustomerLocationsTable(globals.cognitoUserAttributes.customerID,function (success, data) {
             if (success) {
                 globals.theLocationsArray = data;
                 locationManager.showLocationPicker(configure.loadMoreScripts);
@@ -55,11 +56,6 @@ var configure = {
                 utils.fatalError('fl001', 'Failed to fetch location information.<br>' + data);
             }
         });
-
-
-
-
-
 
     },
 
@@ -115,6 +111,7 @@ var configure = {
 
         //seems we have a user
         globals.theUser = results;
+
 
         //build the menu's
         configure.buildMenus();

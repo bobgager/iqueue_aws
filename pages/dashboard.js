@@ -65,6 +65,7 @@ var dashboardPage = {
 
             //the call failed, but since this is a recurring refresh, let's show a ? and assume the next call will work
             $('#studentsInLine_Dash').html('?');
+            $('#currentWaitTime_Dash').html('?');
 
             return;
         }
@@ -89,7 +90,21 @@ var dashboardPage = {
     //******************************************************************************************************************
     updateTodayStats: function () {
         utils.writeDebug('updateTodayStats() called',false);
-        //TODO
+        awsDynamoDBConnector.fetchHelpedToday(globals.theLocation.locationID, dashboardPage.helpedTodayReturned);
+    },
+
+//******************************************************************************************************************
+    helpedTodayReturned: function (success, data) {
+
+        if(!success){
+
+            //TODO Handle the error better
+            utils.writeDebug('<span class="text-danger">There was an error reading the closedQueue table. Need to handle the error</span>',true);
+
+            return;
+        }
+
+        utils.writeDebug('helpedToday count = ' + data.length,false);
     }
 
 //******************************************************************************************************************
