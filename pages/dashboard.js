@@ -94,7 +94,7 @@ var dashboardPage = {
     },
 
 //******************************************************************************************************************
-    helpedTodayReturned: function (success, data) {
+    helpedTodayReturned: function (success, results) {
 
         if(!success){
 
@@ -104,7 +104,194 @@ var dashboardPage = {
             return;
         }
 
-        utils.writeDebug('helpedToday count = ' + data.length,false);
+        $('#myfirstchart').html('helpedToday count = ' + results.length);
+
+        //show the total number of students we helped today
+        $('#totalToday_Dash').html(results.length);
+
+
+        if(results.length === 0){
+            //nobody has been helped today, so no need to draw the graph
+            if($('#myfirstchart').highcharts()){
+                $('#myfirstchart').highcharts().destroy();
+            }
+            return;
+        }
+
+        //build the data for the graph
+
+
+        //build an array of hour values between the first entry and the last
+        var chartTimeCategories = [];
+
+        var createDate = new Date(results[0].createTime);
+        var firstHour = createDate.getHours();
+        createDate = new Date(results[results.length-1].createTime);
+        var lastHour = createDate.getHours();
+
+        for (i = firstHour; i < lastHour+1; i++) {
+            chartTimeCategories.push(i);
+        }
+
+
+        var hourCount = [];
+        for (i = 0; i < chartTimeCategories.length; i++) {
+            hourCount.push(0);
+        }
+
+        var maxWaitTime = [];
+        for (i = 0; i < chartTimeCategories.length; i++) {
+            maxWaitTime.push(0);
+        }
+
+        var maxServiceTime = [];
+        for (i = 0; i < chartTimeCategories.length; i++) {
+            maxServiceTime.push(0);
+        }
+
+        results.forEach(function(item){
+
+            //add to the hourCount array
+            var createDate = new Date(item.createTime);
+            var activeDate = new Date(item.activeTime);
+            var closeDate = new Date(item.closeTime);
+            hourCount[chartTimeCategories.indexOf(createDate.getHours())] += 1;
+
+
+
+            //figure out the wait times in minutes
+            var waitTime = (activeDate - createDate)/1000/60 ;
+            waitTime = Math.max(0, waitTime);
+            waitTime = Math.round(waitTime);
+
+            //see if it's bigger than the existing wait time for this hour
+            if(waitTime > maxWaitTime[chartTimeCategories.indexOf(createDate.getHours())] ){
+                maxWaitTime[chartTimeCategories.indexOf(createDate.getHours())]= waitTime;
+            }
+
+
+
+            //figure out the wait and service times in minutes
+            var serviceTime = (closeDate - activeDate)/1000/60 ;
+            serviceTime = Math.max(0, serviceTime);
+            serviceTime = Math.round(serviceTime);
+
+            //see if it's bigger than the existing service time for this hour
+            if(serviceTime > maxServiceTime[chartTimeCategories.indexOf(createDate.getHours())] ){
+                maxServiceTime[chartTimeCategories.indexOf(createDate.getHours())]= serviceTime;
+            }
+
+
+        });
+
+        //adjust the hours for better presentation
+        for (i = 0; i < chartTimeCategories.length; i++) {
+            if(chartTimeCategories[i] < 13){
+                //midnight to noon
+
+                if (chartTimeCategories[i] === 12){
+                    chartTimeCategories[i] = chartTimeCategories[i].toString() + ' pm';
+                }
+                else {
+                    chartTimeCategories[i] = chartTimeCategories[i].toString() + ' am';
+                }
+
+            }
+            else{
+                //noon to midnight
+                chartTimeCategories[i] -= 12;
+                chartTimeCategories[i] = chartTimeCategories[i].toString() + ' pm';
+            }
+        }
+        if($('#myfirstchart').highcharts()){
+            $('#myfirstchart').highcharts().destroy();
+        }
+        $('#myfirstchart').highcharts({
+            chart: {
+                zoomType: 'xy'
+            },
+            title: {
+                text: "Today's Profile"
+            },
+            subtitle: {
+                text: ' '
+            },
+            xAxis: [{
+                categories: chartTimeCategories,
+                crosshair: true
+            }],
+            yAxis: [{ // Primary yAxis
+                labels: {
+                    format: '{value} Min',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'Time',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                floor: 0,
+                opposite: true
+            },
+                { // Secondary yAxis
+                    title: {
+                        text: 'Students Helped',
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                    },
+                    labels: {
+                        format: '{value}',
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                    }
+                }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                x: 0,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+            },
+            series: [
+                {
+                    name: 'Helped',
+                    type: 'column',
+                    yAxis: 1,
+                    data: hourCount,
+                    tooltip: {
+                        valueSuffix: ''
+                    }
+
+                },
+                {
+                    name: 'Max Wait Time',
+                    type: 'spline',
+                    data: maxWaitTime,
+                    tooltip: {
+                        valueSuffix: ' Min'
+                    }
+                },
+                {
+                    name: 'Max Service Time',
+                    type: 'spline',
+                    data: maxServiceTime,
+                    tooltip: {
+                        valueSuffix: ' Min'
+                    }
+                }
+            ]
+        });
+
     }
 
 //******************************************************************************************************************
