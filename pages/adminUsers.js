@@ -13,7 +13,7 @@ var adminUsersPage = {
 
         jPM.close();
 
-        globals.currentPage = 'adminUsersPage';
+        router.currentPage = 'adminUsersPage';
 
 
         //fetch the users for this customer

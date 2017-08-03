@@ -17,7 +17,8 @@ var configure = {
         $('#loading-iqueue-progress-bar').html('Loading scripts');
 
         var progress = 0;
-        var scripts = ['assets/js/AWSDynamoDBConnector.js?version='+globals.version];
+        var scripts = ['assets/js/AWSDynamoDBConnector.js?version='+globals.version,
+            'assets/js/router.js?version='+globals.version];
         scripts.forEach(function(script) {
             $.getScript(script, function () {
                 if (++progress == scripts.length) configure.loadCustomerConfig();
@@ -70,7 +71,8 @@ var configure = {
             'pages/adminUsers.js?version='+globals.version,
             'pages/userDetails.js?version='+globals.version,
             'pages/adminDisplay.js?version='+globals.version,
-            'pages/adminDisplay_test.js?version='+globals.version];
+            'pages/adminDisplay_test.js?version='+globals.version,
+            'pages/reports/dailyTraffic.js?version='+globals.version];
 
         scripts.forEach(function(script) {
             $.getScript(script, function () {

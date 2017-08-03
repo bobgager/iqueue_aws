@@ -11,7 +11,7 @@ var dashboardPage = {
 
         jPM.close();
 
-        globals.currentPage = 'dashboardPage';
+        router.currentPage = 'dashboardPage';
 
 
         $('#authenticatedContent').hide().load("pages/dashboard.html?version="+ globals.version, function() {
@@ -40,7 +40,7 @@ var dashboardPage = {
         clearTimeout(dashboardPage.refreshTimer);
 
         //just exit if we're no longer on the Dashboard page
-        if (globals.currentPage !== 'dashboardPage'){
+        if (router.currentPage !== 'dashboardPage'){
             return;
         }
 

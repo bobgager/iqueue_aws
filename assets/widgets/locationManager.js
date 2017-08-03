@@ -106,8 +106,8 @@ var locationManager = {
         locationManager.callback();
 
         //tell the page we're on that the location has changed
-        if(globals.currentPage){
-            switch(globals.currentPage) {
+        if(router.currentPage){
+            switch(router.currentPage) {
                 case 'adminDisplayPage':
                     adminDisplayPage.locationChanged();
                     break;
