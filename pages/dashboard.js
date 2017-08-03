@@ -80,10 +80,10 @@ var dashboardPage = {
         }
 
         if(theQueue.length === 0){
-            $('#currentWaitTime_Dash').html('0 Minutes');
+            $('#currentWaitTime_Dash').html('0 <span class="h4">Min.</span>');
             return;
         }
-        $('#currentWaitTime_Dash').html(Math.round(theQueue[0].waitTime/1000/60)+ ' Minutes');
+        $('#currentWaitTime_Dash').html(Math.round(theQueue[0].waitTime/1000/60)+ ' <span class="h4">Min.</span>');
 
     },
 
