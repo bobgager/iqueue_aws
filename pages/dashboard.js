@@ -104,7 +104,6 @@ var dashboardPage = {
             return;
         }
 
-        $('#myfirstchart').html('helpedToday count = ' + results.length);
 
         //show the total number of students we helped today
         $('#totalToday_Dash').html(results.length);
