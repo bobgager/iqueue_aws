@@ -13,6 +13,18 @@ var router = {
         //save the pageName in case we need to know it later
         router.currentPage = pageName;
 
+        if (router.thePage){
+            router.thePage.preClose(router.preCloseDone);
+        }
+        else {
+            router.preCloseDone();
+        }
+
+    },
+
+    //******************************************************************************************************************
+    preCloseDone: function () {
+
         switch(router.currentPage) {
             case 'adminDisplayPage':
                 router.thePage = adminDisplayPage;
@@ -22,6 +34,9 @@ var router = {
                 break;
             case 'dashboardPage':
                 router.thePage = dashboardPage;
+                break;
+            case 'studentSearchPage':
+                router.thePage = studentSearchPage;
                 break;
             default:
                 //if all else fails, just load the dashboard
