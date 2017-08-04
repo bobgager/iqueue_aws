@@ -29,14 +29,23 @@ var router = {
             case 'adminDisplayPage':
                 router.thePage = adminDisplayPage;
                 break;
+            case 'agentMetricsPage':
+                router.thePage = agentMetricsPage;
+                break;
             case 'dailyTrafficPage':
                 router.thePage = dailyTrafficPage;
                 break;
             case 'dashboardPage':
                 router.thePage = dashboardPage;
                 break;
+            case 'studentListPage':
+                router.thePage = studentListPage;
+                break;
             case 'studentSearchPage':
                 router.thePage = studentSearchPage;
+                break;
+            case 'touchpointsPage':
+                router.thePage = touchpointsPage;
                 break;
             default:
                 //if all else fails, just load the dashboard

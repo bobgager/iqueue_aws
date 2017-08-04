@@ -73,7 +73,10 @@ var configure = {
             'pages/adminDisplay.js?version='+globals.version,
             'pages/adminDisplay_test.js?version='+globals.version,
             'pages/reports/studentSearch.js?version='+globals.version,
-            'pages/reports/dailyTraffic.js?version='+globals.version];
+            'pages/reports/dailyTraffic.js?version='+globals.version,
+            'pages/reports/studentList.js?version='+globals.version,
+            'pages/reports/touchpoints.js?version='+globals.version,
+            'pages/reports/agentMetrics.js?version='+globals.version];
 
         scripts.forEach(function(script) {
             $.getScript(script, function () {
