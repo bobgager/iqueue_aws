@@ -15,7 +15,7 @@ var adminDisplayTestPage = {
 
         jPM.close();
 
-        globals.currentPage = 'adminDisplayTestPage';
+        router.currentPage = 'adminDisplayTestPage';
 
 
         $('#authenticatedContent').hide().load("pages/adminDisplay_test.html?version="+ globals.version, function() {

@@ -25,7 +25,7 @@ var invitationPage = {
     //******************************************************************************************************************
     render: function () {
 
-        globals.currentPage = 'invitationPage';
+        router.currentPage = 'invitationPage';
 
         $('#authenticatedContent').hide().load("pages/invu47.html?version="+ globals.version, function() {
 

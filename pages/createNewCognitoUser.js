@@ -12,7 +12,7 @@ var newCognitoUserPage = {
 
     render: function (user) {
 
-        globals.currentPage = 'newCognitoUserPage';
+        router.currentPage = 'newCognitoUserPage';
 
         newCognitoUserPage.userInformation.role = user.role;
         newCognitoUserPage.userInformation.customerID = user.customerID;
