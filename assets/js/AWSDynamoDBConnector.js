@@ -307,6 +307,32 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    updateCustomerLocationsTable: function (theLocation, callback) {
+
+
+        var params = {
+            TableName: 'iqCustomerLocations',
+            Key: { locationID : theLocation.locationID, customerID : theLocation.customerID },
+
+            UpdateExpression: "set displayAnnounceMessage = :dam ",
+            ExpressionAttributeValues:{
+                ":dam": theLocation.displayAnnounceMessage
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
+            if (err){
+                callback(false,err)
+            }
+            else {
+                callback(true);
+            }
+        });
+
+
+    },
+
+    //******************************************************************************************************************
     update_iqUsers: function (userDetails, callback) {
         var params = {
             TableName: 'iqUsers',

@@ -4,6 +4,8 @@
 
 var adminIqueuePage = {
 
+    oldDisplayAnnounceMessage: '',
+
     pageURL: 'pages/adminIqueue.html',
 
     //******************************************************************************************************************
@@ -22,7 +24,8 @@ var adminIqueuePage = {
 
         $('#allowedDomainsInput').val(globals.theCustomer.allowedDomains);
 
-        $('#configCodeInput').val(globals.theCustomer.configCode);
+        //$('#configCodeInput').val(globals.theCustomer.configCode);
+        $('#configCodeLabel').html(globals.theCustomer.configCode);
 
         //setup some tooltips
         $('#mypopover1').popover();
@@ -71,17 +74,17 @@ var adminIqueuePage = {
         $('#displayAnnounceMessageInput').val(globals.theLocation.displayAnnounceMessage);
 
         //setup the NameCoach section
-        $('#nameCoachChoice').prop('checked', globals.customer.useNameCoach);
+        $('#nameCoachChoice').prop('checked', globals.theCustomer.useNameCoach);
 
-        if (globals.customer.nameCoachAuthToken === '~'){
-            globals.customer.nameCoachAuthToken = '';
+        if (globals.theCustomer.nameCoachAuthToken === '~'){
+            globals.theCustomer.nameCoachAuthToken = '';
         }
-        $('#nameCoachAuthTokenInput').val(globals.customer.nameCoachAuthToken);
+        $('#nameCoachAuthTokenInput').val(globals.theCustomer.nameCoachAuthToken);
 
-        if (globals.customer.nameCoachAccessCode === '~'){
-            globals.customer.nameCoachAccessCode = '';
+        if (globals.theCustomer.nameCoachAccessCode === '~'){
+            globals.theCustomer.nameCoachAccessCode = '';
         }
-        $('#nameCoachAccessCodeInput').val(globals.customer.nameCoachAccessCode);
+        $('#nameCoachAccessCodeInput').val(globals.theCustomer.nameCoachAccessCode);
 
 
     },
@@ -96,10 +99,13 @@ var adminIqueuePage = {
             return;
         }
 
+        adminIqueuePage.oldDisplayAnnounceMessage = globals.theLocation.displayAnnounceMessage;
+
         globals.theLocation.displayAnnounceMessage = $('#displayAnnounceMessageInput').val();
 
-        awsConnector.updateCustomerLocationsTable(globals.theLocation, App.adminview.updateDisplayAnnounceMessageReturned);
+        utils.activeButton('displayMessageUpdateBTN','');
 
+        awsDynamoDBConnector.updateCustomerLocationsTable(globals.theLocation, adminIqueuePage.updateDisplayAnnounceMessageReturned);
 
     },
 
@@ -109,8 +115,15 @@ var adminIqueuePage = {
 
         }
         else {
-            bootbox.alert("Communication Error.<br/><br>There was an error communicating with the cloud.<br>Please make sure you are connected to the internet and try again.<br><br>Error Code: av_udamr_001<br>" + error, function() {});
 
+            var options = {};
+            options.title = 'Communication Error';
+            options.message = "There was an error communicating with the cloud.<br>Please make sure you are connected to the internet and try again.<br><br>Error Code: udamr_001<br>" + error ;
+            options.buttonName = 'OK';
+            options.callback = function () {
+                $('#displayAnnounceMessageInput').val(adminIqueuePage.oldDisplayAnnounceMessage);
+            };
+            modalMessage.showMessage(options);
         }
     },
 
