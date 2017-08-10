@@ -30,7 +30,7 @@
                    <div class="form-group border-primary row " style="margin-bottom: -1px">
 
                         <label for="configCodeInput" class="text-primary font-weight-bold col-sm-4 col-form-label">Configuration Code: <i id="mypopover1" class="fa fa-question-circle-o  mb-1" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Your Configuration Code is used to setup various components of the iQueue system to identify them as connecting to your service. When needed, iQueue will ask you for this Configuration Code" data-original-title="Configuration Code"></i></label>
-                        <div class="col-sm-7 mt-2">
+                        <div class="col-sm-7 mt-3 mb-3">
 <!--
                             <input type="text" class="form-control mt-2" id="configCodeInput"  value="Your Configuration Code has not been set" readonly>
 -->
@@ -42,7 +42,7 @@
                     <div class="form-group border-primary row" style="margin-bottom: -1px">
 
                         <label for="displayAnnounceMessageInput" class="text-primary font-weight-bold col-sm-4 col-form-label">Default Announcement: <i id="defaultAnnouncePopover" class="fa fa-question-circle-o  mb-1" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="The Default Announcement Message is displayed on the overhead display when a student is called up." data-original-title="Default Announcement Message"></i></label>
-                        <div class="input-group col-sm-7 mt-2 mb-2">
+                        <div class="input-group col-sm-7 mt-3 mb-3">
                             <input type="text" class="form-control" id="displayAnnounceMessageInput" onchange="adminIqueuePage.updateDisplayAnnounceMessage()" placeholder="Please set a default Display Announcement Message">
                             <span class="input-group-btn">
                                 <button id="displayMessageUpdateBTN" class="btn btn-secondary pointer" type="button"><i class="fa fa-check"></i></button>
@@ -53,7 +53,7 @@
 
                     <div class="form-group border-primary row">
                         <label class="text-primary font-weight-bold col-sm-4 col-form-label">NameCoach:</label>
-                        <div class="col-sm-8 mt-2">
+                        <div class="col-sm-8 mt-3">
 
                             <div class="form-check">
                                 <label class="form-check-label">
@@ -135,85 +135,7 @@
     <!-- Tab panes -->
     <div class="tab-content">
 
-        <div role="tabpanel" class="tab-pane active"    id="generalTab">
-<!--            <p class=" h4 bold">Your General Settings: </p>-->
 
-
-            <div class="form-horizontal">
-
-                <br>
-
-                <div class="form-group border-top">
-
-                    <br>
-
-                    <label for="configCodeInput" class="col-sm-3 control-label">Configuration Code <i id="mypopover1" class="entypo-help-circled" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Your Configuration Code is used to setup various components of the iQueue system to identify them as connecting to your service. When needed, iQueue will ask you for this Configuration Code" data-original-title="Configuration Code"></i></label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" name="role" id="configCodeInput"  value="Your Configuration Code has not been set" readonly>
-                        <span class="description">Please contact Cobalt Fire Software to change your Configuration Code</span>
-                    </div>
-
-                </div>
-
-                <div class="form-group border-top">
-
-                    <br>
-
-                    <label for="displayAnnounceMessageInput" class="col-sm-3 control-label">Default Announcement <i id="defaultAnnouncePopover" class="entypo-help-circled" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="The Default Announcement Message is displayed on the overhead display when a student is called up." data-original-title="Default Announcement Message"></i></label>
-                    <div class="input-group col-sm-7">
-                        <input type="text" class="form-control" name="role" id="displayAnnounceMessageInput" onchange="App.adminview.updateDisplayAnnounceMessage()" placeholder="Please set a default Display Announcement Message" >
-                        <span class="input-group-btn">
-                                        <button class="btn btn-secondary" type="button" ><i class="fa fa-check"></i></button>
-                                    </span>
-                    </div>
-
-                </div>
-
-
-
-                <div class="form-group border-top">
-                    <label for="nameCoachChoice" class="col-sm-3 control-label">NameCoach:</label>
-                    <div class="col-sm-5">
-                        <div class="checkbox"  style="padding-left: 0">
-                            <label>
-                                <input id="nameCoachChoice" type="checkbox" onchange="App.adminview.saveNameCoach();"> Use NameCoach
-                            </label>
-                        </div>
-
-                        <div>
-                            <span class="description">Your NameCoach Auth_Token:</span>
-
-                            <div class="input-group">
-                                <input id="nameCoachAuthTokenInput" name="nameCoachAuthTokenInput" type="text" placeholder="NameCoach Auth_Token" class="form-control input-md" onchange="App.adminview.saveNameCoach();" >
-                                <span class="input-group-btn">
-                                                <button class="btn btn-secondary" type="button" onclick="App.adminview.saveNameCoach();" ><i class="fa fa-check"></i></button>
-                                            </span>
-                            </div>
-
-                        </div>
-
-                        <div>
-                            <span class="description">Your NameCoach Access_Code:</span>
-
-                            <div class="input-group">
-                                <input id="nameCoachAccessCodeInput" name="nameCoachAccessCodeInput" type="text" placeholder="NameCoach Access_Code" class="form-control input-md" onchange="App.adminview.saveNameCoach();" >
-                                <span class="input-group-btn">
-                                                <button class="btn btn-secondary" type="button" onclick="App.adminview.saveNameCoach();" ><i class="fa fa-check"></i></button>
-                                            </span>
-                            </div>
-
-                        </div>
-
-                        <br>
-                        <span class="description">Please contact <a href="https://www.name-coach.com/education" target="_blank" style="text-decoration: underline">NameCoach</a> to setup your account</span>
-                    </div>
-                </div>
-
-
-
-            </div>
-
-        </div>
 
         <div role="tabpanel" class="tab-pane" id="touchpointsTab" >
             <p class=" h4 bold">Your Touch Points: &NonBreakingSpace;<i style="cursor: pointer" class=" entypo-arrows-ccw" onclick="App.adminview.touchpointsTabClicked();"></i></p>

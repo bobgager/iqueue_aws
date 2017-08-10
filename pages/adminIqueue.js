@@ -142,7 +142,10 @@ var adminIqueuePage = {
             nameCoachAccessCode = '~';
         }
 
-        awsConnector.updateNameCoach($('#nameCoachChoice').is(':checked'), nameCoachAuthToken, nameCoachAccessCode, App.adminview.updateNameCoachReturned);
+        utils.activeButton('nameCoachAuthTokenBTN','');
+        utils.activeButton('nameCoachAccessCodeBTN','');
+
+        awsDynamoDBConnector.updateNameCoach(globals.theCustomer.customerID, globals.theCustomer.configCode, $('#nameCoachChoice').is(':checked'), nameCoachAuthToken, nameCoachAccessCode, adminIqueuePage.updateNameCoachReturned);
 
     },
 
@@ -152,14 +155,20 @@ var adminIqueuePage = {
         if (success){
 
             //update the local copy of the customer info
-            globals.customer.useNameCoach = $('#nameCoachChoice').is(':checked');
-            globals.customer.nameCoachAuthToken = $('#nameCoachAuthTokenInput').val();
-            globals.customer.nameCoachAccessCode = $('#nameCoachAccessCodeInput').val();
+            globals.theCustomer.useNameCoach = $('#nameCoachChoice').is(':checked');
+            globals.theCustomer.nameCoachAuthToken = $('#nameCoachAuthTokenInput').val();
+            globals.theCustomer.nameCoachAccessCode = $('#nameCoachAccessCodeInput').val();
 
         }
         else {
-            bootbox.alert("Communication Error.<br/><br>There was an error communicating with the cloud.<br>Please make sure you are connected to the internet and try again.<br><br>Error Code: av_uncr_001<br>" + error, function() {});
-
+            var options = {};
+            options.title = 'Communication Error';
+            options.message = "There was an error communicating with the cloud.<br>Please make sure you are connected to the internet and try again.<br><br>Error Code: uncr_001<br>" + error ;
+            options.buttonName = 'OK';
+            options.callback = function () {
+                adminIqueuePage.locationChanged();
+            };
+            modalMessage.showMessage(options);
         }
     },
 

@@ -355,7 +355,36 @@ var awsDynamoDBConnector = {
             }
         });
 
-    }
+    },
+
+    //******************************************************************************************************************
+    updateNameCoach: function (customerID, configCode, useNameCoach, nameCoachAuthToken, nameCoachAccessCode, callback) {
+
+        var params = {
+            TableName: 'iqCustomerConfigs',
+            Key: { customerID : customerID, configCode : configCode },
+            UpdateExpression: "set useNameCoach=:useNameCoach, nameCoachAuthToken=:nameCoachAuthToken, nameCoachAccessCode=:nameCoachAccessCode",
+            ExpressionAttributeValues:{
+                ":useNameCoach": useNameCoach,
+                ":nameCoachAuthToken": nameCoachAuthToken,
+                ":nameCoachAccessCode": nameCoachAccessCode
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
+            //console.log('returned from update with err = ' + err);
+            if (err){
+                //console.log(err); // an error occurred
+                callback(false,err);
+            }
+            else {
+                //console.log(data);
+                callback(true);
+            }
+        });
+
+
+    },
 
 
     //******************************************************************************************************************
