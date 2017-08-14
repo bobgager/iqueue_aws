@@ -18,6 +18,8 @@ var adminIqueuePage = {
 
     activeTPCategory: null,
 
+    activeTPSubCategory: null,
+
     //******************************************************************************************************************
     preRender: function (callback) {
         //initialize anything that is required before the page gets rendered
@@ -257,8 +259,8 @@ var adminIqueuePage = {
         });
 
         //add an Add TouchPoint Department link
-        s +=    '<a href="#" class="list-group-item clearfix text-primary-darkend text-sm" >';
-        s +=        'Add Department &NonBreakingSpace;<i style="cursor: pointer" class="fa fa-plus" onclick="adminIqueuePage.addTPDepartment();"></i>' ;
+        s +=    '<a href="#" class="list-group-item clearfix text-primary-darkend text-sm pointer" onclick="adminIqueuePage.addTPDepartment();">';
+        s +=        'Add Department &NonBreakingSpace;<i style="cursor: pointer" class="fa fa-plus" ></i>' ;
         s +=    '</a>';
 
         $('#touchpointDepartmentListGroup').html(s);
@@ -337,8 +339,8 @@ var adminIqueuePage = {
         });
 
         //add an Add TouchPoint Category link
-        s +=    '<a href="#" class="list-group-item clearfix text-primary-darkend text-sm" >';
-        s +=        'Add Category &NonBreakingSpace;<i style="cursor: pointer" class="fa fa-plus" onclick="adminIqueuePage.addTPCategory();"></i>' ;
+        s +=    '<a href="#" class="list-group-item clearfix text-primary-darkend text-sm pointer" onclick="adminIqueuePage.addTPCategory();">';
+        s +=        'Add Category &NonBreakingSpace;<i style="cursor: pointer" class="fa fa-plus" ></i>' ;
         s +=    '</a>';
 
         $('#touchpointCategoriesListGroup').html(s);
@@ -398,55 +400,55 @@ var adminIqueuePage = {
         });
 
 
-        if(theSubCategories.length === 0){
-            $('#touchpointSubCategoriesListGroup').html('<p>Click the + icon above to add a Sub-Category for this Category</p>');
-        }
-        else{
-            //sort the sub categories
-            theSubCategories.sort(function(a, b){
-                var catA= a.toLowerCase(), catB= b.toLowerCase()
-                if (catA < catB) //sort string ascending
-                    return -1
-                if (catA > catB)
-                    return 1
-                return 0 //default return value (no sorting)
-            });
+        //sort the sub categories
+        theSubCategories.sort(function(a, b){
+            var catA= a.toLowerCase(), catB= b.toLowerCase()
+            if (catA < catB) //sort string ascending
+                return -1
+            if (catA > catB)
+                return 1
+            return 0 //default return value (no sorting)
+        });
 
-            adminIqueuePage.touchpointSubCategories = theSubCategories;
+        adminIqueuePage.touchpointSubCategories = theSubCategories;
 
-            //loop through the sub categories and build the list
-            var s = '';
-            theSubCategories.forEach(function(item){
+        //loop through the sub categories and build the list
+        var s = '';
+        theSubCategories.forEach(function(item){
 
-                var itemID = item.replace(/ /g, "_");
-                itemID = itemID.replace(/\u002f/g, "_");
-                itemID = itemID.replace(/\u005c/g, "_");
-                itemID = itemID.replace(/\u0028/g, "_");
-                itemID = itemID.replace(/\u0029/g, "_");
-                itemID = itemID.replace(/\u002A/g, "_");
-                itemID = itemID.replace(/:/g, "_");
+            var itemID = item.replace(/ /g, "_");
+            itemID = itemID.replace(/\u002f/g, "_");
+            itemID = itemID.replace(/\u005c/g, "_");
+            itemID = itemID.replace(/\u0028/g, "_");
+            itemID = itemID.replace(/\u0029/g, "_");
+            itemID = itemID.replace(/\u002A/g, "_");
+            itemID = itemID.replace(/:/g, "_");
 
-                s +=    '<a id="touchPointSubCategory" href="#" class="list-group-item clearfix" data-subcategory="' + item + '">';
-                s +=        item ;
-                s +=        '<span class="pull-right">';
-                s +=            '<button id="tpSubCategoryTrash'+ itemID +'" class="btn btn-xs btn-default">';
-                s +=                '<span id="tpSubCategoryTrash" class="fa fa-trash"></span>';
-                s +=            '</button>';
-                s +=        '</span>';
-                s +=    '</a>';
+            s +=    '<a id="touchPointSubCategory" href="#" class="list-group-item clearfix" data-subcategory="' + item + '" onclick="adminIqueuePage.touchPointSubCategoryClicked(&#39;' + item + '&#39;)">';
+            s +=        item ;
+            s +=        '<span class="pull-right">';
+            s +=            '<button id="tpSubCategoryTrash'+ itemID +'" class="btn btn-xs btn-default">';
+            s +=                '<span id="tpSubCategoryTrash" class="fa fa-trash"></span>';
+            s +=            '</button>';
+            s +=        '</span>';
+            s +=    '</a>';
 
 
-            });
+        });
 
-            $('#touchpointSubCategoriesListGroup').html(s);
+        //add an Add TouchPoint SubCategory link
+        s +=    '<a href="#" class="list-group-item clearfix text-primary-darkend text-sm pointer"  onclick="adminIqueuePage.addTPSubCategory();">';
+        s +=        'Add Sub-Category &NonBreakingSpace;<i style="cursor: pointer" class="fa fa-plus"></i>' ;
+        s +=    '</a>';
 
-            //hide all the category trash icons
-            adminIqueuePage.showTPCategoryTrashIcon(-1);
+        $('#touchpointSubCategoriesListGroup').html(s);
 
-            //hide all the sub-category trash icons
-            adminIqueuePage.showTPSubCategoryTrashIcon(-1);
+        //hide all the category trash icons
+        adminIqueuePage.showTPCategoryTrashIcon(-1);
 
-        }
+        //hide all the sub-category trash icons
+        adminIqueuePage.showTPSubCategoryTrashIcon(-1);
+
 
 
     },
@@ -616,24 +618,28 @@ var adminIqueuePage = {
     //******************************************************************************************************************
     addTPSubCategory: function(){
 
-        bootbox.prompt("Add a Sub-Category to the "+ App.adminview.activeTPCategory +" Category:", function(result) {
-            if (result === null) {
-                //alert("Prompt dismissed");
-                return;
-            }
-            else {
-                //alert("New SubCategory Name is: "+result);
-                if(result === ''){
-                    //they left it blank
+        bootbox.prompt({
+            closeButton: false,
+            title: "<h5 class='text-primary'>Add a Sub-Category to the "+ adminIqueuePage.activeTPCategory +" Category:</h5>",
+            callback: function (result) {
+                if (result === null) {
+                    //alert("Prompt dismissed");
                     return;
                 }
+                else {
+                    //alert("New SubCategory Name is: "+result);
+                    if(result === ''){
+                        //they left it blank
+                        return;
+                    }
 
-                //ok, something was typed in
-                var newTouchpointSubCategory = result;
+                    //ok, something was typed in
+                    var newTouchpointSubCategory = result;
 
-                var newTouchpointListItem = {department: App.adminview.activeTPDepartment, category: App.adminview.activeTPCategory, subcategory: newTouchpointSubCategory}
-                awsConnector.addTouchpointListItem(newTouchpointListItem, App.adminview.addTouchpointListItemReturned);
+                    var newTouchpointListItem = {department: adminIqueuePage.activeTPDepartment, category: adminIqueuePage.activeTPCategory, subcategory: newTouchpointSubCategory}
+                    awsConnector.addTouchpointListItem(newTouchpointListItem, adminIqueuePage.addTouchpointListItemReturned);
 
+                }
             }
         });
 
@@ -643,7 +649,7 @@ var adminIqueuePage = {
     //******************************************************************************************************************
     showTPSubCategoryTrashIcon: function(selectedSubCategory){
 
-        App.adminview.touchpointSubCategories.forEach(function(item){
+        adminIqueuePage.touchpointSubCategories.forEach(function(item){
 
             var itemID = item.replace(/ /g, "_");
             itemID = itemID.replace(/\u002f/g, "_");
@@ -665,25 +671,32 @@ var adminIqueuePage = {
     },
 
     //******************************************************************************************************************
-    touchPointSubCategoryClicked: function(e){
+    touchPointSubCategoryClicked: function(activeTPSubCategory){
 
         //var activeTPSubCategoryID = e.currentTarget.getAttribute('data-subcategoryid');
-        var activeTPSubCategory = e.currentTarget.getAttribute('data-subcategory');
+        //var activeTPSubCategory = e.currentTarget.getAttribute('data-subcategory');
 
-        App.adminview.activeTPSubCategory = activeTPSubCategory;
+        adminIqueuePage.activeTPSubCategory = activeTPSubCategory;
 
         //was it the trash icon that was clicked?
-        if(e.target.id.indexOf('tpSubCategoryTrash') != -1){
+        //TODO
+/*        if(e.target.id.indexOf('tpSubCategoryTrash') != -1){
             //it was the trash
-            this.deleteTPSubCategory(App.adminview.activeTPSubCategory);
+            this.deleteTPSubCategory(adminIqueuePage.activeTPSubCategory);
             return;
-        }
+        }*/
 
         //clear out any previously set active class
-        $('#touchpointSubCategoriesListGroup > a').each(function () { $(this).removeClass('active') });
+        $('#touchpointSubCategoriesListGroup > a').each(function () {
+            var theSubCategory = this.getAttribute('data-subcategory');
+            if (theSubCategory === activeTPSubCategory){
+                $(this).addClass('active') ;
+            }
+            else{
+                $(this).removeClass('active') ;
+            }
 
-        //set the clicked item to active
-        $(e.currentTarget).addClass("active");
+        });
 
         //show the trash icon
         this.showTPSubCategoryTrashIcon(activeTPSubCategory);

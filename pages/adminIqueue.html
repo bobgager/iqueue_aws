@@ -83,36 +83,32 @@
 
             <!--TouchPoints Tab-->
             <div class="tab-pane fade" id="touchpointsTab" role="tabpanel">
-                <h5 class="text-primary" >
-                    Your Touch Points: &nbsp;&nbsp;<i style="cursor: pointer" class=" fa fa-refresh" onclick="adminIqueuePage.touchpointsTabClicked();"></i>
-                </h5>
 
                 <div class="panel-group joined " id="touchpointGroup">
 
-                    <div class="row">
 
-                        <div class="col-xs-4">
 
-                            <div class="h5 padding-bottom-5">Departments</div>
-                            <div id="touchpointDepartmentListGroup" class="list-group"></div>
-
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="h4 pl-2 pt-2 text-primary">Departments</div>
+                                <div id="touchpointDepartmentListGroup" class="list-group"></div>
+                            </div>
+                            <div class="col-sm">
+                                <div class="h4 pl-2 pt-2 text-primary">Categories</div>
+                                <div id="touchpointCategoriesListGroup" class="list-group"></div>
+                            </div>
+                            <div class="col-sm">
+                                <div class="h4 pl-2 pt-2 text-primary">Sub-Categories</div>
+                                <div id="touchpointSubCategoriesListGroup" class="list-group"></div>
+                            </div>
                         </div>
-
-                        <div class="col-xs-4">
-
-                            <div class="h5 padding-bottom-5">Categories</div>
-                            <div id="touchpointCategoriesListGroup" class="list-group"></div>
-
-                        </div>
-
-                        <div class="col-xs-4">
-
-                            <div class="h4 padding-bottom-5">Sub-Categories &nbsp;<i id="addTPSubCategoryIcon" style="cursor: pointer" class=" entypo-plus" onclick="App.adminview.addTPSubCategory();"></i></div>
-                            <div id="touchpointSubCategoriesListGroup" class="list-group"></div>
-
-                        </div>
-
                     </div>
+
+
+
+
+
 
                 </div>
             </div>
