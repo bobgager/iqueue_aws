@@ -8,6 +8,16 @@ var adminIqueuePage = {
 
     pageURL: 'pages/adminIqueue.html',
 
+    touchPointList: [],
+
+    touchpointCategories: [],
+
+    touchpointSubCategories: [],
+
+    activeTPDepartment: null,
+
+    activeTPCategory: null,
+
     //******************************************************************************************************************
     preRender: function (callback) {
         //initialize anything that is required before the page gets rendered
@@ -190,45 +200,35 @@ var adminIqueuePage = {
         $('#addTPSubCategoryIcon').hide();
 
 
-        awsConnector.fetchTouchpointList(App.adminview.touchpointListReturned);
+        awsDynamoDBConnector.fetchTouchpointList(globals.theLocation.locationID, adminIqueuePage.touchpointListReturned);
 
     },
 
     //******************************************************************************************************************
-    touchpointListReturned: function (touchPointList) {
+    touchpointListReturned: function (success, data) {
 
-        if (!touchPointList){
-            bootbox.dialog({
-                message: "Please double check that you are connected to the internet and try again.<br>Error Code: av:tplr:001",
-                title: "Error Communicating With Server",
-                buttons: {
-                    main: {
-                        label: "OK",
-                        className: "btn-default",
-                        callback: function() {
-                            App.adminview.locationSwitch();
-                        }
-                    }
-                }
-            });
+        if (!success){
 
-            return;
-        }
+            var options = {};
+            options.title = 'Communication Error';
+            options.message = "There was an error communicating with the cloud.<br>Please make sure you are connected to the internet and try again.<br><br>Error Code: tplr_001<br>" + data ;
+            options.buttonName = 'OK';
+            options.callback = function () {
+                adminIqueuePage.locationChanged();
+            };
+            modalMessage.showMessage(options);
 
-
-
-        if(touchPointList.length === 0){
-            $('#touchpointDepartmentListGroup').html('Click the + icon above to add your first TouchPoint.');
             return;
         }
 
         //save the touchpointList for later usage
-        App.adminview.touchpointList = touchPointList;
+        adminIqueuePage.touchPointList = data;
+
 
         //build a unique list of Departments
         var theDepartments = [];
 
-        touchPointList.forEach(function(touchPoint) {
+        adminIqueuePage.touchPointList.forEach(function(touchPoint) {
 
             if (theDepartments.indexOf(touchPoint.department) === -1){
                 theDepartments.push(touchPoint.department);
@@ -250,53 +250,54 @@ var adminIqueuePage = {
         var s = '';
         theDepartments.forEach(function(item){
 
-            s +=    '<a id="touchPointDepartment" href="#" class="list-group-item clearfix" data-department="' + item + '">';
+            s +=    '<a id="touchPointDepartment" href="#" class="list-group-item clearfix" data-department="' + item + '" onclick="adminIqueuePage.touchPointDepartmentClicked(&#39;' + item + '&#39;)">';
             s +=        item ;
             s +=    '</a>';
 
         });
 
+        //add an Add TouchPoint Department link
+        s +=    '<a href="#" class="list-group-item clearfix text-primary-darkend text-sm" >';
+        s +=        'Add Department &NonBreakingSpace;<i style="cursor: pointer" class="fa fa-plus" onclick="adminIqueuePage.addTPDepartment();"></i>' ;
+        s +=    '</a>';
+
         $('#touchpointDepartmentListGroup').html(s);
 
-
-        $('#touchpointCategoriesListGroup').html('<p>Click on any Department</p>');
+        if (adminIqueuePage.touchPointList.length !==0){
+            $('#touchpointCategoriesListGroup').html('<p>Click on any Department</p>');
+        }
 
     },
 
     //******************************************************************************************************************
-    touchPointDepartmentClicked: function(e){
+    touchPointDepartmentClicked: function(activeTPDepartment){
 
-//        this.activeTPDepartmentID = e.currentTarget.getAttribute('data-departmentid');
-        this.activeTPDepartment = e.currentTarget.getAttribute('data-department');
+        adminIqueuePage.activeTPDepartment = activeTPDepartment;
 
         //clear out any previously set active class
-        $('#touchpointDepartmentListGroup > a').each(function () { $(this).removeClass('active') });
+        $('#touchpointDepartmentListGroup > a').each(function () {
+            var theDepartment = this.getAttribute('data-department');
+            if (theDepartment === activeTPDepartment){
+                $(this).addClass('active') ;
+            }
+            else{
+                $(this).removeClass('active') ;
+            }
 
-        //set the clicked item to active
-        $(e.currentTarget).addClass("active");
-
-        //show the add category icon
-        $('#addTPCategoryIcon').show();
-
-        //hide the sub-category add icon
-        $('#addTPSubCategoryIcon').hide();
-
-        //hide the sub-category add icon
-        $('#addTPSubCategoryIcon').hide();
+        });
 
         //build a unique list of Touch Point Categories for this Touch Point Department
         var theCategories = [];
 
-        App.adminview.touchpointList.forEach(function(touchPoint) {
+        adminIqueuePage.touchPointList.forEach(function(touchPoint) {
 
-            if(touchPoint.department === App.adminview.activeTPDepartment){
+            if(touchPoint.department === activeTPDepartment){
                 if (theCategories.indexOf(touchPoint.category) === -1){
                     theCategories.push(touchPoint.category);
                 }
             }
 
         });
-
 
         //sort the categories
         theCategories.sort(function(a, b){
@@ -308,8 +309,8 @@ var adminIqueuePage = {
             return 0 //default return value (no sorting)
         });
 
-        //save the lsit of Categories so we can use them later
-        App.adminview.touchpointCategories = theCategories;
+        //save the list of Categories so we can use them later
+        adminIqueuePage.touchpointCategories = theCategories;
 
         //loop through the categories and build the list
         var s = '';
@@ -324,21 +325,26 @@ var adminIqueuePage = {
             itemID = itemID.replace(/:/g, "_");
 
 
-            s +=    '<a id="touchPointCategory" href="#" class="list-group-item clearfix" data-category="' + item  +'">';
+            s +=    '<a id="touchPointCategory" href="#" class="list-group-item clearfix" data-category="' + item  +'" onclick="adminIqueuePage.touchPointCategoryClicked(&#39;' + item + '&#39;)">';
             s +=        item ;
             s +=        '<span class="pull-right">';
             s +=            '<button id="tpCategoryTrash'+ itemID +'" class="btn btn-xs btn-default">';
-            s +=                '<span id="tpCategoryTrash" class="glyphicon glyphicon-trash"></span>';
+            s +=                '<span id="tpCategoryTrash" class="fa fa-trash"></span>';
             s +=            '</button>';
             s +=        '</span>';
             s +=    '</a>';
 
         });
 
+        //add an Add TouchPoint Category link
+        s +=    '<a href="#" class="list-group-item clearfix text-primary-darkend text-sm" >';
+        s +=        'Add Category &NonBreakingSpace;<i style="cursor: pointer" class="fa fa-plus" onclick="adminIqueuePage.addTPCategory();"></i>' ;
+        s +=    '</a>';
+
         $('#touchpointCategoriesListGroup').html(s);
 
         //hide all the category trash icons
-        App.adminview.showTPCategoryTrashIcon(-1);
+        adminIqueuePage.showTPCategoryTrashIcon(-1);
 
 
         $('#touchpointSubCategoriesListGroup').html('<p>Click on any Category</p>');
@@ -346,36 +352,42 @@ var adminIqueuePage = {
     },
 
     //******************************************************************************************************************
-    touchPointCategoryClicked: function(e){
+    touchPointCategoryClicked: function(activeTPCategory){
+
+        adminIqueuePage.activeTPCategory = activeTPCategory;
 
         //this.activeTPCategoryID = e.currentTarget.getAttribute('data-categoryid');
-        this.activeTPCategory = e.currentTarget.getAttribute('data-category');
+        //this.activeTPCategory = e.currentTarget.getAttribute('data-category');
+
+        //clear out any previously set active class
+        $('#touchpointCategoriesListGroup > a').each(function () {
+            var theCategory = this.getAttribute('data-category');
+            if (theCategory === activeTPCategory){
+                $(this).addClass('active') ;
+            }
+            else{
+                $(this).removeClass('active') ;
+            }
+
+        });
 
         //was it the trash icon that was clicked?
-        if(e.target.id.indexOf('tpCategoryTrash') != -1){
+        //TODO
+/*        if(e.target.id.indexOf('tpCategoryTrash') != -1){
             //it was the trash
             this.deleteTPCategory(this.activeTPCategoryID,this.activeTPCategory);
             return;
-        }
-
-        //clear out any previously set active class
-        $('#touchpointCategoriesListGroup > a').each(function () { $(this).removeClass('active') });
-
-        //set the clicked item to active
-        $(e.currentTarget).addClass("active");
+        }*/
 
         //show the trash icon
         this.showTPCategoryTrashIcon(this.activeTPCategory);
 
-        //show the add sub-category icon
-
-        $('#addTPSubCategoryIcon').show();
 
         //build the list of sub-categories for this category
         var theSubCategories = [];
-        App.adminview.touchpointList.forEach(function(touchPoint) {
+        adminIqueuePage.touchPointList.forEach(function(touchPoint) {
 
-            if(touchPoint.department === App.adminview.activeTPDepartment && touchPoint.category === App.adminview.activeTPCategory){
+            if(touchPoint.department === adminIqueuePage.activeTPDepartment && touchPoint.category === adminIqueuePage.activeTPCategory){
                 if (theSubCategories.indexOf(touchPoint.subcategory) === -1){
                     if (touchPoint.subcategory){
                         theSubCategories.push(touchPoint.subcategory);
@@ -400,7 +412,7 @@ var adminIqueuePage = {
                 return 0 //default return value (no sorting)
             });
 
-            App.adminview.touchpointSubCategories = theSubCategories;
+            adminIqueuePage.touchpointSubCategories = theSubCategories;
 
             //loop through the sub categories and build the list
             var s = '';
@@ -418,7 +430,7 @@ var adminIqueuePage = {
                 s +=        item ;
                 s +=        '<span class="pull-right">';
                 s +=            '<button id="tpSubCategoryTrash'+ itemID +'" class="btn btn-xs btn-default">';
-                s +=                '<span id="tpSubCategoryTrash" class="glyphicon glyphicon-trash"></span>';
+                s +=                '<span id="tpSubCategoryTrash" class="fa fa-trash"></span>';
                 s +=            '</button>';
                 s +=        '</span>';
                 s +=    '</a>';
@@ -429,10 +441,10 @@ var adminIqueuePage = {
             $('#touchpointSubCategoriesListGroup').html(s);
 
             //hide all the category trash icons
-            App.adminview.showTPCategoryTrashIcon(-1);
+            adminIqueuePage.showTPCategoryTrashIcon(-1);
 
             //hide all the sub-category trash icons
-            App.adminview.showTPSubCategoryTrashIcon(-1);
+            adminIqueuePage.showTPSubCategoryTrashIcon(-1);
 
         }
 
@@ -442,7 +454,7 @@ var adminIqueuePage = {
     //******************************************************************************************************************
     showTPCategoryTrashIcon: function(selectedCategory){
 
-        App.adminview.touchpointCategories.forEach(function(item){
+        adminIqueuePage.touchpointCategories.forEach(function(item){
 
             var itemID = item.replace(/ /g, "_");
             itemID = itemID.replace(/\u002f/g, "_");

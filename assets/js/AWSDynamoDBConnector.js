@@ -218,6 +218,42 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    fetchTouchpointList: function(locationID, callback){
+
+        var params = {
+            TableName: 'iqTouchPointList',
+            KeyConditionExpression: 'locationID = :lkey',
+            ExpressionAttributeValues: {
+                ':lkey': locationID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
+            //console.log('err= ' + err);
+            if (err){
+                //console.log(err);
+                callback(false, err);
+
+            }
+            else{
+                //console.log(data);
+
+                //remove all the spaces in the subcategory field
+
+                data.Items.forEach(function(touchPoint) {
+
+                    if(touchPoint.subcategory === ' '){
+                        touchPoint.subcategory = null;
+                    }
+
+                });
+
+                callback(true, data.Items);
+            }
+        });
+    },
+
+    //******************************************************************************************************************
     fetchWaitTime: function(locationID, callback){
 
         var params = {

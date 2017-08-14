@@ -8,7 +8,7 @@
     <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs">
             <li class="nav-item"> <a class="nav-link active" href="#generalTab" data-toggle="tab">General Settings</a> </li>
-            <li class="nav-item"> <a class="nav-link" href="#touchpointsTab" data-toggle="tab">Touch Points</a> </li>
+            <li class="nav-item"> <a class="nav-link" href="#touchpointsTab" data-toggle="tab" onclick="adminIqueuePage.touchpointsTabClicked();">Touch Points</a> </li>
             <li class="nav-item"> <a class="nav-link" href="#methodsofserviceTab" data-toggle="tab">Methods Of Service</a> </li>
             <li class="nav-item"> <a class="nav-link" href="#mobileSettingsTab" data-toggle="tab">iQueue Mobile</a> </li>
         </ul>
@@ -18,12 +18,6 @@
 
             <!--General Settings Tab-->
             <div class="tab-pane fade active show" id="generalTab" role="tabpanel">
-<!--                <h4 class="card-title">
-                    Your General Settings:
-                </h4>-->
-
-
-
 
                 <div class="form-horizontal ml-2 mr-2">
 
@@ -31,9 +25,6 @@
 
                         <label for="configCodeInput" class="text-primary font-weight-bold col-sm-4 col-form-label">Configuration Code: <i id="mypopover1" class="fa fa-question-circle-o  mb-1" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Your Configuration Code is used to setup various components of the iQueue system to identify them as connecting to your service. When needed, iQueue will ask you for this Configuration Code" data-original-title="Configuration Code"></i></label>
                         <div class="col-sm-7 mt-3 mb-3">
-<!--
-                            <input type="text" class="form-control mt-2" id="configCodeInput"  value="Your Configuration Code has not been set" readonly>
--->
                             <span  class="font-weight-bold" id="configCodeLabel"  >Your Configuration Code has not been set</span>
                         </div>
 
@@ -90,14 +81,43 @@
 
             </div>
 
+            <!--TouchPoints Tab-->
             <div class="tab-pane fade" id="touchpointsTab" role="tabpanel">
-                <h4 class="card-title">
-                    touchpointsTab
-                </h4>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <h5 class="text-primary" >
+                    Your Touch Points: &nbsp;&nbsp;<i style="cursor: pointer" class=" fa fa-refresh" onclick="adminIqueuePage.touchpointsTabClicked();"></i>
+                </h5>
+
+                <div class="panel-group joined " id="touchpointGroup">
+
+                    <div class="row">
+
+                        <div class="col-xs-4">
+
+                            <div class="h5 padding-bottom-5">Departments</div>
+                            <div id="touchpointDepartmentListGroup" class="list-group"></div>
+
+                        </div>
+
+                        <div class="col-xs-4">
+
+                            <div class="h5 padding-bottom-5">Categories</div>
+                            <div id="touchpointCategoriesListGroup" class="list-group"></div>
+
+                        </div>
+
+                        <div class="col-xs-4">
+
+                            <div class="h4 padding-bottom-5">Sub-Categories &nbsp;<i id="addTPSubCategoryIcon" style="cursor: pointer" class=" entypo-plus" onclick="App.adminview.addTPSubCategory();"></i></div>
+                            <div id="touchpointSubCategoriesListGroup" class="list-group"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
 
+            <!--Methods Of Service Tab-->
             <div class="tab-pane fade" id="methodsofserviceTab" role="tabpanel">
                 <h4 class="card-title">
                     methodsofserviceTab
@@ -106,6 +126,7 @@
                 <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
 
+            <!--iQueue Mobile Tab-->
             <div class="tab-pane fade" id="mobileSettingsTab" role="tabpanel">
                 <h4 class="card-title">
                     mobileSettingsTab
