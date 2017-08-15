@@ -5,6 +5,45 @@
 var awsDynamoDBConnector = {
 
 
+
+    //******************************************************************************************************************
+    addTouchpointListItem: function (newTouchpointListItem, callback) {
+
+        //don't allow double or single quotes
+        newTouchpointListItem.department = newTouchpointListItem.department.replace(/'/g, "");
+        newTouchpointListItem.department = newTouchpointListItem.department.replace(/"/g, "");
+
+        //don't allow double or single quotes
+        newTouchpointListItem.category = newTouchpointListItem.category.replace(/'/g, "");
+        newTouchpointListItem.category = newTouchpointListItem.category.replace(/"/g, "");
+
+        //don't allow double or single quotes
+        newTouchpointListItem.subcategory = newTouchpointListItem.subcategory.replace(/'/g, "");
+        newTouchpointListItem.subcategory = newTouchpointListItem.subcategory.replace(/"/g, "");
+
+        var params = {
+            TableName : 'iqTouchPointList',
+            Item: {
+                locationID: newTouchpointListItem.locationID,
+                touchPointID: utils.guid(),
+                department: newTouchpointListItem.department,
+                category: newTouchpointListItem.category,
+                subcategory: newTouchpointListItem.subcategory
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.put(params, function(err, data) {
+            if (err){
+                //console.log(err);
+                callback(false, err);
+            }
+            else{
+                callback(true);
+            }
+
+        });
+    },
+
     //******************************************************************************************************************
     deleteDisplaySlide: function(theSlide, callback){
 

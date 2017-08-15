@@ -197,11 +197,6 @@ var adminIqueuePage = {
         $('#touchpointCategoriesListGroup').html('');
         $('#touchpointSubCategoriesListGroup').html('');
 
-        //hide the add category and subcategory icons
-        $('#addTPCategoryIcon').hide();
-        $('#addTPSubCategoryIcon').hide();
-
-
         awsDynamoDBConnector.fetchTouchpointList(globals.theLocation.locationID, adminIqueuePage.touchpointListReturned);
 
     },
@@ -329,8 +324,8 @@ var adminIqueuePage = {
 
             s +=    '<a id="touchPointCategory" href="#" class="list-group-item clearfix" data-category="' + item  +'" onclick="adminIqueuePage.touchPointCategoryClicked(&#39;' + item + '&#39;)">';
             s +=        item ;
-            s +=        '<span class="pull-right">';
-            s +=            '<button id="tpCategoryTrash'+ itemID +'" class="btn btn-xs btn-default">';
+            s +=        '<span class="float-right">';
+            s +=            '<button id="tpCategoryTrash'+ itemID +'" class="btn btn-primary btn-rounded btn-icon btn-sm " onclick="adminIqueuePage.deleteTPCategory(&#39;' + itemID + '&#39; , &#39;' + item + '&#39;)">';
             s +=                '<span id="tpCategoryTrash" class="fa fa-trash"></span>';
             s +=            '</button>';
             s +=        '</span>';
@@ -346,7 +341,7 @@ var adminIqueuePage = {
         $('#touchpointCategoriesListGroup').html(s);
 
         //hide all the category trash icons
-        adminIqueuePage.showTPCategoryTrashIcon(-1);
+        adminIqueuePage.showTPCategoryTrashIcon(-2);
 
 
         $('#touchpointSubCategoriesListGroup').html('<p>Click on any Category</p>');
@@ -357,9 +352,6 @@ var adminIqueuePage = {
     touchPointCategoryClicked: function(activeTPCategory){
 
         adminIqueuePage.activeTPCategory = activeTPCategory;
-
-        //this.activeTPCategoryID = e.currentTarget.getAttribute('data-categoryid');
-        //this.activeTPCategory = e.currentTarget.getAttribute('data-category');
 
         //clear out any previously set active class
         $('#touchpointCategoriesListGroup > a').each(function () {
@@ -372,17 +364,6 @@ var adminIqueuePage = {
             }
 
         });
-
-        //was it the trash icon that was clicked?
-        //TODO
-/*        if(e.target.id.indexOf('tpCategoryTrash') != -1){
-            //it was the trash
-            this.deleteTPCategory(this.activeTPCategoryID,this.activeTPCategory);
-            return;
-        }*/
-
-        //show the trash icon
-        this.showTPCategoryTrashIcon(this.activeTPCategory);
 
 
         //build the list of sub-categories for this category
@@ -398,6 +379,14 @@ var adminIqueuePage = {
             }
 
         });
+
+        //hide all the category trash icons
+        adminIqueuePage.showTPCategoryTrashIcon(-2);
+        //show the trash icon if there are no sub-categories
+        if (theSubCategories.length ===0){
+            adminIqueuePage.showTPCategoryTrashIcon(adminIqueuePage.activeTPCategory);
+        }
+
 
 
         //sort the sub categories
@@ -424,10 +413,10 @@ var adminIqueuePage = {
             itemID = itemID.replace(/\u002A/g, "_");
             itemID = itemID.replace(/:/g, "_");
 
-            s +=    '<a id="touchPointSubCategory" href="#" class="list-group-item clearfix" data-subcategory="' + item + '" onclick="adminIqueuePage.touchPointSubCategoryClicked(&#39;' + item + '&#39;)">';
+            s +=    '<a id="touchPointSubCategory" href="#" class="list-group-item clearfix" data-subcategory="' + item + '" onclick="adminIqueuePage.touchPointSubCategoryClicked(&#39;' + item + '&#39; , )">';
             s +=        item ;
-            s +=        '<span class="pull-right">';
-            s +=            '<button id="tpSubCategoryTrash'+ itemID +'" class="btn btn-xs btn-default">';
+            s +=        '<span class="float-right">';
+            s +=            '<button id="tpSubCategoryTrash'+ itemID +'" class="btn btn-primary btn-rounded btn-icon btn-sm ">';
             s +=                '<span id="tpSubCategoryTrash" class="fa fa-trash"></span>';
             s +=            '</button>';
             s +=        '</span>';
@@ -456,6 +445,10 @@ var adminIqueuePage = {
     //******************************************************************************************************************
     showTPCategoryTrashIcon: function(selectedCategory){
 
+        if (selectedCategory === -1){
+            return;
+        }
+
         adminIqueuePage.touchpointCategories.forEach(function(item){
 
             var itemID = item.replace(/ /g, "_");
@@ -480,52 +473,60 @@ var adminIqueuePage = {
     //******************************************************************************************************************
     addTPDepartment: function(){
 
-        var self = this;
-
-        bootbox.prompt("Add Department", function(result) {
-            if (result === null) {
-                //alert("Prompt dismissed");
-                return;
-            }
-            else {
-                //alert("New Department Name is: "+result);
-                if(result === ''){
-                    //nothing was typed in
+        bootbox.prompt({
+            closeButton: false,
+            title: "<h5 class='text-primary'>Add Department:</h5>",
+            callback: function (result) {
+                if (result === null) {
+                    //alert("Prompt dismissed");
                     return;
                 }
-
-                var newTouchpointDepartment = result;
-
-                bootbox.prompt("Please create the first Category for the " + newTouchpointDepartment + " department.", function(result){
-                    if (result === null) {
-                        //alert("Prompt dismissed");
+                else {
+                    //alert("New Department Name is: "+result);
+                    if(result === ''){
+                        //nothing was typed in
                         return;
                     }
-                    else{
-                        if(result === ''){
-                            //nothing was typed in
-                            return;
-                        }
-                        //ok, something was typed in
-                        var newTouchpointCategory = result;
 
-                        var newTouchpointListItem = {department: newTouchpointDepartment, category: newTouchpointCategory, subcategory: ' '}
-                        awsConnector.addTouchpointListItem(newTouchpointListItem, App.adminview.addTouchpointListItemReturned);
-                    }
-                });
+                    var newTouchpointDepartment = result;
+
+                    bootbox.prompt({
+                        closeButton: false,
+                        title: "<h5 class='text-primary'>Please create the first Category for the " + newTouchpointDepartment + " department:</h5>",
+                        callback: function (result) {
+                            if (result === null) {
+                                //alert("Prompt dismissed");
+                                return;
+                            }
+                            else{
+                                if(result === ''){
+                                    //nothing was typed in
+                                    return;
+                                }
+                                //ok, something was typed in
+                                var newTouchpointCategory = result;
+
+                                var newTouchpointListItem = {locationID: globals.theLocation.locationID, department: newTouchpointDepartment, category: newTouchpointCategory, subcategory: ' '}
+                                awsDynamoDBConnector.addTouchpointListItem(newTouchpointListItem, adminIqueuePage.addTouchpointListItemReturned);
+                            }
+                        }
+                    });
+
+                }
             }
         });
+
     },
 
     //******************************************************************************************************************
-    addTouchpointListItemReturned: function (success) {
+    addTouchpointListItemReturned: function (success, err) {
 
         if(success){
-            App.adminview.touchpointsTabClicked();
+            adminIqueuePage.touchpointsTabClicked();
             return;
         }
         bootbox.dialog({
-            message: 'Please double check that you are connected to the internet and try again.<br><br>Error Code: av-atplir-001.<br><br>Error= ' + err,
+            message: 'Please double check that you are connected to the internet and try again.<br><br>Error Code: atplir-001.<br><br>Error= ' + err,
             title: "There was an error saving your TouchPoint.",
             closeButton: false,
             buttons: {
@@ -544,24 +545,28 @@ var adminIqueuePage = {
     //******************************************************************************************************************
     addTPCategory: function(){
 
-
-        bootbox.prompt("Add a Category to the "+ App.adminview.activeTPDepartment +" Department:", function(result){
-            if (result === null) {
-                //alert("Prompt dismissed");
-                return;
-            }
-            else{
-                if(result === ''){
-                    //nothing was typed in
+        bootbox.prompt({
+            closeButton: false,
+            title: "<h5 class='text-primary'>Add a Category to the "+ adminIqueuePage.activeTPDepartment +" Department:</h5>",
+            callback: function (result) {
+                if (result === null) {
+                    //alert("Prompt dismissed");
                     return;
                 }
-                //ok, something was typed in
-                var newTouchpointCategory = result;
+                else{
+                    if(result === ''){
+                        //nothing was typed in
+                        return;
+                    }
+                    //ok, something was typed in
+                    var newTouchpointCategory = result;
 
-                var newTouchpointListItem = {department: App.adminview.activeTPDepartment, category: newTouchpointCategory, subcategory: ' '}
-                awsConnector.addTouchpointListItem(newTouchpointListItem, App.adminview.addTouchpointListItemReturned);
+                    var newTouchpointListItem = {locationID: globals.theLocation.locationID, department: adminIqueuePage.activeTPDepartment, category: newTouchpointCategory, subcategory: ' '}
+                    awsDynamoDBConnector.addTouchpointListItem(newTouchpointListItem, adminIqueuePage.addTouchpointListItemReturned);
+                }
             }
         });
+
     },
 
     //******************************************************************************************************************
@@ -570,6 +575,7 @@ var adminIqueuePage = {
         bootbox.dialog({
             message: "<h4>Are you sure you want to delete the Touch Point Category:<br><br><strong>" + name + "</strong></h4><br><br>This delete cannot be undone",
             title: "Delete TouchPoint Category?",
+            closeButton: false,
             buttons: {
                 cancel: {
                     label: "Cancel",
@@ -585,12 +591,12 @@ var adminIqueuePage = {
                     callback: function(e) {
 
                         //figure out which touchpoint to delete
-                        App.adminview.touchpointList.forEach(function (touchpoint) {
-                            if(App.adminview.activeTPDepartment === touchpoint.department){
+                        adminIqueuePage.touchPointList.forEach(function (touchpoint) {
+                            if(adminIqueuePage.activeTPDepartment === touchpoint.department){
                                 //the department matches
-                                if (App.adminview.activeTPCategory === touchpoint.category){
+                                if (adminIqueuePage.activeTPCategory === touchpoint.category){
                                     //and, the category matches
-                                    awsConnector.deleteTouchpointListItem(globals.theLocationID, touchpoint.touchPointID, App.adminview.touchpointDeleteReturned)
+                                    awsConnector.deleteTouchpointListItem(globals.theLocation.locationID, touchpoint.touchPointID, adminIqueuePage.touchpointDeleteReturned)
                                 }
                             }
                         });
@@ -636,8 +642,8 @@ var adminIqueuePage = {
                     //ok, something was typed in
                     var newTouchpointSubCategory = result;
 
-                    var newTouchpointListItem = {department: adminIqueuePage.activeTPDepartment, category: adminIqueuePage.activeTPCategory, subcategory: newTouchpointSubCategory}
-                    awsConnector.addTouchpointListItem(newTouchpointListItem, adminIqueuePage.addTouchpointListItemReturned);
+                    var newTouchpointListItem = {locationID: globals.theLocation.locationID, department: adminIqueuePage.activeTPDepartment, category: adminIqueuePage.activeTPCategory, subcategory: newTouchpointSubCategory}
+                    awsDynamoDBConnector.addTouchpointListItem(newTouchpointListItem, adminIqueuePage.addTouchpointListItemReturned);
 
                 }
             }
@@ -800,7 +806,7 @@ var adminIqueuePage = {
         mosArray.forEach(function(item){
 
             listHTML += '       <li class="list-group-item clearfix">';
-            listHTML += '          <span class="h4">'+ item.methodOfServiceName + '<a class="pointer text-danger" onclick="App.adminview.deleteMethodOfService_AWS(&#39;'+ item.theLocation + '&#39;, &#39;'+ item.methodOfServiceID + '&#39;, &#39;'+ item.methodOfServiceName + '&#39;)"><i class="fa fa-trash-o pull-right "></i></a></span>';
+            listHTML += '          <span class="h4">'+ item.methodOfServiceName + '<a class="pointer text-danger" onclick="App.adminview.deleteMethodOfService_AWS(&#39;'+ item.theLocation + '&#39;, &#39;'+ item.methodOfServiceID + '&#39;, &#39;'+ item.methodOfServiceName + '&#39;)"><i class="fa fa-trash-o float-right "></i></a></span>';
             listHTML += '       </li>';
 
         });
