@@ -416,7 +416,7 @@ var adminIqueuePage = {
             s +=    '<a id="touchPointSubCategory" href="#" class="list-group-item clearfix" data-subcategory="' + item + '" onclick="adminIqueuePage.touchPointSubCategoryClicked(&#39;' + item + '&#39; , )">';
             s +=        item ;
             s +=        '<span class="float-right">';
-            s +=            '<button id="tpSubCategoryTrash'+ itemID +'" class="btn btn-primary btn-rounded btn-icon btn-sm ">';
+            s +=            '<button id="tpSubCategoryTrash'+ itemID +'" class="btn btn-primary btn-rounded btn-icon btn-sm " onclick="adminIqueuePage.deleteTPSubCategory(&#39;' + itemID + '&#39;,&#39;' + item + '&#39;)">';
             s +=                '<span id="tpSubCategoryTrash" class="fa fa-trash"></span>';
             s +=            '</button>';
             s +=        '</span>';
@@ -596,7 +596,7 @@ var adminIqueuePage = {
                                 //the department matches
                                 if (adminIqueuePage.activeTPCategory === touchpoint.category){
                                     //and, the category matches
-                                    awsConnector.deleteTouchpointListItem(globals.theLocation.locationID, touchpoint.touchPointID, adminIqueuePage.touchpointDeleteReturned)
+                                    awsDynamoDBConnector.deleteTouchpointListItem(globals.theLocation.locationID, touchpoint.touchPointID, adminIqueuePage.touchpointDeleteReturned)
                                 }
                             }
                         });
@@ -611,12 +611,12 @@ var adminIqueuePage = {
 
         if(success){
             //delete was OK
-            App.adminview.touchpointsTabClicked();
+            adminIqueuePage.touchpointsTabClicked();
             return;
         }
         else{
             //delete failed
-            bootbox.alert("There was an error deleting that Touchpoint.<br><br>Error Code: amv-tpdr-001<br><br>Error Info: " + error);
+            bootbox.alert("There was an error deleting that Touchpoint.<br><br>Error Code: tpdr-001<br><br>Error Info: " + error);
         }
 
     },
@@ -710,10 +710,11 @@ var adminIqueuePage = {
     },
 
     //******************************************************************************************************************
-    deleteTPSubCategory: function(name){
+    deleteTPSubCategory: function(id,name){
 
         bootbox.dialog({
-            message: "<h4>Are you sure you want to delete the Touch Point Sub-Category:<br><br><strong>" + name + "</strong></h4><br><br>This delete cannot be undone",
+            closeButton: false,
+            message: "<h5>Are you sure you want to delete the Touch Point Sub-Category:<br><br><strong>" + name + "</strong></h5><br><br>This delete cannot be undone",
             title: "Delete TouchPoint Sub-Category?",
             buttons: {
                 cancel: {
@@ -731,21 +732,21 @@ var adminIqueuePage = {
                     callback: function(e) {
 
                         //figure out which touchpoint to delete
-                        App.adminview.touchpointList.forEach(function (touchpoint) {
-                            if(App.adminview.activeTPDepartment === touchpoint.department){
+                        adminIqueuePage.touchPointList.forEach(function (touchpoint) {
+                            if(adminIqueuePage.activeTPDepartment === touchpoint.department){
                                 //the department matches
-                                if (App.adminview.activeTPCategory === touchpoint.category){
+                                if (adminIqueuePage.activeTPCategory === touchpoint.category){
                                     //and, the category matches
-                                    if(App.adminview.activeTPSubCategory === touchpoint.subcategory){
+                                    if(adminIqueuePage.activeTPSubCategory === touchpoint.subcategory){
                                         //and, the subcategory matches
-                                        if(App.adminview.touchpointSubCategories.length === 1){
+                                        if(adminIqueuePage.touchpointSubCategories.length === 1){
                                             //if there's only one subcategory, then update the touchpoint
                                             var updatedTouchpointListItem = {touchPointID: touchpoint.touchPointID, department: touchpoint.department, category: touchpoint.category, subcategory: ' '};
                                             awsConnector.updateTouchpointListItem(updatedTouchpointListItem, App.adminview.touchpointDeleteReturned);
                                         }
                                         else{
                                             //if there is more than one subcategory, then delete the touchpoint
-                                            awsConnector.deleteTouchpointListItem(globals.theLocationID, touchpoint.touchPointID, App.adminview.touchpointDeleteReturned);
+                                            awsDynamoDBConnector.deleteTouchpointListItem(globals.theLocation.locationID, touchpoint.touchPointID, adminIqueuePage.touchpointDeleteReturned);
                                         }
                                     }
                                 }

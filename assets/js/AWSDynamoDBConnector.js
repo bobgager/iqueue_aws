@@ -68,6 +68,29 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    deleteTouchpointListItem: function(locationID, touchPointID, callback){
+
+        var params = {
+            TableName : 'iqTouchPointList',
+            Key: {
+                locationID: locationID,
+                touchPointID: touchPointID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.delete(params, function(err, data) {
+            if (err){
+                callback(false,err);
+            }
+            else{
+                callback(true);
+            }
+
+        });
+
+    },
+
+    //******************************************************************************************************************
     fetchCustomerConfig: function(customerID, callback){
 
         var params = {
