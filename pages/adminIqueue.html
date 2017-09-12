@@ -7,9 +7,9 @@
 <div class="card">
     <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs">
-            <li class="nav-item"> <a class="nav-link active" href="#generalTab" data-toggle="tab">General Settings</a> </li>
+            <li class="nav-item"> <a id="generalSettingsTabLink" class="nav-link active" href="#generalTab" data-toggle="tab">General Settings</a> </li>
             <li class="nav-item"> <a class="nav-link" href="#touchpointsTab" data-toggle="tab" onclick="adminIqueuePage.touchpointsTabClicked();">Touch Points</a> </li>
-            <li class="nav-item"> <a class="nav-link" href="#methodsofserviceTab" data-toggle="tab">Methods Of Service</a> </li>
+            <li class="nav-item"> <a class="nav-link" href="#methodsofserviceTab" data-toggle="tab" onclick="adminIqueuePage.methodsOfServiceTabClicked();">Methods Of Service</a> </li>
             <li class="nav-item"> <a class="nav-link" href="#mobileSettingsTab" data-toggle="tab">iQueue Mobile</a> </li>
         </ul>
     </div>
@@ -23,7 +23,7 @@
 
                    <div class="form-group border-primary row " style="margin-bottom: -1px">
 
-                        <label for="configCodeInput" class="text-primary font-weight-bold col-sm-4 col-form-label">Configuration Code: <i id="mypopover1" class="fa fa-question-circle-o  mb-1" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Your Configuration Code is used to setup various components of the iQueue system to identify them as connecting to your service. When needed, iQueue will ask you for this Configuration Code" data-original-title="Configuration Code"></i></label>
+                        <label for="configCodeLabel" class="text-primary font-weight-bold col-sm-4 col-form-label">Configuration Code: <i id="mypopover1" class="fa fa-question-circle-o  mb-1" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Your Configuration Code is used to setup various components of the iQueue system to identify them as connecting to your service. When needed, iQueue will ask you for this Configuration Code" data-original-title="Configuration Code"></i></label>
                         <div class="col-sm-7 mt-3 mb-3">
                             <span  class="font-weight-bold" id="configCodeLabel"  >Your Configuration Code has not been set</span>
                         </div>
@@ -115,11 +115,11 @@
 
             <!--Methods Of Service Tab-->
             <div class="tab-pane fade" id="methodsofserviceTab" role="tabpanel">
-                <h4 class="card-title">
-                    methodsofserviceTab
-                </h4>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+
+                <p class=" h4 bold">Your Methods Of Service: &NonBreakingSpace;<i style="cursor: pointer" class=" entypo-plus " onclick="App.adminview.addMOS_AWS();"></i></p>
+
+                <div id="methodOfServiceListGroup2" ></div>
+
             </div>
 
             <!--iQueue Mobile Tab-->
@@ -143,7 +143,7 @@
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a id="generalSettingsTabLink" href="#generalTab" role="tab" data-toggle="tab" onclick="console.log('general tab clicked')">General Settings</a></li>
+        <li role="presentation" class="active"><a  href="#generalTab" role="tab" data-toggle="tab" onclick="console.log('general tab clicked')">General Settings</a></li>
         <li role="presentation" ><a href="#touchpointsTab"  role="tab" data-toggle="tab" onclick="App.adminview.touchpointsTabClicked();">Touch Points</a></li>
         <li role="presentation"><a href="#methodsofserviceTab" role="tab" data-toggle="tab" onclick="App.adminview.methodsOfServiceTabClicked();">Methods Of Service</a></li>
         <li role="presentation"><a href="#mobileSettingsTab" role="tab" data-toggle="tab" onclick="console.log('mobile tab clicked')">iQueue Mobile</a></li>
@@ -154,38 +154,6 @@
 
 
 
-        <div role="tabpanel" class="tab-pane" id="touchpointsTab" >
-            <p class=" h4 bold">Your Touch Points: &NonBreakingSpace;<i style="cursor: pointer" class=" entypo-arrows-ccw" onclick="App.adminview.touchpointsTabClicked();"></i></p>
-
-            <div class="panel-group joined " id="touchpointGroup">
-
-                <div class="row">
-
-                    <div class="col-xs-4">
-
-                        <div class="h4 padding-bottom-5">Departments &NonBreakingSpace;<i style="cursor: pointer" class=" entypo-plus" onclick="App.adminview.addTPDepartment();"></i></div>
-                        <div id="touchpointDepartmentListGroup" class="list-group"></div>
-
-                    </div>
-
-                    <div class="col-xs-4">
-
-                        <div class="h4 padding-bottom-5">Categories &nbsp;<i id="addTPCategoryIcon" style="cursor: pointer" class=" entypo-plus" onclick="App.adminview.addTPCategory();"></i></div>
-                        <div id="touchpointCategoriesListGroup" class="list-group"></div>
-
-                    </div>
-
-                    <div class="col-xs-4">
-
-                        <div class="h4 padding-bottom-5">Sub-Categories &nbsp;<i id="addTPSubCategoryIcon" style="cursor: pointer" class=" entypo-plus" onclick="App.adminview.addTPSubCategory();"></i></div>
-                        <div id="touchpointSubCategoriesListGroup" class="list-group"></div>
-
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
 
         <div role="tabpanel" class="tab-pane" id="methodsofserviceTab">
 

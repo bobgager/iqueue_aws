@@ -251,6 +251,31 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    fetchMethodsOfService: function(locationID, callback){
+
+        var params = {
+            TableName: 'iqMethodsOfService',
+            KeyConditionExpression: 'theLocation = :lkey',
+            ExpressionAttributeValues: {
+                ':lkey': locationID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
+            //console.log('err= ' + err);
+            if (err){
+
+                callback (false, err);
+
+            }
+            else{
+                //console.log(data);
+                callback(true, data.Items);
+            }
+        });
+    },
+
+    //******************************************************************************************************************
     fetchSingleUser: function(customerID, userGUID, callback){
 
         var params = {
@@ -481,6 +506,32 @@ var awsDynamoDBConnector = {
             }
         });
 
+
+    },
+
+    //******************************************************************************************************************
+    updateTouchpointListItem: function (locationID, updatedTouchpointListItem, callback) {
+
+        var params = {
+            TableName: 'iqTouchPointList',
+            Key: { locationID : locationID, touchPointID : updatedTouchpointListItem.touchPointID },
+
+            UpdateExpression: "set department = :dpt, category=:ctg, subcategory=:sctg ",
+            ExpressionAttributeValues:{
+                ":dpt":updatedTouchpointListItem.department,
+                ":ctg":updatedTouchpointListItem.category,
+                ":sctg":updatedTouchpointListItem.subcategory
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
+            if (err){
+                callback(false,err)
+            }
+            else {
+                callback(true);
+            }
+        });
 
     },
 

@@ -742,7 +742,7 @@ var adminIqueuePage = {
                                         if(adminIqueuePage.touchpointSubCategories.length === 1){
                                             //if there's only one subcategory, then update the touchpoint
                                             var updatedTouchpointListItem = {touchPointID: touchpoint.touchPointID, department: touchpoint.department, category: touchpoint.category, subcategory: ' '};
-                                            awsConnector.updateTouchpointListItem(updatedTouchpointListItem, App.adminview.touchpointDeleteReturned);
+                                            awsDynamoDBConnector.updateTouchpointListItem(globals.theLocation.locationID, updatedTouchpointListItem, adminIqueuePage.touchpointDeleteReturned);
                                         }
                                         else{
                                             //if there is more than one subcategory, then delete the touchpoint
@@ -770,16 +770,31 @@ var adminIqueuePage = {
     methodsOfServiceTabClicked: function(){
 
         //clear out the previous lists from the UI
-        $('#methodOfServiceListGroup2').html('Loading Methods Of Service');
+        $('#methodOfServiceListGroup2').html('<i class="fa fa-spinner fa-spin fa-fw"></i> Loading Methods Of Service');
 
         //fetch the Methods of Service for this location
-        awsConnector.fetchMethodsOfService(App.adminview.buildMOSList);
+        awsDynamoDBConnector.fetchMethodsOfService(globals.theLocation.locationID, adminIqueuePage.buildMOSList);
 
     },
 
     //******************************************************************************************************************
-    buildMOSList: function(mosArray){
+    buildMOSList: function(success, data){
 
+        if (!success){
+
+            var options = {};
+            options.title = 'Communication Error';
+            options.message = "There was an error communicating with the cloud.<br>Please make sure you are connected to the internet and try again.<br><br>Error Code: bmosl_001<br>" + data ;
+            options.buttonName = 'OK';
+            options.callback = function () {
+                adminIqueuePage.locationChanged();
+            };
+            modalMessage.showMessage(options);
+
+            return;
+        }
+
+        var mosArray = data;
 
         //sort the Methods Of Service
         mosArray.sort(function(a, b){
