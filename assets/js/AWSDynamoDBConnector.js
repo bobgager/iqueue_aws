@@ -68,6 +68,31 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    deleteMethodOfService: function(theLocation, methodOfServiceID, callback){
+
+        var params = {
+            TableName : 'iqMethodsOfService',
+            Key: {
+                theLocation: theLocation,
+                methodOfServiceID: methodOfServiceID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.delete(params, function(err, data) {
+            if (err){
+                //console.log(err);
+                callback(false,err);
+            }
+            else{
+                //console.log(data);
+                callback(true);
+            }
+
+        });
+
+    },
+
+    //******************************************************************************************************************
     deleteTouchpointListItem: function(locationID, touchPointID, callback){
 
         var params = {
@@ -425,6 +450,34 @@ var awsDynamoDBConnector = {
             }
         });
 
+
+
+    },
+
+    //******************************************************************************************************************
+    saveMethodOfService: function(locationID, methodOfServiceID, newMOS, callback){
+
+        var params = {
+            TableName : 'iqMethodsOfService',
+            Item: {
+                theLocation: locationID,
+                methodOfServiceID: methodOfServiceID,
+                methodOfServiceName: newMOS
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.put(params, function(err, data) {
+            if (err){
+                //console.log(err);
+                callback(false, err);
+            }
+            else{
+                //console.log(data);
+                callback(true);
+            }
+
+
+        });
 
 
     },

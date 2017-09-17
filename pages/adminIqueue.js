@@ -770,7 +770,7 @@ var adminIqueuePage = {
     methodsOfServiceTabClicked: function(){
 
         //clear out the previous lists from the UI
-        $('#methodOfServiceListGroup2').html('<i class="fa fa-spinner fa-spin fa-fw"></i> Loading Methods Of Service');
+        $('#methodOfServiceListGroup').html('<i class="fa fa-spinner fa-spin fa-fw"></i> Loading Methods Of Service');
 
         //fetch the Methods of Service for this location
         awsDynamoDBConnector.fetchMethodsOfService(globals.theLocation.locationID, adminIqueuePage.buildMOSList);
@@ -830,79 +830,32 @@ var adminIqueuePage = {
         listHTML += '   </ul>';
 
         $('#methodOfServiceListGroup2').html(listHTML);
-    },
 
-    //******************************************************************************************************************
-    showMethodOfServiceTrashIcon: function(id){
 
-        App.methodofservicecollection.models.forEach(function(item){
 
-            if(id.toString() === item.get('id')){
-                $('#methodofserviceTrashBTN'+ item.get('id')).show() ;
-            }
-            else{
-                $('#methodofserviceTrashBTN'+ item.get('id')).hide() ;
-            }
+        //loop through the Methods of Service and build the list
+        var s = '';
+        mosArray.forEach(function(item){
+
+            s +=    '<a id="MethodOfService" href="#" class="list-group-item clearfix" >';
+            s +=        item.methodOfServiceName ;
+            s +=        '<span class="float-right">';
+            s +=            '<button class="btn btn-primary btn-rounded btn-icon btn-sm " onclick="adminIqueuePage.deleteMethodOfService_AWS(&#39;' + item.methodOfServiceID + '&#39; , &#39;' + item.methodOfServiceName + '&#39;)">';
+            s +=                '<span class="fa fa-trash"></span>';
+            s +=            '</button>';
+            s +=        '</span>';
+            s +=    '</a>';
 
         });
 
-    },
+        //add an Add Method Of Service link
+        s +=    '<a href="#" class="list-group-item clearfix text-primary-darkend text-sm pointer" onclick="adminIqueuePage.addMOS_AWS();">';
+        s +=        'Add Method Of Service &NonBreakingSpace;<i style="cursor: pointer" class="fa fa-plus" ></i>' ;
+        s +=    '</a>';
 
-    //******************************************************************************************************************
-    methodOfServiceClicked: function(e){
-
-        //was it the trash icon that was clicked?
-        if(e.target.id.indexOf('methodofserviceTrashBTN') != -1){
-            //it was the trash
-            this.deleteMethodOfService(e.currentTarget.getAttribute('data-methodofserviceid'),e.currentTarget.getAttribute('data-methodofservice'));
-            return;
-        }
-
-        //clear out any previously set active class
-        $('#methodOfServiceListGroup > a').each(function () { $(this).removeClass('active') });
-
-        //set the clicked item to active
-        $(e.currentTarget).addClass("active");
+        $('#methodOfServiceListGroup').html(s);
 
 
-        //show the trash icon
-        this.showMethodOfServiceTrashIcon(e.currentTarget.getAttribute('data-methodofserviceid'));
-
-    },
-
-    //******************************************************************************************************************
-    addMethodOfService: function(){
-        //TODO: Once all customers MOS's are on AWS, delete this function
-        var self = this;
-
-        bootbox.prompt("Add a new Method Of Service", function(result) {
-            if (result === null) {
-                //alert("Prompt dismissed");
-            } else {
-                //alert("New Method Of Service is: "+result);
-                if(result === ''){
-
-                    return;
-                }
-
-                var methodofservicemodel = new App.methodOfServiceModel({
-                    customerID: globals.customer.customerID,
-                    methodofservice: result
-
-                });
-
-                methodofservicemodel.save();
-                bootbox.hideAll();
-
-                loading("show",null,"Saving",750,true);
-
-                //wait one second for the save to complete, and then reload things
-                var _aTimer = setTimeout(function(){self.methodsOfServiceTabClicked()},1000*1);
-
-                return false;
-
-            }
-        });
 
     },
 
@@ -910,37 +863,69 @@ var adminIqueuePage = {
     addMOS_AWS: function(){
         var self = this;
 
-        bootbox.prompt("Add a new Method Of Service", function(result) {
-            if (result === null) {
-                //alert("Prompt dismissed");
-            } else {
-                //alert("New Method Of Service is: "+result);
-                if(result === ''){
+        bootbox.prompt({
+            closeButton: false,
+            title: "Add a new Method Of Service",
+            callback: function(result){
+                if (result === null) {
+                    //alert("Prompt dismissed");
+                } else {
+                    //alert("New Method Of Service is: "+result);
+                    if(result === ''){
 
-                    return;
-                }
+                        return;
+                    }
 
-                //add the new MOS to AWS
-                awsConnector.saveMethodOfService(result, App.adminview.methodsOfServiceTabClicked)
+                    //add the new MOS to AWS
 
-                bootbox.hideAll();
+                    awsDynamoDBConnector.saveMethodOfService(globals.theLocation.locationID, utils.guid(), result, adminIqueuePage.saveMethodOfServiceComplete);
 
-                loading("show",null,"Saving",750,true);
+                    bootbox.hideAll();
 
-                return false;
+                    toastr.info(" ", "<i class=\"fa fa-spinner fa-spin fa-fw\"></i> Saving", {timeOut: 2000, positionClass: "toast-top-center"});
 
-            }
-        });
+                    return false;
+
+                } }
+        })
+
 
     },
 
     //******************************************************************************************************************
-    deleteMethodOfService: function(id,name){
-        //TODO: Once all customers MOS's are on AWS, delete this function
-        var self = this;
+    saveMethodOfServiceComplete: function (success, data) {
 
+        if (!success){
+            //the save failed
+
+            bootbox.dialog({
+                message: 'Please double check that you are connected to the internet and try again.<br><br>Error Code: smosc-001.<br><br>Error= ' + data,
+                title: "There was an error saving your Method Of Service.",
+                closeButton: false,
+                buttons: {
+                    main: {
+                        label: "Bummer",
+                        className: "btn-primary",
+                        callback: function() {
+
+                        }
+                    }
+                }
+            });
+
+            return;
+        }
+
+        toastr.clear();
+        adminIqueuePage.methodsOfServiceTabClicked();
+
+    },
+
+    //******************************************************************************************************************
+    deleteMethodOfService_AWS: function(methodOfServiceID, name){
 
         bootbox.dialog({
+            closeButton: false,
             message: "<h4>Are you sure you want to delete the Method Of Service:<br><br><strong>" + name + "</strong></h4><br><br>This delete cannot be undone",
             title: "Delete Method Of Service?",
             buttons: {
@@ -954,67 +939,47 @@ var adminIqueuePage = {
                 },
                 delete: {
                     label: "Delete",
-                    className: "btn-warning",
+                    className: "btn-primary",
 
                     callback: function(e) {
 
+                        awsDynamoDBConnector.deleteMethodOfService(globals.theLocation.locationID, methodOfServiceID, adminIqueuePage.deleteMethodOfServiceComplete);
 
-
-                        var methodOfServiceModel = new App.methodOfServiceModel({
-                            id: id
-
-                        });
-
-                        methodOfServiceModel.sync('delete');
-
-                        loading("show",null,"Deleting",750,false);
-
-                        //wait one second for the delete to complete, and then reload things
-                        var _aTimer = setTimeout(function(){self.methodsOfServiceTabClicked()},1000*1);
-
-                        //return false;
-
+                        toastr.info(" ", "<i class=\"fa fa-spinner fa-spin fa-fw\"></i> Deleting", {timeOut: 2000, positionClass: "toast-top-center"});
 
                     }
                 }
             }
         });
-
-
-
-
 
     },
 
     //******************************************************************************************************************
-    deleteMethodOfService_AWS: function(theLocation, methodOfServiceID, name){
+    deleteMethodOfServiceComplete: function (success, data) {
 
-        bootbox.dialog({
-            message: "<h4>Are you sure you want to delete the Method Of Service:<br><br><strong>" + name + "</strong></h4><br><br>This delete cannot be undone",
-            title: "Delete Method Of Service?",
-            buttons: {
-                cancel: {
-                    label: "Cancel",
-                    className: "btn-default",
-                    callback: function(e) {
+        if (!success){
+            //the save failed
 
-                        //return false;
-                    }
-                },
-                delete: {
-                    label: "Delete",
-                    className: "btn-warning",
+            bootbox.dialog({
+                message: 'Please double check that you are connected to the internet and try again.<br><br>Error Code: dmosc-001.<br><br>Error= ' + data,
+                title: "There was an error deleting your Method Of Service.",
+                closeButton: false,
+                buttons: {
+                    main: {
+                        label: "Bummer",
+                        className: "btn-primary",
+                        callback: function() {
 
-                    callback: function(e) {
-
-                        awsConnector.deleteMethodOfService(theLocation, methodOfServiceID, App.adminview.methodsOfServiceTabClicked)
-
-                        loading("show",null,"Deleting",750,false);
-
+                        }
                     }
                 }
-            }
-        });
+            });
+
+            return;
+        }
+
+        toastr.clear();
+        adminIqueuePage.methodsOfServiceTabClicked();
 
     },
 
