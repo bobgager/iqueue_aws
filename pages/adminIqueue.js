@@ -43,6 +43,8 @@ var adminIqueuePage = {
         $('#mypopover1').popover();
         $('#mypopover2').popover();
         $('#defaultAnnouncePopover').popover();
+        $('#allowedDomainsPopover').popover();
+
 
 
         //watch for any focus events on the input(s) so we can enable the save button(s)
@@ -989,7 +991,7 @@ var adminIqueuePage = {
     //******************************************************************************************************************
     resetMobileSettings: function(){
 
-        $('#allowedDomainsInput').val(globals.customer.allowedDomains);
+        $('#allowedDomainsInput').val(globals.theCustomer.allowedDomains);
 
         $('#saveChangesMobileSettings').addClass('disabled');
 
@@ -999,17 +1001,40 @@ var adminIqueuePage = {
     saveChangesMobileSettings: function(){
         //console.log('saveChangesMobileSettings called');
 
-        awsConnector.updateAllowedDomains($('#allowedDomainsInput').val(),App.adminview.allowedDomainsUpdated);
+        toastr.info(" ", "<i class=\"fa fa-spinner fa-spin fa-fw\"></i> Saving", {timeOut: 2000, positionClass: "toast-top-center"});
+
+
+        awsDynamoDBConnector.updateAllowedDomains(globals.theCustomer, $('#allowedDomainsInput').val(), adminIqueuePage.allowedDomainsUpdated);
 
     },
 
-
-    /***************************************************************************/
-
     //******************************************************************************************************************
-    allowedDomainsUpdated: function(){
+    allowedDomainsUpdated: function(success, data){
+
+        if (!success){
+
+            //the save failed
+
+            bootbox.dialog({
+                message: 'Please double check that you are connected to the internet and try again.<br><br>Error Code: adu-001.<br><br>Error= ' + data,
+                title: "There was an error saving your changes.",
+                closeButton: false,
+                buttons: {
+                    main: {
+                        label: "Bummer",
+                        className: "btn-primary",
+                        callback: function() {
+
+                        }
+                    }
+                }
+            });
+
+            return;
+        }
+
         //update the local globals.customer with the same changes
-        globals.customer.allowedDomains =  $('#allowedDomainsInput').val() ;
+        globals.theCustomer.allowedDomains =  $('#allowedDomainsInput').val() ;
 
         //and disable the Save button since the changes have been saved
         $('#saveChangesMobileSettings').addClass('disabled');

@@ -483,6 +483,35 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    updateAllowedDomains: function(theCustomer, allowedDomains, callback){
+
+        var params = {
+            TableName: 'iqCustomerConfigs',
+            Key: { customerID : theCustomer.customerID, configCode : theCustomer.configCode },
+
+            UpdateExpression: "set allowedDomains = :ad",
+            ExpressionAttributeValues:{
+                ":ad":allowedDomains
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
+
+            //console.log('tried to update allowed domains and err= ' + err);
+
+            if (err){
+                //console.log(err);
+
+                callback(false,err);
+            }
+            else {
+                //console.log(data);
+                callback(true);
+            }
+        });
+    },
+
+    //******************************************************************************************************************
     updateCustomerLocationsTable: function (theLocation, callback) {
 
 
