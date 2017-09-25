@@ -26,6 +26,9 @@ var router = {
     preCloseDone: function () {
 
         switch(router.currentPage) {
+            case 'adminIqueuePage':
+                router.thePage = adminIqueuePage;
+                break;
             case 'adminDisplayPage':
                 router.thePage = adminDisplayPage;
                 break;
@@ -54,7 +57,7 @@ var router = {
                 //and post an error message
                 var options = {};
                 options.title = 'Page Naming Error';
-                options.message = router.currentPage + " is not a defined page!";
+                options.message = router.currentPage + " is not a defined page in the router!";
                 options.callback = function () {
 
                 };

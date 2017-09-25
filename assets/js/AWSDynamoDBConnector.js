@@ -5,6 +5,45 @@
 var awsDynamoDBConnector = {
 
 
+
+    //******************************************************************************************************************
+    addTouchpointListItem: function (newTouchpointListItem, callback) {
+
+        //don't allow double or single quotes
+        newTouchpointListItem.department = newTouchpointListItem.department.replace(/'/g, "");
+        newTouchpointListItem.department = newTouchpointListItem.department.replace(/"/g, "");
+
+        //don't allow double or single quotes
+        newTouchpointListItem.category = newTouchpointListItem.category.replace(/'/g, "");
+        newTouchpointListItem.category = newTouchpointListItem.category.replace(/"/g, "");
+
+        //don't allow double or single quotes
+        newTouchpointListItem.subcategory = newTouchpointListItem.subcategory.replace(/'/g, "");
+        newTouchpointListItem.subcategory = newTouchpointListItem.subcategory.replace(/"/g, "");
+
+        var params = {
+            TableName : 'iqTouchPointList',
+            Item: {
+                locationID: newTouchpointListItem.locationID,
+                touchPointID: utils.guid(),
+                department: newTouchpointListItem.department,
+                category: newTouchpointListItem.category,
+                subcategory: newTouchpointListItem.subcategory
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.put(params, function(err, data) {
+            if (err){
+                //console.log(err);
+                callback(false, err);
+            }
+            else{
+                callback(true);
+            }
+
+        });
+    },
+
     //******************************************************************************************************************
     deleteDisplaySlide: function(theSlide, callback){
 
@@ -26,6 +65,54 @@ var awsDynamoDBConnector = {
                 callback();
             }
         });
+    },
+
+    //******************************************************************************************************************
+    deleteMethodOfService: function(theLocation, methodOfServiceID, callback){
+
+        var params = {
+            TableName : 'iqMethodsOfService',
+            Key: {
+                theLocation: theLocation,
+                methodOfServiceID: methodOfServiceID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.delete(params, function(err, data) {
+            if (err){
+                //console.log(err);
+                callback(false,err);
+            }
+            else{
+                //console.log(data);
+                callback(true);
+            }
+
+        });
+
+    },
+
+    //******************************************************************************************************************
+    deleteTouchpointListItem: function(locationID, touchPointID, callback){
+
+        var params = {
+            TableName : 'iqTouchPointList',
+            Key: {
+                locationID: locationID,
+                touchPointID: touchPointID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.delete(params, function(err, data) {
+            if (err){
+                callback(false,err);
+            }
+            else{
+                callback(true);
+            }
+
+        });
+
     },
 
     //******************************************************************************************************************
@@ -189,6 +276,31 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    fetchMethodsOfService: function(locationID, callback){
+
+        var params = {
+            TableName: 'iqMethodsOfService',
+            KeyConditionExpression: 'theLocation = :lkey',
+            ExpressionAttributeValues: {
+                ':lkey': locationID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
+            //console.log('err= ' + err);
+            if (err){
+
+                callback (false, err);
+
+            }
+            else{
+                //console.log(data);
+                callback(true, data.Items);
+            }
+        });
+    },
+
+    //******************************************************************************************************************
     fetchSingleUser: function(customerID, userGUID, callback){
 
         var params = {
@@ -214,6 +326,42 @@ var awsDynamoDBConnector = {
 
             }
 
+        });
+    },
+
+    //******************************************************************************************************************
+    fetchTouchpointList: function(locationID, callback){
+
+        var params = {
+            TableName: 'iqTouchPointList',
+            KeyConditionExpression: 'locationID = :lkey',
+            ExpressionAttributeValues: {
+                ':lkey': locationID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
+            //console.log('err= ' + err);
+            if (err){
+                //console.log(err);
+                callback(false, err);
+
+            }
+            else{
+                //console.log(data);
+
+                //remove all the spaces in the subcategory field
+
+                data.Items.forEach(function(touchPoint) {
+
+                    if(touchPoint.subcategory === ' '){
+                        touchPoint.subcategory = null;
+                    }
+
+                });
+
+                callback(true, data.Items);
+            }
         });
     },
 
@@ -307,6 +455,89 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    saveMethodOfService: function(locationID, methodOfServiceID, newMOS, callback){
+
+        var params = {
+            TableName : 'iqMethodsOfService',
+            Item: {
+                theLocation: locationID,
+                methodOfServiceID: methodOfServiceID,
+                methodOfServiceName: newMOS
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.put(params, function(err, data) {
+            if (err){
+                //console.log(err);
+                callback(false, err);
+            }
+            else{
+                //console.log(data);
+                callback(true);
+            }
+
+
+        });
+
+
+    },
+
+    //******************************************************************************************************************
+    updateAllowedDomains: function(theCustomer, allowedDomains, callback){
+
+        var params = {
+            TableName: 'iqCustomerConfigs',
+            Key: { customerID : theCustomer.customerID, configCode : theCustomer.configCode },
+
+            UpdateExpression: "set allowedDomains = :ad",
+            ExpressionAttributeValues:{
+                ":ad":allowedDomains
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
+
+            //console.log('tried to update allowed domains and err= ' + err);
+
+            if (err){
+                //console.log(err);
+
+                callback(false,err);
+            }
+            else {
+                //console.log(data);
+                callback(true);
+            }
+        });
+    },
+
+    //******************************************************************************************************************
+    updateCustomerLocationsTable: function (theLocation, callback) {
+
+
+        var params = {
+            TableName: 'iqCustomerLocations',
+            Key: { locationID : theLocation.locationID, customerID : theLocation.customerID },
+
+            UpdateExpression: "set displayAnnounceMessage = :dam ",
+            ExpressionAttributeValues:{
+                ":dam": theLocation.displayAnnounceMessage
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
+            if (err){
+                callback(false,err)
+            }
+            else {
+                callback(true);
+            }
+        });
+
+
+    },
+
+    //******************************************************************************************************************
     update_iqUsers: function (userDetails, callback) {
         var params = {
             TableName: 'iqUsers',
@@ -329,7 +560,62 @@ var awsDynamoDBConnector = {
             }
         });
 
-    }
+    },
+
+    //******************************************************************************************************************
+    updateNameCoach: function (customerID, configCode, useNameCoach, nameCoachAuthToken, nameCoachAccessCode, callback) {
+
+        var params = {
+            TableName: 'iqCustomerConfigs',
+            Key: { customerID : customerID, configCode : configCode },
+            UpdateExpression: "set useNameCoach=:useNameCoach, nameCoachAuthToken=:nameCoachAuthToken, nameCoachAccessCode=:nameCoachAccessCode",
+            ExpressionAttributeValues:{
+                ":useNameCoach": useNameCoach,
+                ":nameCoachAuthToken": nameCoachAuthToken,
+                ":nameCoachAccessCode": nameCoachAccessCode
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
+            //console.log('returned from update with err = ' + err);
+            if (err){
+                //console.log(err); // an error occurred
+                callback(false,err);
+            }
+            else {
+                //console.log(data);
+                callback(true);
+            }
+        });
+
+
+    },
+
+    //******************************************************************************************************************
+    updateTouchpointListItem: function (locationID, updatedTouchpointListItem, callback) {
+
+        var params = {
+            TableName: 'iqTouchPointList',
+            Key: { locationID : locationID, touchPointID : updatedTouchpointListItem.touchPointID },
+
+            UpdateExpression: "set department = :dpt, category=:ctg, subcategory=:sctg ",
+            ExpressionAttributeValues:{
+                ":dpt":updatedTouchpointListItem.department,
+                ":ctg":updatedTouchpointListItem.category,
+                ":sctg":updatedTouchpointListItem.subcategory
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
+            if (err){
+                callback(false,err)
+            }
+            else {
+                callback(true);
+            }
+        });
+
+    },
 
 
     //******************************************************************************************************************

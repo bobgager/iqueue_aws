@@ -68,6 +68,7 @@ var configure = {
 
         var progress = 0;
         var scripts = ['pages/dashboard.js?version='+globals.version,
+            'pages/adminIqueue.js?version='+globals.version,
             'pages/adminUsers.js?version='+globals.version,
             'pages/userDetails.js?version='+globals.version,
             'pages/adminDisplay.js?version='+globals.version,

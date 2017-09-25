@@ -11,7 +11,7 @@ var utils = {
     //******************************************************************************************************************
     activeButton: function (buttonID, activeText, timeout) {
 
-        timeout = timeout || 2000;
+        timeout = timeout || 5000;
 
         var oldText = $('#' + buttonID).html();
 

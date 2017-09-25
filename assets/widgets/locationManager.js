@@ -111,6 +111,9 @@ var locationManager = {
                 case 'adminDisplayPage':
                     adminDisplayPage.locationChanged();
                     break;
+                case 'adminIqueuePage':
+                    adminIqueuePage.locationChanged();
+                    break;
                 case 'dashboardPage':
                     dashboardPage.locationChanged();
                     break;

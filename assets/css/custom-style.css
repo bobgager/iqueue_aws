@@ -147,6 +147,11 @@
     background: none;
 }
 
+/*make the cursor a pointer*/
+.pointer {
+    cursor: pointer;
+}
+
 /*overide the minimum width of the dropdown menu's*/
 .navbar-toggleable-md.navbar-main.collapse .dropdown-menu{
     min-width: 150px; !important;

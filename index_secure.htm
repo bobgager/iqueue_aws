@@ -21,6 +21,9 @@
     <!--summernote text editor css-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.css" rel="stylesheet">
 
+    <!--toastr-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
+
     <!-- Theme style -->
 <!--    <link href="assets/css/theme-style.min.css" rel="stylesheet">-->
     <link href="assets/css/theme-style.css" rel="stylesheet">
@@ -141,7 +144,7 @@
                                 <!-- Menu -->
                                 <div class="dropdown-menu dropdown-menu-nobullets dropdown-menu-right">
 
-                                    <a href="#" class="dropdown-item" ><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> iQueue Setup</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;adminIqueuePage&#39;)" ><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> iQueue Setup</a>
                                     <a href="#" class="dropdown-item" onclick="adminUsersPage.render()"><i class="fa fa-users dropdown-icon" aria-hidden="true"></i> Manage Users</a>
                                     <a href="#" class="dropdown-item"onclick="adminDisplayPage.render()"><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> Manage Display</a>
                                     <a href="#" class="dropdown-item"><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> Manage Kiosk</a>
@@ -379,11 +382,17 @@
 <!--summernote text editor script-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.js"></script>
 
+
+<!--toastr-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
 <!--Highcharts-->
 <script src="assets/plugins/highcharts_v4.1.8/js/highcharts.js"></script>
 <script src="assets/plugins/highcharts_v4.1.8/js/modules/drilldown.js"></script>
 <script src="assets/plugins/highcharts_v4.1.8/js/modules/exporting.js"></script>
 
+<!--Bootbox-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
 
 <!--Custom scripts mainly used to trigger libraries/plugins -->
