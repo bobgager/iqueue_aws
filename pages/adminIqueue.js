@@ -24,7 +24,7 @@ var adminIqueuePage = {
     preRender: function (callback) {
         //initialize anything that is required before the page gets rendered
 
-        utils.writeDebug('adminIqueuePage.preRender has been called', false);
+        utils.writeDebug('adminIqueuePage.preLoad has been called', false);
 
         //go back to the router to actually load the page
         callback();

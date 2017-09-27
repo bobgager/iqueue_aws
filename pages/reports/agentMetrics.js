@@ -10,7 +10,7 @@ var agentMetricsPage = {
     preRender: function (callback) {
         //initialize anything that is required before the page gets rendered
 
-        utils.writeDebug('agentMetricsPage.preRender has been called', false);
+        utils.writeDebug('agentMetricsPage.preLoad has been called', false);
 
         //go back to the router to actually load the page
         callback();
@@ -19,7 +19,7 @@ var agentMetricsPage = {
     //******************************************************************************************************************
     postRender: function () {
         //script that runs after the page has been loaded
-        utils.writeDebug('agentMetricsPage.postRender has been called', false);
+        utils.writeDebug('agentMetricsPage.postLoad has been called', false);
     },
 
     //******************************************************************************************************************

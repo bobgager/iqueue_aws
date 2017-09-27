@@ -301,6 +301,54 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    fetchQueue: function(status, locationID, callback){
+
+        var params = {
+            TableName: 'iqOpenQueue',
+            IndexName: 'locationID-issueStatus-index',
+            KeyConditionExpression: 'locationID = :locationID and issueStatus = :issueStatus ',
+            ExpressionAttributeValues: {
+                ':locationID': locationID,
+                ':issueStatus': status
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
+
+            if (err){
+                return (false, err);
+
+            }
+            else {
+                // successful response
+
+                for (var i=0;i<data.Items.length;i++)
+                {
+                    data.Items[i].guid = data.Items[i].personID;
+
+                    data.Items[i].createDateTime = new Date(data.Items[i].createTime);
+
+                    data.Items[i].waitTime = utils.calibratedDateTime() - data.Items[i].createDateTime;
+                }
+
+                //sort ascending by the create time
+                data.Items.sort(function(a, b){
+                    var createTimeA=a.createTime, createTimeB=b.createTime
+                    if (createTimeA < createTimeB) //sort  ascending
+                        return -1
+                    if (createTimeA > createTimeB)
+                        return 1
+                    return 0 //default return value (no sorting)
+                });
+
+
+                callback(true, data.Items);
+            }
+        });
+
+    },
+
+    //******************************************************************************************************************
     fetchSingleUser: function(customerID, userGUID, callback){
 
         var params = {

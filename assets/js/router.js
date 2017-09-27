@@ -26,6 +26,12 @@ var router = {
     preCloseDone: function () {
 
         switch(router.currentPage) {
+            case 'dashboardPage':
+                router.thePage = dashboardPage;
+                break;
+            case 'myQueuePage':
+                router.thePage = myQueuePage;
+                break;
             case 'adminIqueuePage':
                 router.thePage = adminIqueuePage;
                 break;
@@ -37,9 +43,6 @@ var router = {
                 break;
             case 'dailyTrafficPage':
                 router.thePage = dailyTrafficPage;
-                break;
-            case 'dashboardPage':
-                router.thePage = dashboardPage;
                 break;
             case 'studentListPage':
                 router.thePage = studentListPage;
@@ -64,19 +67,19 @@ var router = {
                 modalMessage.showMessage(options);
         }
 
-        //call the preRender function on the page
-        router.thePage.preRender(router.preRenderDone);
+        //call the preLoad function on the page
+        router.thePage.preLoad(router.preLoadDone);
     },
 
     //******************************************************************************************************************
-    preRenderDone: function () {
+    preLoadDone: function () {
 
         //load the page
         $('#authenticatedContent').hide().load(router.thePage.pageURL + "?version="+ globals.version, function() {
 
             utils.writeDebug(router.currentPage + ' loaded',false);
 
-            router.thePage.postRender();
+            router.thePage.postLoad();
 
         }).fadeIn('1000');
 

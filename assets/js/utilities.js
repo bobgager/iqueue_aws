@@ -49,36 +49,6 @@ var utils = {
 
             });
 
-
-
-/*            $.ajax({
-                dataType : 'json',
-                url: 'https://cobaltfire.com/iqueue3/backbone_php/servertime.php',
-                type: 'get',
-                success: function(results) {
-
-                    //TODO stop using cobaltfire.com to get a common time
-                    console.log('TODO stop using cobaltfire.com to get a common time  (utils.calibratedDateTime)');
-                    utils.writeDebug('<span class="text-warning">TODO stop using cobaltfire.com to get a common time. (utils.calibratedDateTime)</span>', false);
-
-                    var serverTime = results * 1000;
-
-                    var now = new Date();
-                    var localTime = now.getTime();
-
-                    globals.serverTimeOffset = localTime - serverTime;
-
-                },
-                error: function (request, status, error) {
-
-                    //TODO stop using cobaltfire.com to get a common time
-                    console.log('TODO stop using cobaltfire.com to get a common time  (utils.calibratedDateTime)');
-                    utils.writeDebug('<span class="text-warning">TODO stop using cobaltfire.com to get a common time.  (utils.calibratedDateTime)</span>', false);
-
-                }
-            });*/
-
-
         }
 
         var now = new Date();

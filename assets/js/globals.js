@@ -6,7 +6,12 @@ var globals = {
 
     showDebug: true,
 
-    version: '0.001.018',
+    //version: '0.001.019',
+    // port Admin page to Bootstrap 4
+
+    version: '0.001.020',
+    //port My Queue page to Bootstrap 4
+
 
     //******************************************************************************************************************
 
@@ -21,6 +26,7 @@ var globals = {
     //and the location selected by this user
     theLocation: null,
 
+    //holds info about the logged in user
     theUser: {}
 
 

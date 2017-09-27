@@ -10,7 +10,7 @@ var studentSearchPage = {
     preRender: function (callback) {
         //initialize anything that is required before the page gets rendered
 
-        utils.writeDebug('studentSearchPage.preRender has been called', false);
+        utils.writeDebug('studentSearchPage.preLoad has been called', false);
 
         //go back to the router to actually load the page
         callback();
@@ -19,7 +19,7 @@ var studentSearchPage = {
     //******************************************************************************************************************
     postRender: function () {
         //script that runs after the page has been loaded
-        utils.writeDebug('studentSearchPage.postRender has been called', false);
+        utils.writeDebug('studentSearchPage.postLoad has been called', false);
     },
 
     //******************************************************************************************************************

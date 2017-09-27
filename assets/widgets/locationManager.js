@@ -108,14 +108,17 @@ var locationManager = {
         //tell the page we're on that the location has changed
         if(router.currentPage){
             switch(router.currentPage) {
+                case 'dashboardPage':
+                    dashboardPage.locationChanged();
+                    break;
+                case 'myQueuePage':
+                    myQueuePage.locationChanged();
+                    break;
                 case 'adminDisplayPage':
                     adminDisplayPage.locationChanged();
                     break;
                 case 'adminIqueuePage':
                     adminIqueuePage.locationChanged();
-                    break;
-                case 'dashboardPage':
-                    dashboardPage.locationChanged();
                     break;
                 default:
                     //code block

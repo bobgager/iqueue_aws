@@ -10,7 +10,7 @@ var touchpointsPage = {
     preRender: function (callback) {
         //initialize anything that is required before the page gets rendered
 
-        utils.writeDebug('touchpointsPage.preRender has been called', false);
+        utils.writeDebug('touchpointsPage.preLoad has been called', false);
 
         //go back to the router to actually load the page
         callback();
@@ -19,7 +19,7 @@ var touchpointsPage = {
     //******************************************************************************************************************
     postRender: function () {
         //script that runs after the page has been loaded
-        utils.writeDebug('touchpointsPage.postRender has been called', false);
+        utils.writeDebug('touchpointsPage.postLoad has been called', false);
     },
 
     //******************************************************************************************************************
