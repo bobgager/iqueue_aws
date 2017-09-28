@@ -81,7 +81,7 @@ var router = {
 
             router.thePage.postLoad();
 
-        }).fadeIn('1000');
+        }).fadeIn(1000);
 
     }
 

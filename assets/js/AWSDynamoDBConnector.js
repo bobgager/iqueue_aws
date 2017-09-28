@@ -316,7 +316,7 @@ var awsDynamoDBConnector = {
         awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
 
             if (err){
-                return (false, err);
+                callback (false, err);
 
             }
             else {

@@ -7,7 +7,7 @@ var studentSearchPage = {
     pageURL: 'pages/reports/studentSearch.html',
 
     //******************************************************************************************************************
-    preRender: function (callback) {
+    preLoad: function (callback) {
         //initialize anything that is required before the page gets rendered
 
         utils.writeDebug('studentSearchPage.preLoad has been called', false);
@@ -17,7 +17,7 @@ var studentSearchPage = {
     },
 
     //******************************************************************************************************************
-    postRender: function () {
+    postLoad: function () {
         //script that runs after the page has been loaded
         utils.writeDebug('studentSearchPage.postLoad has been called', false);
     },

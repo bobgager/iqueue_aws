@@ -7,7 +7,7 @@ var studentListPage = {
     pageURL: 'pages/reports/studentList.html',
 
     //******************************************************************************************************************
-    preRender: function (callback) {
+    preLoad: function (callback) {
         //initialize anything that is required before the page gets rendered
 
         utils.writeDebug('studentListPage.preLoad has been called', false);
@@ -17,7 +17,7 @@ var studentListPage = {
     },
 
     //******************************************************************************************************************
-    postRender: function () {
+    postLoad: function () {
         //script that runs after the page has been loaded
         utils.writeDebug('studentListPage.postLoad has been called', false);
     },

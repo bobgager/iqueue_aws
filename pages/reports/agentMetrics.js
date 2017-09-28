@@ -7,17 +7,17 @@ var agentMetricsPage = {
     pageURL: 'pages/reports/agentMetrics.html',
 
     //******************************************************************************************************************
-    preRender: function (callback) {
+    preLoad: function (callback) {
         //initialize anything that is required before the page gets rendered
 
-        utils.writeDebug('agentMetricsPage.preLoad has been called', false);
+        //utils.writeDebug('agentMetricsPage.preLoad has been called', false);
 
         //go back to the router to actually load the page
         callback();
     },
 
     //******************************************************************************************************************
-    postRender: function () {
+    postLoad: function () {
         //script that runs after the page has been loaded
         utils.writeDebug('agentMetricsPage.postLoad has been called', false);
     },

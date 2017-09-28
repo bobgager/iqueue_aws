@@ -7,7 +7,7 @@ var touchpointsPage = {
     pageURL: 'pages/reports/touchpoints.html',
 
     //******************************************************************************************************************
-    preRender: function (callback) {
+    preLoad: function (callback) {
         //initialize anything that is required before the page gets rendered
 
         utils.writeDebug('touchpointsPage.preLoad has been called', false);
@@ -17,7 +17,7 @@ var touchpointsPage = {
     },
 
     //******************************************************************************************************************
-    postRender: function () {
+    postLoad: function () {
         //script that runs after the page has been loaded
         utils.writeDebug('touchpointsPage.postLoad has been called', false);
     },

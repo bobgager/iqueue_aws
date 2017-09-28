@@ -21,7 +21,7 @@ var adminIqueuePage = {
     activeTPSubCategory: null,
 
     //******************************************************************************************************************
-    preRender: function (callback) {
+    preLoad: function (callback) {
         //initialize anything that is required before the page gets rendered
 
         utils.writeDebug('adminIqueuePage.preLoad has been called', false);
@@ -31,7 +31,7 @@ var adminIqueuePage = {
     },
 
     //******************************************************************************************************************
-    postRender: function () {
+    postLoad: function () {
         //script that runs after the page has been loaded
 
         $('#allowedDomainsInput').val(globals.theCustomer.allowedDomains);

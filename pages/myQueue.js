@@ -67,14 +67,14 @@ var myQueuePage = {
                 title: "There was an error loading the Queue.",
                 closeButton: false,
                 buttons: {
-                    main: {
+                    ok: {
                         label: "OK",
-                        className: "btn-primary",
+                        className: "btn-secondary",
                         callback: function() {
 
                         }
                     },
-                    main: {
+                    retry: {
                         label: "Try Again",
                         className: "btn-primary",
                         callback: function() {
@@ -90,6 +90,39 @@ var myQueuePage = {
         //success
         const studentLabel = data.length !== 1 ? ' Students' : ' Student';
         $('#queueDiv').html('<span class="h4"><i class="fa fa-spinner fa-spin fa-fw"></i> Processing ' + data.length + studentLabel + ' In Your Queue</span>');
+
+        var listHTML = '<div class="card-accordion" id="queueAccordion" role="tablist" aria-multiselectable="true">';
+
+        data.forEach(function (student, index) {
+
+            listHTML += '<div class="card">';
+            listHTML += '    <h4 class="card-header py-0 px-0" role="tab" id="heading' + index + '">';
+            listHTML += '    <a class="collapsed pb-1" data-toggle="collapse" data-parent="#queueAccordion" href="#collapse' + index + '" aria-expanded="true" aria-controls="collapse' + index + '">' + student.firstName + '&nbsp;' + student.lastName + '<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span></a>';
+            listHTML += '   </h4>';
+            listHTML += '   <div id="collapse' + index + '" class="collapse in" role="tabpanel" aria-labelledby="heading' + index + '">';
+
+
+            listHTML += '       <div class="card-block">';
+            listHTML +=                '<div>';
+            listHTML +=                    '<strong>Category: </strong>'+  student.category   ;
+            listHTML +=                '</div>';
+
+            listHTML +=                '<div>';
+            listHTML +=                    '<strong>Question: </strong>'+  student.question   ;
+            listHTML +=                '</div>';
+            listHTML += '       </div>';
+
+            listHTML += '       <div class="card-footer pt-1 pb-0 ">'
+            listHTML +=             '<a href="#" class="mb-1 btn btn-sm btn-outline-primary" role="button" aria-pressed="true">Call '+ student.firstName + ' Up</a>'
+            listHTML +=         '</div>';
+            listHTML += '   </div>';
+            listHTML += '</div>';
+
+        });
+
+        listHTML += '</div>';
+
+        $('#queueDiv').hide().html(listHTML).fadeIn(1000);
 
     }
 

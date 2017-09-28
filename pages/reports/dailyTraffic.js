@@ -7,7 +7,7 @@ var dailyTrafficPage = {
     pageURL: 'pages/reports/dailyTraffic.html',
 
     //******************************************************************************************************************
-    preRender: function (callback) {
+    preLoad: function (callback) {
         //initialize anything that is required before the page gets rendered
 
         utils.writeDebug('dailyTrafficPage.preLoad has been called', false);
@@ -17,7 +17,7 @@ var dailyTrafficPage = {
     },
 
     //******************************************************************************************************************
-    postRender: function () {
+    postLoad: function () {
         //script that runs after the page has been loaded
         utils.writeDebug('dailyTrafficPage.postLoad has been called', false);
     },

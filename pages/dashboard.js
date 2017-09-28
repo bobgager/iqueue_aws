@@ -22,7 +22,7 @@ var dashboardPage = {
 
             dashboardPage.refreshAll();
 
-        }).fadeIn('1000');
+        }).fadeIn(1000);
 
     },
 
