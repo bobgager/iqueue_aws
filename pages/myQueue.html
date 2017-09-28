@@ -1,15 +1,41 @@
 <h4 class="title-divider text-primary-darkend">
-    <span><span id="pageLocationLabel"></span><span class="font-weight-normal text-muted">Queue</span></span>
+    <span><span id="pageLocationLabel"></span><span class="font-weight-normal text-muted">Queue </span></span>
+    <i class="fa fa-refresh float-right pointer" aria-hidden="true" onclick="router.showPage(&#39;myQueuePage&#39;)"></i>
+
 </h4>
 
-<div id="queueCategoriesDiv">
-    <a href="#" class="mb-1 btn btn-primary btn-rounded" role="button" aria-pressed="true">All (30)</a>
-    <a href="#" class="mb-1 btn btn-secondary btn-rounded" role="button" aria-pressed="true">Housing (3)</a>
-    <a href="#" class="mb-1 btn btn-secondary btn-rounded" role="button" aria-pressed="true">Financial Aid (27)</a>
+<div id="queueCategoriesDiv"></div>
+
+<div id="queueDiv" class="mt-2 pb-2"></div>
+
+<hr>
+
+<div id="currentlyBeingHelpedDiv" >
+    <span class="h5 title-divider text-primary-darkend"><span>Currrently</span><span class="font-weight-normal text-muted">Being Helped</span></span>
+    <div id="currentlyBeingHelpedList" >
+        currently being helped list goes here
+    </div>
 </div>
 
-<div id="queueDiv" class="mt-2">
-    this is the My Queue page
-</div>
 
+<div class="hidden-elements jpanel-menu-exclude">
+    <div id="queueDetailsModal" class="modal fade " tabindex="-1" role="dialog">
+        <div id="queueDetailsModalDialog" class="modal-dialog modal-lg" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="queueDetailsModallTitle" class="modal-title"></h4>
+<!--                    <button type="button" class="close" data-dismiss="modal" >
+                        <span aria-hidden="true">&times;</span>
+                    </button>-->
+                </div>
+                <div class="modal-body">
+                    <p id="queueDetailsModalMessage">No message was set</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="queueDetailsModalOKButton" type="button" class="btn btn-primary" data-dismiss="modal" onclick="myQueuePage.render()">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 

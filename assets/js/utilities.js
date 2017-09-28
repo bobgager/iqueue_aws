@@ -106,6 +106,9 @@ var utils = {
     //******************************************************************************************************************
     writeDebug: function (string,clear) {
 
+        //getting ride of this feature for now as it's complicating page layout of the footer.
+        //when reading it, do it as a modal popup instead
+
         var now = new Date();
 
         if (globals.showDebug){

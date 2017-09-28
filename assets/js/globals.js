@@ -4,9 +4,7 @@
 
 var globals = {
 
-    showDebug: true,
-
-    //version: '0.001.019',
+   //version: '0.001.019',
     // port Admin page to Bootstrap 4
 
     version: '0.001.020',
