@@ -349,6 +349,39 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    fetchQueueItem: function(locationID, personID, callback){
+
+        var params = {
+            TableName: 'iqOpenQueue',
+            KeyConditionExpression: 'locationID = :locationID and personID = :personID ',
+            ExpressionAttributeValues: {
+                ':locationID': locationID,
+                ':personID': personID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
+            //console.log('returned from fetchMyQuestion with err= ' + err);
+            if (err){
+                //console.log(err); // an error occurred
+                callback(false, err);
+
+            }
+            else {
+                // successful response
+                if(data.Count === 0){
+                    //no records match
+                    callback(true, null);
+                    return;
+                }
+                callback(true, data.Items[0]);
+            }
+        });
+
+
+    },
+
+    //******************************************************************************************************************
     fetchSingleUser: function(customerID, userGUID, callback){
 
         var params = {
@@ -527,6 +560,36 @@ var awsDynamoDBConnector = {
 
         });
 
+
+    },
+
+    //******************************************************************************************************************
+    setItemActive: function(locationID, personID, activeTime, agent, callback){
+
+        var params = {
+            TableName: 'iqOpenQueue',
+            Key: { locationID : locationID, personID: personID },
+            UpdateExpression: "set issueStatus=:issueStatus, activeTime=:activeTime, closedBy=:closedBy",
+            ExpressionAttributeValues:{
+                ":issueStatus": 'Active',
+                ":activeTime": activeTime,
+                ":closedBy": agent
+            },
+            ReturnValues: "ALL_NEW"
+        };
+
+        awsCognitoConnector.dynamodbEast.update(params, function(err, data) {
+
+            if (err){
+                //console.log(err); // an error occurred
+               callback (false, err);
+
+            }
+            else {
+                //console.log(data);
+                callback(true, data.Attributes);
+            }
+        });
 
     },
 

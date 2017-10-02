@@ -62,6 +62,9 @@ var myQueuePage = {
         //load the Open queue
         awsDynamoDBConnector.fetchQueue('Open', globals.theLocation.locationID, myQueuePage.openQueueReturned);
 
+        //load the Active queue
+        awsDynamoDBConnector.fetchQueue('Active', globals.theLocation.locationID, myQueuePage.activeQueueReturned);
+
     },
 
     //******************************************************************************************************************
@@ -241,12 +244,142 @@ var myQueuePage = {
 
         var student = myQueuePage.filteredQueue[index];
 
+        //double check that this student isn't being helped by someone else
+        awsDynamoDBConnector.fetchQueueItem(globals.theLocation.locationID, student.personID, myQueuePage.queueItemReturned)
+
+    },
+
+    //******************************************************************************************************************
+    queueItemReturned: function (success, data) {
+
+        if (!success){
+            //the call failed
+            bootbox.dialog({
+                message: 'Please double check that you are connected to the internet and try again.<br><br>Error Code: qir-001.<br><br>Error= ' + data,
+                title: "There was an error loading the Queue.",
+                closeButton: false,
+                buttons: {
+                    ok: {
+                        label: "OK",
+                        className: "btn-primary",
+                        callback: function() {
+
+                        }
+                    }
+                }
+            });
+            return;
+        }
+
+        //the call succeded
+
+        if (data){
+            //we have a result
+            if(data.issueStatus === 'Open'){
+                //and they are still Open
+                //set it as Active and re-save
+
+                //agent = susi.theUser.first +' '+ susi.theUser.last
+
+                awsDynamoDBConnector.setItemActive(globals.theLocation.locationID, data.personID, utils.calibratedDateTime().getTime(), globals.theUser.firstName +' '+ globals.theUser.lastName, myQueuePage.showItemDetails)
+
+                return;
+            }
+
+        }
+
+        //we got a null result back or the student is no longer Open.
+        bootbox.dialog({
+            message: "This student is being helped by someone else.",
+            title: "Attention!",
+            closeButton: false,
+            buttons: {
+                main: {
+                    label: "OK",
+                    className: "btn-default",
+                    callback: function() {
+                        myQueuePage.render();
+                    }
+                }
+            }
+        });
+
+    },
+
+    //******************************************************************************************************************
+    showItemDetails: function (success, data) {
+
+        if (!success){
+            //the call failed
+            bootbox.dialog({
+                message: 'Please double check that you are connected to the internet and try again.<br><br>Error Code: sid-001.<br><br>Error= ' + data,
+                title: "Communication Error",
+                closeButton: false,
+                buttons: {
+                    ok: {
+                        label: "OK",
+                        className: "btn-primary",
+                        callback: function() {
+
+                        }
+                    }
+                }
+            });
+            return;
+        }
+
         $('#queueDetailsModallTitle').html(student.firstName + '&nbsp;' + student.lastName + '<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span>');
 
-
         $('#queueDetailsModal').modal({backdrop: 'static'});
+    },
 
-    }
+    //******************************************************************************************************************
+    activeQueueReturned: function (success, data) {
+
+        if (!success){
+
+            bootbox.dialog({
+                message: 'Please double check that you are connected to the internet and try again.<br><br>Error Code: oqr-001.<br><br>Error= ' + data,
+                title: "There was an error loading the Queue.",
+                closeButton: false,
+                buttons: {
+                    ok: {
+                        label: "OK",
+                        className: "btn-secondary",
+                        callback: function() {
+
+                        }
+                    },
+                    retry: {
+                        label: "Try Again",
+                        className: "btn-primary",
+                        callback: function() {
+                            awsDynamoDBConnector.fetchQueue('Open', globals.theLocation.locationID, myQueuePage.activeQueueReturned);
+                        }
+                    }
+                }
+            });
+
+            return;
+        }
+
+        //success
+
+
+        //create the list of active students
+        var listHTML = '<ul class="list-group">';
+
+        data.forEach(function (student, index) {
+
+            listHTML += '    <li class="list-group-item justify-content-between"><span class="h5 title-divider text-primary-darkend ">' + student.firstName + '&nbsp;' + student.lastName + '</span> is being helped by ' + student.closedBy +'<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span><a href="#" class="float-right font-weight-normal text-muted" ><i class="fa fa-eject"></i></a></li>'
+
+        });
+
+        listHTML += '</ul>';
+
+        $('#currentlyBeingHelpedList').hide().html(listHTML).fadeIn(1000);
+
+    },
 
     //******************************************************************************************************************
     //******************************************************************************************************************
