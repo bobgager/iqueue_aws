@@ -674,16 +674,17 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
-    updateNameCoach: function (customerID, configCode, useNameCoach, nameCoachAuthToken, nameCoachAccessCode, callback) {
+    updateNameCoach: function (customerID, configCode, useNameCoach, nameCoachAuthToken, nameCoachAccessCode, collectNameCoach, callback) {
 
         var params = {
             TableName: 'iqCustomerConfigs',
             Key: { customerID : customerID, configCode : configCode },
-            UpdateExpression: "set useNameCoach=:useNameCoach, nameCoachAuthToken=:nameCoachAuthToken, nameCoachAccessCode=:nameCoachAccessCode",
+            UpdateExpression: "set useNameCoach=:useNameCoach, nameCoachAuthToken=:nameCoachAuthToken, nameCoachAccessCode=:nameCoachAccessCode, collectNameCoach=:collectNameCoach",
             ExpressionAttributeValues:{
                 ":useNameCoach": useNameCoach,
                 ":nameCoachAuthToken": nameCoachAuthToken,
-                ":nameCoachAccessCode": nameCoachAccessCode
+                ":nameCoachAccessCode": nameCoachAccessCode,
+                ":collectNameCoach": collectNameCoach
             }
         };
 

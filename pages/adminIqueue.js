@@ -90,6 +90,17 @@ var adminIqueuePage = {
         //setup the NameCoach section
         $('#nameCoachChoice').prop('checked', globals.theCustomer.useNameCoach);
 
+        //hide or show the Name Coach options
+
+        if ($('#nameCoachChoice').is(':checked')){
+            $('#nameCoachOptionsDiv').show();
+        }
+        else {
+            $('#nameCoachOptionsDiv').hide();
+        }
+
+        $('#collectNameCoachChoice').prop('checked', globals.theCustomer.collectNameCoach);
+
         if (globals.theCustomer.nameCoachAuthToken === '~'){
             globals.theCustomer.nameCoachAuthToken = '';
         }
@@ -144,6 +155,15 @@ var adminIqueuePage = {
     //******************************************************************************************************************
     saveNameCoach: function () {
 
+        //hide or show the Name Coach options
+
+        if ($('#nameCoachChoice').is(':checked')){
+            $('#nameCoachOptionsDiv').show();
+        }
+        else {
+            $('#nameCoachOptionsDiv').hide();
+        }
+
         //save changes to AWS
 
         var nameCoachAuthToken = $('#nameCoachAuthTokenInput').val();
@@ -159,7 +179,7 @@ var adminIqueuePage = {
         utils.activeButton('nameCoachAuthTokenBTN','');
         utils.activeButton('nameCoachAccessCodeBTN','');
 
-        awsDynamoDBConnector.updateNameCoach(globals.theCustomer.customerID, globals.theCustomer.configCode, $('#nameCoachChoice').is(':checked'), nameCoachAuthToken, nameCoachAccessCode, adminIqueuePage.updateNameCoachReturned);
+        awsDynamoDBConnector.updateNameCoach(globals.theCustomer.customerID, globals.theCustomer.configCode, $('#nameCoachChoice').is(':checked'), nameCoachAuthToken, nameCoachAccessCode, $('#collectNameCoachChoice').is(':checked'), adminIqueuePage.updateNameCoachReturned);
 
     },
 
@@ -170,6 +190,7 @@ var adminIqueuePage = {
 
             //update the local copy of the customer info
             globals.theCustomer.useNameCoach = $('#nameCoachChoice').is(':checked');
+            globals.theCustomer.collectNameCoach = $('#collectNameCoachChoice').is(':checked');
             globals.theCustomer.nameCoachAuthToken = $('#nameCoachAuthTokenInput').val();
             globals.theCustomer.nameCoachAccessCode = $('#nameCoachAccessCodeInput').val();
 

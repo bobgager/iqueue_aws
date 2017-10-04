@@ -53,20 +53,31 @@
                                 </label>
                             </div>
 
-                            <label for="nameCoachAuthTokenInput" >Your NameCoach Auth_Token:</label>
-                            <div class="input-group col-sm-7 mt-2 mb-2">
-                                <input type="text" class="form-control" id="nameCoachAuthTokenInput" onchange="adminIqueuePage.saveNameCoach();" placeholder="NameCoach Auth_Token">
-                                <span class="input-group-btn">
-                                <button id="nameCoachAuthTokenBTN" class="btn btn-secondary pointer" type="button"><i class="fa fa-check"></i></button>
-                            </span>
-                            </div>
+                            <div id="nameCoachOptionsDiv">
 
-                            <label for="nameCoachAccessCodeInput" >Your NameCoach Access_Code:</label>
-                            <div class="input-group col-sm-7 mt-2 mb-2">
-                                <input type="text" class="form-control" id="nameCoachAccessCodeInput" onchange="adminIqueuePage.saveNameCoach();" placeholder="NameCoach Access_Code">
-                                <span class="input-group-btn">
-                                <button id="nameCoachAccessCodeBTN" class="btn btn-secondary pointer" type="button"><i class="fa fa-check"></i></button>
-                            </span>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input id="collectNameCoachChoice" class="form-check-input" type="checkbox" onchange="adminIqueuePage.saveNameCoach();">
+                                        Request NameCoach Recordings in Kiosk
+                                    </label>
+                                </div>
+
+                                <label for="nameCoachAuthTokenInput" >Your NameCoach Auth_Token:</label>
+                                <div class="input-group col-sm-7 mt-2 mb-2">
+                                    <input type="text" class="form-control" id="nameCoachAuthTokenInput" onchange="adminIqueuePage.saveNameCoach();" placeholder="NameCoach Auth_Token">
+                                    <span class="input-group-btn">
+                                        <button id="nameCoachAuthTokenBTN" class="btn btn-secondary pointer" type="button"><i class="fa fa-check"></i></button>
+                                    </span>
+                                </div>
+
+                                <label for="nameCoachAccessCodeInput" >Your NameCoach Access_Code:</label>
+                                <div class="input-group col-sm-7 mt-2 mb-2">
+                                    <input type="text" class="form-control" id="nameCoachAccessCodeInput" onchange="adminIqueuePage.saveNameCoach();" placeholder="NameCoach Access_Code">
+                                    <span class="input-group-btn">
+                                        <button id="nameCoachAccessCodeBTN" class="btn btn-secondary pointer" type="button"><i class="fa fa-check"></i></button>
+                                    </span>
+                                </div>
+
                             </div>
 
                             <label class="mb-2" >Please contact <a href="https://www.name-coach.com/education" target="_blank" style="text-decoration: underline">NameCoach</a> to setup your account</label>
