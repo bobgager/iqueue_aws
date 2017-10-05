@@ -52,6 +52,7 @@ var myQueuePage = {
 
         //indicate we're loading the queue
         $('#queueDiv').html('<span class="h4"><i class="fa fa-spinner fa-spin fa-fw"></i> Loading Your Queue</span>');
+        $('#currentlyBeingHelpedList').html('');
 
         //set the filter category back to all
         myQueuePage.filterCategory = 'All';
@@ -328,6 +329,14 @@ var myQueuePage = {
             return;
         }
 
+        var student = data;
+
+        student.guid = student.personID;
+
+        student.createDateTime = new Date(student.createTime);
+
+        student.waitTime = utils.calibratedDateTime() - student.createDateTime;
+
         $('#queueDetailsModallTitle').html(student.firstName + '&nbsp;' + student.lastName + '<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span>');
 
         $('#queueDetailsModal').modal({backdrop: 'static'});
@@ -371,7 +380,7 @@ var myQueuePage = {
 
         data.forEach(function (student, index) {
 
-            listHTML += '    <li class="list-group-item justify-content-between"><span class="h5 title-divider text-primary-darkend ">' + student.firstName + '&nbsp;' + student.lastName + '</span> is being helped by ' + student.closedBy +'<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span><a href="#" class="float-right font-weight-normal text-muted" ><i class="fa fa-eject"></i></a></li>'
+            listHTML += '    <li class="list-group-item justify-content-between"><span class="h5 title-divider text-primary-darkend ">' + student.firstName + '&nbsp;' + student.lastName + '</span> is being helped by ' + student.closedBy +'<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span><a href="#" class="ejectBTN float-right font-weight-normal text-muted btn btn-sm btn-secondary btn-icon btn-rounded border-0" role="button" onclick="myQueuePage.returnToQueue(&#39;' + student.personID + '&#39;)"  data-container="body" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Return ' + student.firstName + ' to the Queue"    ><i class="fa fa-eject"></i></a></li>'
 
         });
 
@@ -379,7 +388,64 @@ var myQueuePage = {
 
         $('#currentlyBeingHelpedList').hide().html(listHTML).fadeIn(1000);
 
+        $('.ejectBTN').popover();
+
     },
+
+    //******************************************************************************************************************
+    returnToQueue: function (personID) {
+
+        //make sure student is still active before returning them to the queue
+
+        awsDynamoDBConnector.fetchQueueItem(globals.theLocation.locationID, personID, myQueuePage.returnToQueueCheckReturned);
+
+    },
+
+    //******************************************************************************************************************
+    returnToQueueCheckReturned: function (success, data) {
+
+        if (!success){
+            //the call failed
+            bootbox.dialog({
+                message: 'Please double check that you are connected to the internet and try again.<br><br>Error Code: rtqcr-001.<br><br>Error= ' + data,
+                title: "Communication Error",
+                closeButton: false,
+                buttons: {
+                    ok: {
+                        label: "OK",
+                        className: "btn-primary",
+                        callback: function() {
+
+                        }
+                    }
+                }
+            });
+            return;
+        }
+
+        if (data){
+            //we have a result
+            if(data.issueStatus === 'Active'){
+                //and they are still Active
+
+                //indicate we're loading the queue
+                $('#queueDiv').html('<span class="h4"><i class="fa fa-spinner fa-spin fa-fw"></i> Loading Your Queue</span>');
+                $('#currentlyBeingHelpedList').html('');
+
+                //return them to the queue
+                awsDynamoDBConnector.setItemOpen(globals.theLocation.locationID, data.personID, myQueuePage.render);
+
+            }
+            else {
+                //they are not active anymore, so just reload the queue
+                myQueuePage.render();
+            }
+
+        }
+
+
+
+    }
 
     //******************************************************************************************************************
     //******************************************************************************************************************
