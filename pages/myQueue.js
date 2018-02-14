@@ -6,19 +6,24 @@ var myQueuePage = {
 
     pageURL: 'pages/myQueue.html',
 
-    theQueue: [],
-
-    theCategories: [],
+    activeStudent: null,
 
     filterCategory: 'All',
 
     filteredQueue: [],
 
+    theQueue: [],
+
+    theCategories: [],
+
+    theFAQCategories: [],
+
+    touchPointList: [],
+    touchPointDepartments: [],
+
     //******************************************************************************************************************
     preLoad: function (callback) {
         //initialize anything that is required before the page gets rendered
-
-        //utils.writeDebug('myQueuePage.preLoad has been called', false);
 
         //go back to the router to actually load the page
         callback();
@@ -27,7 +32,12 @@ var myQueuePage = {
     //******************************************************************************************************************
     postLoad: function () {
         //script that runs after the page has been loaded
-        //utils.writeDebug('myQueuePage.postLoad has been called', false);
+
+        //load the list of FAQ's so we can build the FAQ Category List
+        awsDynamoDBConnector.fetchFAQs(globals.theLocation.locationID, myQueuePage.FAQsReturned);
+
+        //load the list of Touchpoints
+        awsDynamoDBConnector.fetchTouchpointList(globals.theLocation.locationID, myQueuePage.touchpointListReturned);
 
         myQueuePage.render();
 
@@ -37,8 +47,6 @@ var myQueuePage = {
     preClose: function (callback) {
         //this script runs before the next page is loaded.
         //useful to purge any event watchers or kill any timers
-
-        //utils.writeDebug('myQueuePage.preClose has been called', false);
 
         callback();
     },
@@ -51,14 +59,14 @@ var myQueuePage = {
         $('#pageLocationLabel').html(globals.theLocation.name);
 
         //indicate we're loading the queue
-        $('#queueDiv').html('<span class="h4"><i class="fa fa-spinner fa-spin fa-fw"></i> Loading Your Queue</span>');
+        $('#queueDiv').html('<span class="h4"><i class="fas fa-spinner fa-spin fa-fw"></i> Loading Your Queue</span>');
         $('#currentlyBeingHelpedList').html('');
 
         //set the filter category back to all
         myQueuePage.filterCategory = 'All';
 
         //hide the filter buttons
-        $('#queueCategoriesDiv').hide()
+        $('#queueCategoriesDiv').hide();
 
         //load the Open queue
         awsDynamoDBConnector.fetchQueue('Open', globals.theLocation.locationID, myQueuePage.openQueueReturned);
@@ -72,6 +80,73 @@ var myQueuePage = {
     locationChanged: function () {
 
         myQueuePage.render();
+
+    },
+
+    //******************************************************************************************************************
+    touchpointListReturned: function (success, data) {
+
+        if (!success){
+            //there was an error
+            //wait a bit and try again.
+            console.log('Error Reading DynamoDB');
+            console.log(data);
+            setTimeout(function(){
+                awsDynamoDBConnector.fetchTouchpointList(globals.theLocation.locationID, myQueuePage.touchpointListReturned);
+            }, 2000);
+            return;
+        }
+
+        //save the touchpointList for later usage
+        myQueuePage.touchPointList = data;
+
+        //build a unique list of Departments
+        myQueuePage.touchPointDepartments = [];
+
+        myQueuePage.touchPointList.forEach(function(touchPoint) {
+
+            if (myQueuePage.touchPointDepartments.indexOf(touchPoint.department) === -1){
+                myQueuePage.touchPointDepartments.push(touchPoint.department);
+            }
+
+        });
+
+        //sort the departments
+        myQueuePage.touchPointDepartments.sort(function(a, b){
+            var catA= a.toLowerCase(), catB= b.toLowerCase();
+            if (catA < catB) //sort string ascending
+                return -1
+            if (catA > catB)
+                return 1
+            return 0 //default return value (no sorting)
+        });
+
+        console.log('stop')
+
+    },
+
+    //******************************************************************************************************************
+    FAQsReturned: function (success, data) {
+
+        if (!success){
+            //there was an error
+            //wait a bit and try again.
+            console.log('Error Reading DynamoDB');
+            console.log(data);
+            setTimeout(function(){
+                awsDynamoDBConnector.fetchFAQs(globals.theLocation.locationID, myQueuePage.FAQsReturned);
+                }, 2000);
+            return;
+        }
+
+        //build an array of unique categories
+        myQueuePage.theFAQCategories = [];
+
+        data.forEach(function(FAQ) {
+            if (myQueuePage.theFAQCategories.indexOf(FAQ.category) === -1){
+                myQueuePage.theFAQCategories.push(FAQ.category);
+            }
+        });
 
     },
 
@@ -156,24 +231,24 @@ var myQueuePage = {
 
         //let the user know we're processing the results
         const studentLabel = myQueuePage.filteredQueue.length !== 1 ? ' Students' : ' Student';
-        $('#queueDiv').html('<span class="h4"><i class="fa fa-spinner fa-spin fa-fw"></i> Processing ' + myQueuePage.filteredQueue.length + studentLabel + ' In Your Queue</span>');
+        $('#queueDiv').html('<span class="h4"><i class="fas fa-spinner fa-spin fa-fw"></i> Processing ' + myQueuePage.filteredQueue.length + studentLabel + ' In Your Queue</span>');
 
         //build the filter buttons
         myQueuePage.drawFilterBTNs(myQueuePage.filterCategory);
 
         //create the list of waiting students
-        var listHTML = '<div class="card-accordion" id="queueAccordion" role="tablist" aria-multiselectable="true">';
+        var listHTML = '<div class="card-accordion" id="queueAccordion" aria-multiselectable="true">';
 
         myQueuePage.filteredQueue.forEach(function (student, index) {
 
             listHTML += '<div class="card card-outline-primary">';
-            listHTML += '    <h4 class="card-header py-0 px-0" role="tab" id="heading' + index + '">';
+            listHTML += '    <h4 class="card-header py-0 px-0" id="heading' + index + '">';
 
             if (index === 0) {
-                listHTML += '    <a class=" pb-1" data-toggle="collapse" data-parent="#queueAccordion" href="#collapse' + index + '" aria-expanded="true" aria-controls="collapse' + index + '">' + student.firstName + '&nbsp;' + student.lastName + '<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span></a>';
+                listHTML += '    <a class=" pb-1" data-toggle="collapse" data-parent="#queueAccordion" href="#collapse' + index + '" aria-expanded="true" aria-controls="collapse' + index + '">' + student.firstName + '&nbsp;' + student.lastName + '<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-clock pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span></a>';
             }
             else {
-                listHTML += '    <a class="collapsed pb-1" data-toggle="collapse" data-parent="#queueAccordion" href="#collapse' + index + '" aria-expanded="true" aria-controls="collapse' + index + '">' + student.firstName + '&nbsp;' + student.lastName + '<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span></a>';
+                listHTML += '    <a class="collapsed pb-1" data-toggle="collapse" data-parent="#queueAccordion" href="#collapse' + index + '" aria-expanded="true" aria-controls="collapse' + index + '">' + student.firstName + '&nbsp;' + student.lastName + '<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-clock pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span></a>';
             }
 
             listHTML += '   </h4>';
@@ -185,7 +260,7 @@ var myQueuePage = {
                 listHTML += '   <div id="collapse' + index + '" class="collapse in " role="tabpanel" aria-labelledby="heading' + index + '">';
             }
 
-            listHTML += '       <div class="card-block">';
+            listHTML += '       <div class="card-body">';
             listHTML +=                '<div>';
             listHTML +=                    '<strong>Category: </strong>'+  student.category   ;
             listHTML +=                '</div>';
@@ -329,15 +404,81 @@ var myQueuePage = {
             return;
         }
 
-        var student = data;
+        myQueuePage.activeStudent = data;
 
-        student.guid = student.personID;
+        myQueuePage.activeStudent.guid = myQueuePage.activeStudent.personID;
 
-        student.createDateTime = new Date(student.createTime);
+        myQueuePage.activeStudent.createDateTime = new Date(myQueuePage.activeStudent.createTime);
 
-        student.waitTime = utils.calibratedDateTime() - student.createDateTime;
+        myQueuePage.activeStudent.waitTime = utils.calibratedDateTime() - myQueuePage.activeStudent.createDateTime;
 
-        $('#queueDetailsModallTitle').html(student.firstName + '&nbsp;' + student.lastName + '<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span>');
+
+
+        //set the modal header/title
+        $('#queueDetailsModallTitle').html(myQueuePage.activeStudent.firstName + '&nbsp;' + myQueuePage.activeStudent.lastName + '<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-clock pb-1" aria-hidden="true"></i> ' + Math.round(myQueuePage.activeStudent.waitTime/1000/60) + ' Minutes</span>');
+
+        //show the extra kiosk question if there is one
+        $('#extraKioskQuestionDisplay').hide()
+        if (myQueuePage.activeStudent.extraKioskQuestionAnswer){
+            if (myQueuePage.activeStudent.extraKioskQuestionAnswer.question !=='~'){
+                $('#extraKioskQuestionDisplay').show();
+                $('#extraKioskQuestionDisplay').html(myQueuePage.activeStudent.extraKioskQuestionAnswer.question + ' ' + myQueuePage.activeStudent.extraKioskQuestionAnswer.answer)
+            }
+        }
+
+        //build the Category pulldown
+        var selectHTML = '';
+        for (i = 0; i < myQueuePage.theFAQCategories.length; i++) {
+            if(myQueuePage.activeStudent.category === myQueuePage.theFAQCategories[i]){
+                selectHTML += '<option value="'+myQueuePage.theFAQCategories[i]+'" selected>'+myQueuePage.theFAQCategories[i]+'</option> ' ;
+            }
+            else{
+                selectHTML += '<option value="'+myQueuePage.theFAQCategories[i]+'">'+myQueuePage.theFAQCategories[i]+'</option> ' ;
+            }
+        }
+        $('#queueDetails_CategorySelect').html(selectHTML);
+
+        //show the students email
+        $('#queueDetails_EmailInput_Label').html(myQueuePage.activeStudent.firstName +"'s Email:");
+        var theEmail = myQueuePage.activeStudent.email;
+        if(!theEmail){
+            theEmail = '?';
+        }
+        if(theEmail.length === 0){
+            theEmail = '?';
+        }
+        $('#queueDetails_EmailInput').val(theEmail)  ;
+
+        //show the students cell phone number
+        $('#queueDetails_CellPhone_Input_Label').html(myQueuePage.activeStudent.firstName +"'s Cell Phone #:");
+
+        var cellPhone = myQueuePage.activeStudent.cellphone;
+        if(!cellPhone){
+            cellPhone = '?';
+        }
+        if(cellPhone.length === 0){
+            cellPhone = '?';
+        }
+        $('#queueDetails_CellPhone_Input').val(cellPhone)  ;
+
+        //show the students question
+        $('#queueDetails_QuestionTextArea_Label').html(myQueuePage.activeStudent.firstName +"'s Question:");
+        $('#queueDetails_QuestionTextArea').val(myQueuePage.activeStudent.question);
+
+        //show the comments about this student
+        $('#queueDetails_CommentsTextArea_Label').html("Comments about " + myQueuePage.activeStudent.firstName +"'s visit:");
+        $('#queueDetails_CommentsTextArea').val(myQueuePage.activeStudent.comments);
+
+
+
+
+
+
+
+        //set the modal buttons
+        $('#queueDetailsModalReturnButton').html('<i class="fas fa-reply"></i>&nbsp;&nbsp;Return ' + myQueuePage.activeStudent.firstName + ' To The Queue')
+        $('#queueDetailsNoShowButton').html('<i class="fas fa-times"></i>&nbsp;&nbsp;' + myQueuePage.activeStudent.firstName + ' Is A No Show')
+        $('#queueDetails_Close_BTN').html('<i class="fas fa-check"></i> Done Helping '+ myQueuePage.activeStudent.firstName.substr(0,10)  );
 
         $('#queueDetailsModal').modal({backdrop: 'static'});
     },
@@ -380,7 +521,12 @@ var myQueuePage = {
 
         data.forEach(function (student, index) {
 
-            listHTML += '    <li class="list-group-item justify-content-between"><span class="h5 title-divider text-primary-darkend ">' + student.firstName + '&nbsp;' + student.lastName + '</span> is being helped by ' + student.closedBy +'<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span><a href="#" class="ejectBTN float-right font-weight-normal text-muted btn btn-sm btn-secondary btn-icon btn-rounded border-0" role="button" onclick="myQueuePage.returnToQueue(&#39;' + student.personID + '&#39;)"  data-container="body" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Return ' + student.firstName + ' to the Queue"    ><i class="fa fa-eject"></i></a></li>'
+            listHTML += '    <li class="list-group-item justify-content-between bg-primary-faded">' +
+                '<span class="h5 title-divider text-primary-darkend ">' + student.firstName + '&nbsp;' + student.lastName + '</span> is being helped by ' + student.closedBy +'<span class="text-xs font-weight-normal text-muted">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-clock pb-1" aria-hidden="true"></i> ' + Math.round(student.waitTime/1000/60) + ' Minutes</span>' +
+                '<a href="#" class="ejectBTN float-right font-weight-normal text-muted btn btn-sm btn-secondary btn-icon btn-rounded border-0 bg-primary-faded" role="button" onclick="myQueuePage.returnToQueue(&#39;' + student.personID + '&#39;)"  data-toggle="tooltip" data-trigger="hover" data-placement="left" title="Return ' + student.firstName + ' to the Queue"    >' +
+                '<i class="fas fa-reply"></i>' +
+                '</a>' +
+                '</li>'
 
         });
 
@@ -388,12 +534,17 @@ var myQueuePage = {
 
         $('#currentlyBeingHelpedList').hide().html(listHTML).fadeIn(1000);
 
-        $('.ejectBTN').popover();
+        $('.ejectBTN').tooltip();
 
     },
 
     //******************************************************************************************************************
     returnToQueue: function (personID) {
+
+        //pull in the active students personID if one wasn't set
+        if (!personID){
+            personID = myQueuePage.activeStudent.personID;
+        }
 
         //make sure student is still active before returning them to the queue
 
@@ -429,7 +580,7 @@ var myQueuePage = {
                 //and they are still Active
 
                 //indicate we're loading the queue
-                $('#queueDiv').html('<span class="h4"><i class="fa fa-spinner fa-spin fa-fw"></i> Loading Your Queue</span>');
+                $('#queueDiv').html('<span class="h4"><i class="fas fa-spinner fa-spin fa-fw"></i> Loading Your Queue</span>');
                 $('#currentlyBeingHelpedList').html('');
 
                 //return them to the queue
@@ -443,7 +594,7 @@ var myQueuePage = {
 
         }
 
-
+        $('.tooltip').remove();
 
     }
 

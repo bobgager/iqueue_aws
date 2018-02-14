@@ -13,7 +13,7 @@ var adminDisplayTestPage = {
     //******************************************************************************************************************
     render: function () {
 
-        jPM.close();
+        //jPM.close();
 
         router.currentPage = 'adminDisplayTestPage';
 

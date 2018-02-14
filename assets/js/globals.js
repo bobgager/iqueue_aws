@@ -2,6 +2,9 @@
  * Created by bgager on 5/25/17.
  */
 
+var jPM = $.jPanelMenu({});
+
+
 var globals = {
 
    //version: '0.001.019',
@@ -9,6 +12,8 @@ var globals = {
 
     version: '0.001.020',
     //port My Queue page to Bootstrap 4
+
+
 
 
     //******************************************************************************************************************

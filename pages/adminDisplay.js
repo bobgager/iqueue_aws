@@ -4,6 +4,8 @@
 
 var adminDisplayPage = {
 
+    pageURL: 'pages/adminDisplay.html',
+
     galleryThumbs: null,
 
 
@@ -20,11 +22,33 @@ var adminDisplayPage = {
     newSlideText: '',
 
     //******************************************************************************************************************
+    preLoad: function (callback) {
+        //initialize anything that is required before the page gets rendered
+
+        //go back to the router to actually load the page
+        callback();
+    },
+
+    //******************************************************************************************************************
+    postLoad: function () {
+        //script that runs after the page has been loaded
+
+        adminDisplayPage.render();
+
+    },
+
+    //******************************************************************************************************************
+    preClose: function (callback) {
+        //this script runs before the next page is loaded.
+        //useful to purge any event watchers or kill any timers
+
+        callback();
+    },
+
+    //******************************************************************************************************************
+
+    //******************************************************************************************************************
     render: function () {
-
-        jPM.close();
-
-        router.currentPage = 'adminDisplayPage';
 
 
         $('#authenticatedContent').hide().load("pages/adminDisplay.html?version="+ globals.version, function() {

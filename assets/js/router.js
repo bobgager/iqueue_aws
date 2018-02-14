@@ -35,6 +35,9 @@ var router = {
             case 'adminIqueuePage':
                 router.thePage = adminIqueuePage;
                 break;
+            case 'adminUsersPage':
+                router.thePage = adminUsersPage;
+                break;
             case 'adminDisplayPage':
                 router.thePage = adminDisplayPage;
                 break;

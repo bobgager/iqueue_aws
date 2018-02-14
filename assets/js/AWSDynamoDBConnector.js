@@ -228,6 +228,36 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    fetchFAQs: function(locationID, callback){
+
+        var params = {
+            TableName: 'iqFAQs',
+            KeyConditionExpression: 'locationID = :locationID',
+            ExpressionAttributeValues: {
+                ':locationID': locationID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
+
+            //console.log('returned from fetchWaitTime with err= ' + err);
+
+            if (err){
+                //console.log(err); // an error occurred
+
+                callback(false, err);
+
+            }
+            else {
+                // successful response
+
+                callback(true, data.Items);
+            }
+        });
+
+    },
+
+    //******************************************************************************************************************
     fetchHelpedToday: function(locationID, callback){
 
         var thisMorning = new Date();

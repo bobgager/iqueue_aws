@@ -4,25 +4,43 @@
 
 var dashboardPage = {
 
+    pageURL: 'pages/dashboard.html',
+
     refreshTimer:  0 ,
+
+    //******************************************************************************************************************
+    preLoad: function (callback) {
+        //initialize anything that is required before the page gets rendered
+
+        //go back to the router to actually load the page
+        callback();
+    },
+
+    //******************************************************************************************************************
+    postLoad: function () {
+        //script that runs after the page has been loaded
+
+        dashboardPage.render();
+
+    },
+
+    //******************************************************************************************************************
+    preClose: function (callback) {
+        //this script runs before the next page is loaded.
+        //useful to purge any event watchers or kill any timers
+
+        callback();
+    },
+
+    //******************************************************************************************************************
 
     //******************************************************************************************************************
     render: function () {
 
-        jPM.close();
+        // set the header
+        $('#pageLocationLabel').html(globals.theLocation.name);
 
-        router.currentPage = 'dashboardPage';
-
-
-        $('#authenticatedContent').hide().load("pages/dashboard.html?version="+ globals.version, function() {
-
-            $('#pageLocationLabel').html(globals.theLocation.name);
-
-            utils.writeDebug('dashboard Page loaded',false);
-
-            dashboardPage.refreshAll();
-
-        }).fadeIn(1000);
+        dashboardPage.refreshAll();
 
     },
 

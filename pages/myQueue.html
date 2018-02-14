@@ -1,8 +1,10 @@
 <h4 class="title-divider text-primary-darkend">
     <span><span id="pageLocationLabel"></span><span class="font-weight-normal text-muted">Queue </span></span>
-    <i class="fa fa-refresh float-right pointer" aria-hidden="true" onclick="router.showPage(&#39;myQueuePage&#39;)"></i>
+    <i class="fas fa-sync float-right pointer" aria-hidden="true" onclick="router.showPage(&#39;myQueuePage&#39;)"></i>
 
 </h4>
+
+
 
 <div id="queueCategoriesDiv"></div>
 
@@ -17,6 +19,7 @@
     <div id="currentlyBeingHelpedList" >
 
     </div>
+
 </div>
 
 
@@ -26,18 +29,88 @@
     <div id="queueDetailsModal" class="modal fade " tabindex="-1" role="dialog">
         <div id="queueDetailsModalDialog" class="modal-dialog modal-lg" >
             <div class="modal-content">
+
                 <div class="modal-header">
                     <h4 id="queueDetailsModallTitle" class="modal-title"></h4>
-<!--                    <button type="button" class="close" data-dismiss="modal" >
-                        <span aria-hidden="true">&times;</span>
-                    </button>-->
                 </div>
+
                 <div class="modal-body">
-                    <p id="queueDetailsModalMessage">No message was set</p>
+
+                    <div id="extraKioskQuestionDisplay" class="alert alert-primary-faded" role="alert" style="font-weight: bold; display: none" ></div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <!-- Category Select -->
+                            <div class="form-group">
+                                <label class="control-label" for="queueDetails_CategorySelect">Category:</label>
+                                <select id="queueDetails_CategorySelect" name="queueDetails_CategorySelect" class="form-control"></select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <!-- email input-->
+                            <div id="queueDetails_EmailInput_Div" class="form-group ">
+                                <label id="queueDetails_EmailInput_Label" class="control-label" for="queueDetails_EmailInput">Students Email:</label>
+
+                                <div class="input-group">
+                                    <input id="queueDetails_EmailInput" name="queueDetails_EmailInput" type="text" placeholder="Students Email" class="form-control input-md" onchange="this.value = this.value.toLowerCase(); App.queuedetailsview.setupNameCoach(); App.queuedetailsview.testFarmhand()" >
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button" onclick="this.value = this.value.toLowerCase(); App.queuedetailsview.setupNameCoach(); App.queuedetailsview.testFarmhand()" ><i class="fa fa-check"></i></button>
+                                        </span>
+                                </div>
+
+                                <span id="queueDetails_Farmhand_Span" class="help-block">
+
+                                        <button id="queueDetails_Farmhand_BTN"  class="btn btn-primary margin-left btn-xs" onclick="App.queuedetailsview.openFarmhand()">Open Farmhand</button>
+
+                                        <span id="queueDetails_Farmhand_GetEmail_Label" >Ask the student for their Stanford email !</span>
+                                    </span>
+
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <!-- phone number input-->
+                            <div id="queueDetails_CellPhone_Input_Div" class="form-group ">
+                                <label id="queueDetails_CellPhone_Input_Label" class="control-label" for="queueDetails_CellPhone_Input">Students Cell Phone:</label>
+
+                                <div class="input-group">
+                                    <input id="queueDetails_CellPhone_Input" name="queueDetails_CellPhone_Input" type="text" placeholder="Students Cell Phone:" class="form-control input-md"  >
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"  ><i class="fa fa-check"></i></button>
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Question Textarea -->
+                    <div class="form-group">
+                        <label id="queueDetails_QuestionTextArea_Label" class="control-label" for="queueDetails_QuestionTextArea">Question:</label>
+                        <textarea readonly class="form-control" id="queueDetails_QuestionTextArea" name="queueDetails_QuestionTextArea"></textarea>
+                    </div>
+
+                    <!-- Comments Textarea -->
+                    <div class="form-group">
+                        <label id="queueDetails_CommentsTextArea_Label" class="control-label" for="queueDetails_CommentsTextArea">Comments:</label>
+                        <textarea class="form-control" id="queueDetails_CommentsTextArea" name="queueDetails_CommentsTextArea" ></textarea>
+                    </div>
+
                 </div>
-                <div class="modal-footer">
-                    <button id="queueDetailsModalOKButton" type="button" class="btn btn-primary" data-dismiss="modal" onclick="myQueuePage.render()">OK</button>
+
+                <div class="modal-footer pt-1 pb-2">
+                    <button id="queueDetailsModalReturnButton" type="button" class="btn btn-dark" data-dismiss="modal" onclick="myQueuePage.returnToQueue()">Return To Queue</button>
+                    <button id="queueDetailsNoShowButton" type="button" class="btn btn-dark" data-dismiss="modal" onclick="myQueuePage.noShow()">No Show</button>
+                    <button id="queueDetails_Close_BTN" type="button" class="btn btn-primary" data-dismiss="modal" onclick="myQueuePage.closeStudent()">Close</button>
                 </div>
+
             </div>
         </div>
     </div>

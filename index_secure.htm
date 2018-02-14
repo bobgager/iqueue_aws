@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>iQueue</title>
     <meta charset="utf-8">
@@ -9,11 +10,13 @@
     <meta name="description" content="Your Virtual Line Manager">
     <meta name="author" content="cobaltfire.com">
 
-    <!-- Bootstrap 4.0.0-alpha.6 CSS via CDN -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <!-- Bootstrap v4.0.0 CSS via CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
-    <!-- Font Awesome 4.7.0 via CDN -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<!--    &lt;!&ndash; Font Awesome 4.7.0 via CDN &ndash;&gt;
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">-->
+    <!-- Iconset: Font Awesome 5.0.4 via CDN -->
+    <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
 
     <!--the swiper css from CDN-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css">
@@ -24,12 +27,13 @@
     <!--toastr-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
 
-    <!-- Theme style -->
-<!--    <link href="assets/css/theme-style.min.css" rel="stylesheet">-->
-    <link href="assets/css/theme-style.css" rel="stylesheet">
+    <!-- AppStrap Theme style -->
+<!--    <link href="assets/css/theme-style_appstrap_3_0_12.min.css" rel="stylesheet">-->
+<!--    <link href="assets/css/theme-style_appstrap_3_0_12.css" rel="stylesheet">-->
+    <link href="assets/css/theme-style_appstrap_3_1_0.css" rel="stylesheet">
 
-    <!--Your custom colour override-->
-    <link href="#" id="colour-scheme" rel="stylesheet">
+  <!--Your custom colour override-->
+  <link href="#" id="colour-scheme" rel="stylesheet">
 
     <script type="text/javascript">
 
@@ -38,36 +42,43 @@
         /*Your custom override*/
         document.write('<link href="assets/css/custom-style.css?version=' + currentDateTime + '" rel="stylesheet">');
 
-
     </script>
 
 
 
 
+  <!-- Le fav and touch icons - @todo: fill with your icons or remove, try https://realfavicongenerator.net -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicons/favicon-16x16.png">
+  <link rel="manifest" href="assets/favicons/manifest.json">
+  <link rel="shortcut icon" href="assets/favicons/favicon.ico">
+  <meta name="msapplication-config" content="assets/favicons/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
 
-    <!-- Le fav and touch icons - @todo: fill with your icons or remove -->
-    <!--<link rel="shortcut icon" href="assets/assets/img/icons/favicon.png">-->
-    <link rel="apple-touch-icon" sizes="114x114" href="assets/assets/img/icons/114x114.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="assets/assets/img/icons/72x72.png">
-    <link rel="apple-touch-icon" href="assets/assets/img/icons/default.png">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Rambla' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
 
-    <!--Plugin: Retina.js (high def image replacement) - @see: http://retinajs.com/-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/retina.js/1.3.0/retina.min.js"></script>
+
+
+
+
+  <!-- Google fonts -->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Rambla:400,700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
+
 
 </head>
 
 <!-- ======== @Region: body ======== -->
-<body class="page navbar-layout-default">
 
-<!-- @plugin: page loading indicator, delete to remove loader -->
-<div class="page-loader" data-toggle="page-loader"></div>
+<body class="page page-index navbar-layout-default">
 
-<!-- ======== @Region: #header ======== -->
-<div id="header">
+  <!-- @plugin: page loading indicator, delete to remove loader -->
+  <div class="page-loader" data-toggle="page-loader"></div>
+
+  <!-- ======== @Region: #header ======== -->
+  <div id="header">
 
 
 
@@ -75,39 +86,45 @@
     <div data-toggle="sticky">
 
 
-        <!--Header & Branding region-->
-        <div class="header pb-1 pt-1">
-            <!-- all direct children of the .header-inner element will be vertically aligned with each other you can override all the behaviours using the flexbox utilities (flexbox.htm) All elements with .header-brand & .header-block-flex wrappers will automatically be aligned inline & vertically using flexbox, this can be overridden using the flexbox utilities (flexbox.htm) Use .header-block to stack elements within on small screen & "float" on larger screens use .flex-first or/and .flex-last classes to make an element show first or last within .header-inner or .headr-block elements -->
-            <div class="header-inner container">
 
-                <!--branding/logo -->
-                <div class="header-brand flex-first">
-                    <a class="header-brand-text" href="#" title="iQueue">
-                        <h1>
-                            <span>i</span>Q<span>ueue</span>
-                        </h1>
-                    </a>
-                    <div class="header-divider hidden-md-down"></div>
-                    <div class="header-slogan hidden-md-down">The Wait Is Over</div>
-                </div>
 
-                <!-- other header content -->
-                <div id="otherHeaderContent" class="header-block flex-last">
 
-                    <!-- mobile collapse menu button - data-toggle="collapse" = default BS menu - data-toggle="jpanel-menu" = jPanel Menu - data-toggle="overlay" = Overlay Menu -->
-                    <a  href="#top" class="btn btn-link btn-icon header-btn float-right hidden-lg-up" data-toggle="jpanel-menu" data-target=".navbar-main" data-direction="right"> <i class="fa fa-bars"></i> </a>
-                </div>
 
-                <div id="mainNavbar" class="navbar navbar-toggleable-md">
+      <!--Header & Branding region-->
+      <div class="header">
+        <!-- all direct children of the .header-inner element will be vertically aligned with each other you can override all the behaviours using the flexbox utilities (flexbox.htm) All elements with .header-brand & .header-block-flex wrappers will automatically be aligned inline & vertically using flexbox, this can be overridden using the flexbox utilities (flexbox.htm) Use .header-block to stack elements within on small screen & "float" on larger screens use .order-first or/and .order-last classes to make an element show first or last within .header-inner or .headr-block elements -->
+        <div class="header-inner container">
+
+          <!--branding/logo -->
+
+          <div class="header-brand">
+            <a class="header-brand-text" href="index.html" title="Home">
+              <h1 class="h2">
+                <span class="header-brand-text-alt">i</span>Queue<span class="header-brand-text-alt"></span>
+              </h1>
+            </a>
+            <div class="header-divider d-none d-lg-block"></div>
+            <div class="header-slogan d-none d-lg-block">The Wait Is Over</div>
+          </div>
+
+          <!-- other header content -->
+          <div id="otherHeaderContent" class="header-block order-12">
+
+
+            <!-- mobile collapse menu button - data-toggle="collapse" = default BS menu - data-toggle="jpanel-menu" = jPanel Menu - data-toggle="overlay" = Overlay Menu -->
+            <a href="#top" class="menu-trigger btn btn-link btn-icon header-btn float-right d-lg-none" data-toggle="jpanel-menu" data-target=".navbar-main" data-direction="right"> <i class="fa fa-bars"></i> </a>
+          </div>
+
+                <div id="mainNavbar" class="navbar navbar-expand-md navbar-static-top">
                     <!--everything within this div is collapsed on mobile-->
 
-                    <div class="navbar-main collapse">
+                    <div id="menu" class="navbar-main collapse">
                         <!--main navigation-->
                         <ul class="nav navbar-nav float-lg-right dropdown-effect-fade">
 
                             <!-- Dashboard Menu -->
                             <li class="nav-item d-lg-flex dropdown">
-                                <a href="#" class="nav-link " data-toggle="dropdown" data-hover="dropdown" onclick="dashboardPage.render()">Dashboard</a>
+                                <a href="#" class="nav-link " data-toggle="dropdown" data-hover="dropdown" onclick="router.showPage(&#39;dashboardPage&#39;)">Dashboard</a>
                             </li>
 
                             <!-- Your Queue Menu -->
@@ -121,11 +138,11 @@
                                 <!-- Dropdown menu -->
                                 <div id="reportMenu" class="dropdown-menu dropdown-menu-right dropdown-menu-nobullets">
 
-                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;dailyTrafficPage&#39;)"><i class="fa fa-bar-chart dropdown-icon" aria-hidden="true"></i> Daily Traffic</a>
-                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;studentSearchPage&#39;)"><i class="fa fa-search dropdown-icon" aria-hidden="true"></i> Student Search</a>
-                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;studentListPage&#39;)"><i class="fa fa-list dropdown-icon" aria-hidden="true"></i> Student List</a>
-                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;touchpointsPage&#39;)"><i class="fa fa-hand-pointer-o dropdown-icon" aria-hidden="true"></i> Touchpoints</a>
-                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;agentMetricsPage&#39;)"><i class="fa fa-pie-chart dropdown-icon" aria-hidden="true"></i> Agent Metrics</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;dailyTrafficPage&#39;)"><i class="far fa-chart-bar dropdown-icon" aria-hidden="true"></i> Daily Traffic</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;studentSearchPage&#39;)"><i class="fas fa-search dropdown-icon" aria-hidden="true"></i> Student Search</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;studentListPage&#39;)"><i class="fas fa-list dropdown-icon" aria-hidden="true"></i> Student List</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;touchpointsPage&#39;)"><i class="far fa-hand-pointer dropdown-icon" aria-hidden="true"></i> Touchpoints</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;agentMetricsPage&#39;)"><i class="fas fa-chart-pie dropdown-icon" aria-hidden="true"></i> Agent Metrics</a>
 
                                 </div>
                             </li>
@@ -144,10 +161,10 @@
                                 <!-- Menu -->
                                 <div class="dropdown-menu dropdown-menu-nobullets dropdown-menu-right">
 
-                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;adminIqueuePage&#39;)" ><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> iQueue Setup</a>
-                                    <a href="#" class="dropdown-item" onclick="adminUsersPage.render()"><i class="fa fa-users dropdown-icon" aria-hidden="true"></i> Manage Users</a>
-                                    <a href="#" class="dropdown-item"onclick="adminDisplayPage.render()"><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> Manage Display</a>
-                                    <a href="#" class="dropdown-item"><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> Manage Kiosk</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;adminIqueuePage&#39;)" ><i class="fas fa-cog dropdown-icon" aria-hidden="true"></i> iQueue Setup</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;adminUsersPage&#39;)"><i class="fas fa-users dropdown-icon" aria-hidden="true"></i> Manage Users</a>
+                                    <a href="#" class="dropdown-item"onclick="router.showPage(&#39;adminDisplayPage&#39;)"><i class="fas fa-cog dropdown-icon" aria-hidden="true"></i> Manage Display</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-cog dropdown-icon" aria-hidden="true"></i> Manage Kiosk</a>
 
                                 </div>
                             </li>
@@ -159,15 +176,15 @@
                                 <div id="more-dropdown-menu" class="dropdown-menu dropdown-menu-nobullets dropdown-menu-right">
 
                                     <div id="launch-dropdown-menu" class="dropdown dropdown-submenu ">
-                                        <a href="#" class="dropdown-item dropdown-toggle" id="launch-drop" data-toggle="dropdown" data-hover="dropdown" data-close-others="false"><i class="fa fa-external-link dropdown-icon" aria-hidden="true"></i> Launch...</a>
+                                        <a href="#" class="dropdown-item dropdown-toggle" id="launch-drop" data-toggle="dropdown" data-hover="dropdown" data-close-others="false"><i class="fas fa-external-link-alt dropdown-icon" aria-hidden="true"></i> Launch...</a>
                                         <!-- Dropdown Menu -->
                                         <div class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="admin-drop">
-                                            <a href="#" class="dropdown-item" ><i class="fa fa-tablet dropdown-icon" aria-hidden="true"></i> Kiosk</a>
-                                            <a href="#" class="dropdown-item" onclick="app.launchDisplay()" ><i class="fa fa-tv dropdown-icon" aria-hidden="true"></i> Display</a>
+                                            <a href="#" class="dropdown-item" ><i class="fas fa-tablet dropdown-icon" aria-hidden="true"></i> Kiosk</a>
+                                            <a href="#" class="dropdown-item" onclick="app.launchDisplay()" ><i class="fas fa-tv dropdown-icon" aria-hidden="true"></i> Display</a>
                                         </div>
                                     </div>
 
-                                    <a href="#" class="dropdown-item"><i class="fa fa-info dropdown-icon" aria-hidden="true"></i> What&#39;s New</a>
+                                    <a href="#" class="dropdown-item"><i class="fas fa-info dropdown-icon" aria-hidden="true"></i> What&#39;s New</a>
 
                                 </div>
                             </li>
@@ -187,6 +204,128 @@
                 </div>
             </div>
         </div>
+
+
+
+<!--
+        <div class="header pb-1 pt-1">
+            &lt;!&ndash; all direct children of the .header-inner element will be vertically aligned with each other you can override all the behaviours using the flexbox utilities (flexbox.htm) All elements with .header-brand & .header-block-flex wrappers will automatically be aligned inline & vertically using flexbox, this can be overridden using the flexbox utilities (flexbox.htm) Use .header-block to stack elements within on small screen & "float" on larger screens use .flex-first or/and .flex-last classes to make an element show first or last within .header-inner or .headr-block elements &ndash;&gt;
+            <div class="header-inner container">
+
+                &lt;!&ndash;branding/logo &ndash;&gt;
+                <div class="header-brand flex-first">
+                    <a class="header-brand-text" href="#" title="iQueue">
+                        <h1>
+                            <span>i</span>Q<span>ueue</span>
+                        </h1>
+                    </a>
+                    <div class="header-divider hidden-md-down"></div>
+                    <div class="header-slogan hidden-md-down">The Wait Is Over</div>
+                </div>
+
+                &lt;!&ndash; other header content &ndash;&gt;
+                <div id="otherHeaderContent" class="header-block flex-last">
+
+                    &lt;!&ndash; mobile collapse menu button - data-toggle="collapse" = default BS menu - data-toggle="jpanel-menu" = jPanel Menu - data-toggle="overlay" = Overlay Menu &ndash;&gt;
+                    <a  href="#top" class="btn btn-link btn-icon header-btn float-right hidden-lg-up" data-toggle="jpanel-menu" data-target=".navbar-main" data-direction="right"> <i class="fa fa-bars"></i> </a>
+                </div>
+
+                <div id="mainNavbar" class="navbar navbar-toggleable-md">
+                    &lt;!&ndash;everything within this div is collapsed on mobile&ndash;&gt;
+
+                    <div class="navbar-main collapse">
+                        &lt;!&ndash;main navigation&ndash;&gt;
+                        <ul class="nav navbar-nav float-lg-right dropdown-effect-fade">
+
+                            &lt;!&ndash; Dashboard Menu &ndash;&gt;
+                            <li class="nav-item d-lg-flex dropdown">
+                                <a href="#" class="nav-link " data-toggle="dropdown" data-hover="dropdown" onclick="dashboardPage.render()">Dashboard</a>
+                            </li>
+
+                            &lt;!&ndash; Your Queue Menu &ndash;&gt;
+                            <li class="nav-item d-lg-flex dropdown">
+                                <a href="#" class="nav-link " data-toggle="dropdown" data-hover="dropdown" onclick="router.showPage(&#39;myQueuePage&#39;)">Your Queue</a>
+                            </li>
+
+                            &lt;!&ndash; Reports Menu &ndash;&gt;
+                            <li class="nav-item d-lg-flex dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">Reports</a>
+                                &lt;!&ndash; Dropdown menu &ndash;&gt;
+                                <div id="reportMenu" class="dropdown-menu dropdown-menu-right dropdown-menu-nobullets">
+
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;dailyTrafficPage&#39;)"><i class="fa fa-bar-chart dropdown-icon" aria-hidden="true"></i> Daily Traffic</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;studentSearchPage&#39;)"><i class="fa fa-search dropdown-icon" aria-hidden="true"></i> Student Search</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;studentListPage&#39;)"><i class="fa fa-list dropdown-icon" aria-hidden="true"></i> Student List</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;touchpointsPage&#39;)"><i class="fa fa-hand-pointer-o dropdown-icon" aria-hidden="true"></i> Touchpoints</a>
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;agentMetricsPage&#39;)"><i class="fa fa-pie-chart dropdown-icon" aria-hidden="true"></i> Agent Metrics</a>
+
+                                </div>
+                            </li>
+
+                            &lt;!&ndash; Location Menu &ndash;&gt;
+                            <li class="nav-item d-lg-flex dropdown">
+                                <a id="locationMenuHeader" href="#" class="nav-link dropdown-toggle " data-toggle="dropdown" data-hover="dropdown">LOCATION</a>
+                                &lt;!&ndash; Dropdown menu &ndash;&gt;
+                                <div id="locationMenu" class="dropdown-menu dropdown-menu-right dropdown-menu-nobullets" style="min-width: 200px; !important;">
+                                </div>
+                            </li>
+
+                            &lt;!&ndash; Admin Menu &ndash;&gt;
+                            <li id="admin-dropdown-menu"  class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle " id="admin-drop" data-toggle="dropdown" data-hover="dropdown">Admin</a>
+                                &lt;!&ndash; Menu &ndash;&gt;
+                                <div class="dropdown-menu dropdown-menu-nobullets dropdown-menu-right">
+
+                                    <a href="#" class="dropdown-item" onclick="router.showPage(&#39;adminIqueuePage&#39;)" ><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> iQueue Setup</a>
+                                    <a href="#" class="dropdown-item" onclick="adminUsersPage.render()"><i class="fa fa-users dropdown-icon" aria-hidden="true"></i> Manage Users</a>
+                                    <a href="#" class="dropdown-item"onclick="adminDisplayPage.render()"><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> Manage Display</a>
+                                    <a href="#" class="dropdown-item"><i class="fa fa-cog dropdown-icon" aria-hidden="true"></i> Manage Kiosk</a>
+
+                                </div>
+                            </li>
+
+                            &lt;!&ndash; More Menu &ndash;&gt;
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle " id="more-drop" data-toggle="dropdown" data-hover="dropdown">More</a>
+                                &lt;!&ndash; Menu &ndash;&gt;
+                                <div id="more-dropdown-menu" class="dropdown-menu dropdown-menu-nobullets dropdown-menu-right">
+
+                                    <div id="launch-dropdown-menu" class="dropdown dropdown-submenu ">
+                                        <a href="#" class="dropdown-item dropdown-toggle" id="launch-drop" data-toggle="dropdown" data-hover="dropdown" data-close-others="false"><i class="fa fa-external-link dropdown-icon" aria-hidden="true"></i> Launch...</a>
+                                        &lt;!&ndash; Dropdown Menu &ndash;&gt;
+                                        <div class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="admin-drop">
+                                            <a href="#" class="dropdown-item" ><i class="fa fa-tablet dropdown-icon" aria-hidden="true"></i> Kiosk</a>
+                                            <a href="#" class="dropdown-item" onclick="app.launchDisplay()" ><i class="fa fa-tv dropdown-icon" aria-hidden="true"></i> Display</a>
+                                        </div>
+                                    </div>
+
+                                    <a href="#" class="dropdown-item"><i class="fa fa-info dropdown-icon" aria-hidden="true"></i> What&#39;s New</a>
+
+                                </div>
+                            </li>
+
+                            &lt;!&ndash; User Menu &ndash;&gt;
+                            <li class="nav-item d-lg-flex dropdown">
+                                <a id="userMenuHeader" href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">User Menu</a>
+                                &lt;!&ndash; Dropdown menu &ndash;&gt;
+                                <div id="userMenu" class="dropdown-menu dropdown-menu-right dropdown-menu-nobullets">
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                    &lt;!&ndash;/.navbar-collapse &ndash;&gt;
+
+                </div>
+            </div>
+        </div>
+
+     -->
+
+
+
+
+
     </div>
 </div>
 
@@ -224,9 +363,15 @@
         </form>
 
         <!--Loading Progress Bar-->
-        <div id="loading-iqueue-progress" class="progress">
-            <div id="loading-iqueue-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated w-30 progress-bar-lg " role="progressbar" >Sign In Success : Loading iQueue</div>
+        <div  id="loading-iqueue-progress" >
+            <div id="loading-iqueue-progress-label" class="text-primary">Sign In Success : Loading iQueue</div>
+            <div class="progress">
+                <div id="loading-iqueue-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated w-30 progress-lg " role="progressbar" ></div>
+
+            </div>
+
         </div>
+
 
         <div id="authenticatedContent"></div>
 
@@ -248,7 +393,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <p class="mb-0">iQueue | Copyright 2017 &copy; <a href="http://cobaltfire.com" class="footer-link">Cobaltfire Software LLC</a></p>
+                    <p class="mb-0">iQueue | Copyright 2018 &copy; <a href="http://cobaltfire.com" class="footer-link">Cobaltfire Software LLC</a></p>
                 </div>
                 <div class="col-md-6">
                     <ul class="list-inline footer-links float-md-right mb-0">
@@ -395,9 +540,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
 
-<!--Custom scripts mainly used to trigger libraries/plugins -->
-<!--<script src="assets/js/script.min.js"></script>-->
-<script src="assets/js/script.js"></script>
+
+
+<!--Custom AppStrap script mainly used to trigger libraries/plugins -->
+<!--<script src="assets/js/script_appstrap_3_0_12.min.js"></script>-->
+<!--<script src="assets/js/script_appstrap_3_0_12.js"></script>-->
+  <script src="assets/js/script_appstrap_3_1_0.js"></script>
+
+
+  <!--and some plugins used by appstrap-->
+  <script src="assets/plugins/jPanelMenu/jquery.jpanelmenu.min.js"></script>
 
 
 <!--Custom App Scripts-->

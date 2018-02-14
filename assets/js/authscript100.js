@@ -14,7 +14,7 @@ var configure = {
         $('#otherHeaderContent').show();
 
         $('#loading-iqueue-progress-bar').addClass('w-50');
-        $('#loading-iqueue-progress-bar').html('Loading scripts');
+        $('#loading-iqueue-progress-label').html('Loading scripts');
 
         var progress = 0;
         var scripts = ['assets/js/AWSDynamoDBConnector.js?version='+globals.version,
@@ -31,7 +31,7 @@ var configure = {
     loadCustomerConfig:function () {
 
         $('#loading-iqueue-progress-bar').addClass('w-60');
-        $('#loading-iqueue-progress-bar').html("Fetching Customer Configuration");
+        $('#loading-iqueue-progress-label').html("Fetching Customer Configuration");
 
         awsDynamoDBConnector.fetchCustomerConfig(globals.cognitoUserAttributes.customerID, function (success, data) {
             if (success) {
@@ -63,7 +63,7 @@ var configure = {
     //******************************************************************************************************************
     loadMoreScripts: function () {
 
-        $('#loading-iqueue-progress-bar').html('Loading more scripts');
+        $('#loading-iqueue-progress-label').html('Loading more scripts');
         $('#loading-iqueue-progress-bar').addClass('w-70');
 
         var progress = 0;
@@ -149,7 +149,7 @@ var configure = {
             options.message = "There's a little more information we need to complete your account." ;
             options.buttonName = 'OK';
             options.callback = function () {
-                $('#loading-iqueue-progress-bar').html('Initialization Complete');
+                $('#loading-iqueue-progress-label').html('Initialization Complete');
                 $('#loading-iqueue-progress-bar').addClass('w-100');
                 $('#loading-iqueue-progress').fadeOut(1000);
 
@@ -168,12 +168,12 @@ var configure = {
     //******************************************************************************************************************
     showDashboard:function () {
 
-        $('#loading-iqueue-progress-bar').html('Initialization Complete');
+        $('#loading-iqueue-progress-label').html('Initialization Complete');
         $('#loading-iqueue-progress-bar').addClass('w-100');
         $('#loading-iqueue-progress').fadeOut(2000);
 
         setTimeout(function () {
-            dashboardPage.render();
+            router.showPage('dashboardPage')
         },2000)
 
     },
@@ -181,7 +181,7 @@ var configure = {
     //******************************************************************************************************************
     buildMenus:function () {
 
-        $('#loading-iqueue-progress-bar').html("Building Menu's");
+        $('#loading-iqueue-progress-label').html("Building Menu's");
 
         $('#mainNavbar').show();
 
@@ -204,8 +204,8 @@ var configure = {
         $('#userMenuHeader').html(globals.theUser.firstName);
 
         var userMenuHTML = '' +
-            '<a href="#" class="dropdown-item" onclick="userDetailsPage.render()"><i class="fa fa-user dropdown-icon" aria-hidden="true"></i> My Profile</a>' +
-            '<a href="#" class="dropdown-item" onclick="window.open(&#39;index_secure.htm?version=' + globals.version + '&#39;, &#39;_self&#39;);"><i class="fa fa-sign-out dropdown-icon" aria-hidden="true"></i> Sign Out</a>' ;
+            '<a href="#" class="dropdown-item" onclick="userDetailsPage.render()"><i class="far fa-user dropdown-icon" aria-hidden="true"></i> My Profile</a>' +
+            '<a href="#" class="dropdown-item" onclick="window.open(&#39;index_secure.htm?version=' + globals.version + '&#39;, &#39;_self&#39;);"><i class="fas fa-sign-out-alt dropdown-icon" aria-hidden="true"></i> Sign Out</a>' ;
 
         $('#userMenu').html(userMenuHTML);
 

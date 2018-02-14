@@ -4,16 +4,40 @@
 
 var adminUsersPage = {
 
+    pageURL: 'pages/adminUsers.html',
+
     userList: null,
     inviteGUID: null,
     invitedUserEmail: null,
 
     //******************************************************************************************************************
+    preLoad: function (callback) {
+        //initialize anything that is required before the page gets rendered
+
+        //go back to the router to actually load the page
+        callback();
+    },
+
+    //******************************************************************************************************************
+    postLoad: function () {
+        //script that runs after the page has been loaded
+
+        adminUsersPage.render();
+
+    },
+
+    //******************************************************************************************************************
+    preClose: function (callback) {
+        //this script runs before the next page is loaded.
+        //useful to purge any event watchers or kill any timers
+
+        callback();
+    },
+
+    //******************************************************************************************************************
+
+    //******************************************************************************************************************
     render:function () {
-
-        jPM.close();
-
-        router.currentPage = 'adminUsersPage';
 
 
         //fetch the users for this customer

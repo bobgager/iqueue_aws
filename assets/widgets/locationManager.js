@@ -126,6 +126,7 @@ var locationManager = {
         }
 
 
+
     },
 
     //******************************************************************************************************************
@@ -159,6 +160,10 @@ var locationManager = {
 
 
         $('#locationMenu').html(locationMenuHTML);
+
+        //need to cycle jPanelMenu to rebuild the side panel menu for smaller screens
+        jPM.off();
+        jPM.on();
 
     }
 

@@ -7,7 +7,7 @@ var userDetailsPage = {
     //******************************************************************************************************************
     render: function () {
 
-        jPM.close();
+        //jPM.close();
 
         router.currentPage = 'userDetailsPage';
 
