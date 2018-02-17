@@ -32,6 +32,9 @@ var router = {
             case 'myQueuePage':
                 router.thePage = myQueuePage;
                 break;
+            case 'myQueueDetailsPage':
+                router.thePage = myQueueDetailsPage;
+                break;
             case 'adminIqueuePage':
                 router.thePage = adminIqueuePage;
                 break;

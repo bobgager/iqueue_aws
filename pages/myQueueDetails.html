@@ -1,0 +1,169 @@
+
+    <div class="card" style="min-width: 768px">
+
+        <!--TODO: change the Touchpoints section so we can scale down to skinny screens-->
+
+        <div class="card-header">
+            <h4 id="queueDetailsModallTitle" ></h4>
+        </div>
+
+        <div id="extraKioskQuestionDisplay" class="card-header text-primary" style="font-weight: bold; display: none; background-color: white" ></div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <!-- Category Select -->
+                    <div class="form-group">
+                        <label class="control-label" for="queueDetails_CategorySelect">Category:</label>
+                        <select id="queueDetails_CategorySelect" name="queueDetails_CategorySelect" class="form-control"></select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <!-- email input-->
+                    <div id="queueDetails_EmailInput_Div" class="form-group ">
+                        <label id="queueDetails_EmailInput_Label" class="control-label" for="queueDetails_EmailInput">Students Email:</label>
+
+                        <div class="input-group">
+                            <input id="queueDetails_EmailInput" name="queueDetails_EmailInput" type="text" placeholder="Students Email" class="form-control input-md" onchange="this.value = this.value.toLowerCase(); App.queuedetailsview.setupNameCoach(); App.queuedetailsview.testFarmhand()" >
+                            <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button" onclick="this.value = this.value.toLowerCase(); App.queuedetailsview.setupNameCoach(); App.queuedetailsview.testFarmhand()" ><i class="fa fa-check"></i></button>
+                                        </span>
+                        </div>
+
+                        <span id="queueDetails_Farmhand_Span" class="help-block">
+
+                                        <button id="queueDetails_Farmhand_BTN"  class="btn btn-primary margin-left btn-xs" onclick="App.queuedetailsview.openFarmhand()">Open Farmhand</button>
+
+                                        <span id="queueDetails_Farmhand_GetEmail_Label" >Ask the student for their Stanford email !</span>
+                                    </span>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <!-- phone number input-->
+                    <div id="queueDetails_CellPhone_Input_Div" class="form-group ">
+                        <label id="queueDetails_CellPhone_Input_Label" class="control-label" for="queueDetails_CellPhone_Input">Students Cell Phone:</label>
+
+                        <div class="input-group">
+                            <input id="queueDetails_CellPhone_Input" name="queueDetails_CellPhone_Input" type="text" placeholder="Students Cell Phone:" class="form-control input-md"  >
+                            <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"  ><i class="fa fa-check"></i></button>
+                                        </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Question Textarea -->
+            <div class="form-group">
+                <label id="queueDetails_QuestionTextArea_Label" class="control-label" for="queueDetails_QuestionTextArea">Question:</label>
+                <textarea readonly class="form-control" id="queueDetails_QuestionTextArea" name="queueDetails_QuestionTextArea"></textarea>
+            </div>
+
+            <!-- Comments Textarea -->
+            <div class="form-group">
+                <label id="queueDetails_CommentsTextArea_Label" class="control-label" for="queueDetails_CommentsTextArea">Comments:</label>
+                <textarea class="form-control" id="queueDetails_CommentsTextArea" name="queueDetails_CommentsTextArea" ></textarea>
+            </div>
+
+
+            <!--now add in the touchpoints section-->
+
+            <div class="form-group">
+
+                <table style="width:100%" class="table table-condensed table-hover ">
+                    <tr>
+                        <th class="text-center">Tier</th>
+                        <th class="text-center">Department</th>
+                        <th class="text-center">Category</th>
+                        <th class="text-center">SubCategory</th>
+                        <th class="text-center">Method Of Service</th>
+                        <th >&nbsp;&nbsp;Qty</th>
+                        <th > </th>
+                    </tr>
+
+                    <tr id="touchPointRow0">
+                        <td colspan="7"><i class="fa fa-spin fa-spinner"></i> Loading Touchpoints</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <select id="touchPointTierDropdown" class="form-control" style="min-width: 40px" onchange="App.queuedetailsview.addTouchpointButtonTest()" >
+                                <option value="?">?</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id="touchPointDepartmentDropdown" class="form-control" onchange="App.queuedetailsview.touchpointDepartmentChanged()">
+                                <option value="?">?</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id="touchPointCategoryDropdown" class="form-control" onchange="App.queuedetailsview.touchpointCategoryChanged()">
+                                <option value="?">?</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id="touchPointSubCategoryDropdown" class="form-control" onchange="App.queuedetailsview.addTouchpointButtonTest()">
+
+                            </select>
+                        </td>
+                        <td>
+                            <select id="touchPointMOSDropdown" class="form-control" onchange="App.queuedetailsview.addTouchpointButtonTest()" >
+                                <option>?</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input id="touchPointQTYInput" type="number" min="1" class="form-control" style="width: 60px" value="1" >
+                        </td>
+                        <td>
+                            <button id="addTouchPointBtn" type="button" class="btn btn-link text-success hidden" onclick="App.queuedetailsview.addTouchPoint()"><i class="fa fa-plus-circle fa-2x"></i></button>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="card-footer text-right">
+            <button id="queueDetailsModalReturnButton" type="button" class="btn btn-dark" data-dismiss="modal" onclick="myQueueDetailsPage.returnToQueue()">Return To Queue</button>
+            <button id="queueDetailsNoShowButton" type="button" class="btn btn-dark" data-dismiss="modal" onclick="myQueueDetailsPage.noShow()">No Show</button>
+            <button id="queueDetails_Close_BTN" type="button" class="btn btn-primary" data-dismiss="modal" onclick="myQueueDetailsPage.closeStudent()">Close</button>
+        </div>
+    </div>
+
+            <div>
+
+
+                <div class="modal-body">
+
+
+
+
+
+
+                </div>
+
+                <div class="modal-footer pt-1 pb-2">
+
+                </div>
+
+            </div>
+
