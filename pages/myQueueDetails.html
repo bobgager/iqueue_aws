@@ -98,31 +98,31 @@
 
                     <tr>
                         <td>
-                            <select id="touchPointTierDropdown" class="form-control" style="min-width: 40px" onchange="App.queuedetailsview.addTouchpointButtonTest()" >
-                                <option value="?">?</option>
-                                <option>1</option>
+                            <select id="touchPointTierDropdown" class="form-control" style="min-width: 40px" onchange="myQueueDetailsPage.addTouchpointButtonTest()" >
+                                <!--<option value="?">?</option>-->
+                                <option value="1">1</option>
                                 <option>2</option>
                                 <option>3</option>
                                 <option>4</option>
                             </select>
                         </td>
                         <td>
-                            <select id="touchPointDepartmentDropdown" class="form-control" onchange="App.queuedetailsview.touchpointDepartmentChanged()">
+                            <select id="touchPointDepartmentDropdown" class="form-control" onchange="myQueueDetailsPage.touchpointDepartmentChanged()">
                                 <option value="?">?</option>
                             </select>
                         </td>
                         <td>
-                            <select id="touchPointCategoryDropdown" class="form-control" onchange="App.queuedetailsview.touchpointCategoryChanged()">
+                            <select id="touchPointCategoryDropdown" class="form-control" onchange="myQueueDetailsPage.touchpointCategoryChanged()">
                                 <option value="?">?</option>
                             </select>
                         </td>
                         <td>
-                            <select id="touchPointSubCategoryDropdown" class="form-control" onchange="App.queuedetailsview.addTouchpointButtonTest()">
+                            <select id="touchPointSubCategoryDropdown" class="form-control" onchange="myQueueDetailsPage.addTouchpointButtonTest()">
 
                             </select>
                         </td>
                         <td>
-                            <select id="touchPointMOSDropdown" class="form-control" onchange="App.queuedetailsview.addTouchpointButtonTest()" >
+                            <select id="touchPointMOSDropdown" class="form-control" onchange="myQueueDetailsPage.addTouchpointButtonTest()" >
                                 <option>?</option>
                             </select>
                         </td>
@@ -130,7 +130,7 @@
                             <input id="touchPointQTYInput" type="number" min="1" class="form-control" style="width: 60px" value="1" >
                         </td>
                         <td>
-                            <button id="addTouchPointBtn" type="button" class="btn btn-link text-success hidden" onclick="App.queuedetailsview.addTouchPoint()"><i class="fa fa-plus-circle fa-2x"></i></button>
+                            <button id="addTouchPointBtn" type="button" class="btn btn-link text-success hidden" onclick="myQueueDetailsPage.addTouchPoint()"><i class="fa fa-plus-circle fa-2x"></i></button>
                         </td>
                     </tr>
 
@@ -143,9 +143,9 @@
 
 
         <div class="card-footer text-right">
-            <button id="queueDetailsModalReturnButton" type="button" class="btn btn-dark" data-dismiss="modal" onclick="myQueueDetailsPage.returnToQueue()">Return To Queue</button>
-            <button id="queueDetailsNoShowButton" type="button" class="btn btn-dark" data-dismiss="modal" onclick="myQueueDetailsPage.noShow()">No Show</button>
-            <button id="queueDetails_Close_BTN" type="button" class="btn btn-primary" data-dismiss="modal" onclick="myQueueDetailsPage.closeStudent()">Close</button>
+            <button id="queueDetailsModalReturnButton" type="button" class="btn btn-dark" onclick="myQueueDetailsPage.returnToQueue()">Return To Queue</button>
+            <button id="queueDetailsNoShowButton" type="button" class="btn btn-dark" onclick="myQueueDetailsPage.noShow()">No Show</button>
+            <button id="queueDetails_Close_BTN" type="button" class="btn btn-primary " onclick="myQueueDetailsPage.close()">Close</button>
         </div>
     </div>
 

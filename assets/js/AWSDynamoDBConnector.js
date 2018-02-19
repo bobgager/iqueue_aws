@@ -93,6 +93,29 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    deleteTouchPoint: function(locationID,createTime, callback){
+
+        var params = {
+            TableName : 'iqTouchPoints',
+            Key: {
+                locationID: locationID,
+                createTime: Number(createTime)
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.delete(params, function(err, data) {
+            //console.log('delete returned: '+  err);
+            if (err){
+                console.log('Error deleting touchpoint from AWS: ' + err);
+                callback();
+            }
+            else{
+                callback();
+            }
+        });
+    },
+
+    //******************************************************************************************************************
     deleteTouchpointListItem: function(locationID, touchPointID, callback){
 
         var params = {
@@ -379,6 +402,31 @@ var awsDynamoDBConnector = {
     },
 
     //******************************************************************************************************************
+    fetchQuestionsTouchPoints: function(questionObjectID, callback){
+
+        var params = {
+            TableName: 'iqTouchPoints',
+            IndexName: 'questionObjectID-index',
+            KeyConditionExpression: 'questionObjectID = :questionObjectID',
+            ExpressionAttributeValues: {
+                ':questionObjectID': questionObjectID
+            }
+        };
+
+        awsCognitoConnector.dynamodbEast.query(params, function(err, data) {
+            //console.log('query returned: '+  err);
+            if (err){
+                callback();
+            }
+            else {
+                //console.log(data);
+                callback(data.Items);
+            }
+        });
+
+    },
+
+    //******************************************************************************************************************
     fetchQueueItem: function(locationID, personID, callback){
 
         var params = {
@@ -590,6 +638,31 @@ var awsDynamoDBConnector = {
 
         });
 
+
+    },
+
+    //******************************************************************************************************************
+    saveTouchPoint: function(locationID, newTouchPoint, callback){
+
+        newTouchPoint.locationID = locationID;
+        newTouchPoint.createTime = utils.calibratedDateTime().getTime();
+
+        var params = {
+            TableName : 'iqTouchPoints',
+            Item: newTouchPoint
+        };
+
+
+        awsCognitoConnector.dynamodbEast.put(params, function(err, data) {
+            if (err){
+                callback(false);
+            }
+            else{
+                callback(true);
+            }
+
+
+        });
 
     },
 

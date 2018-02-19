@@ -12,6 +12,8 @@ var myQueuePage = {
 
     filteredQueue: [],
 
+    methodsOfService: [],
+
     theQueue: [],
 
     theCategories: [],
@@ -39,6 +41,9 @@ var myQueuePage = {
         //load the list of Touchpoints
         awsDynamoDBConnector.fetchTouchpointList(globals.theLocation.locationID, myQueuePage.touchpointListReturned);
 
+        //load the list of Methods Of Service
+        awsDynamoDBConnector.fetchMethodsOfService(globals.theLocation.locationID, myQueuePage.methodsOfServiceReturned);
+
         myQueuePage.render();
 
     },
@@ -54,6 +59,13 @@ var myQueuePage = {
     //******************************************************************************************************************
     //******************************************************************************************************************
     render: function () {
+
+        //make sure we're still on the myQueuePage
+        //since the myQueueDetailsPage could initiate a returnToQueue() on this page.
+        if (router.currentPage !== 'myQueuePage'){
+            router.showPage('myQueuePage');
+        }
+
 
         // set the header
         $('#pageLocationLabel').html(globals.theLocation.name);
@@ -121,7 +133,34 @@ var myQueuePage = {
             return 0 //default return value (no sorting)
         });
 
-        console.log('stop')
+    },
+
+    //******************************************************************************************************************
+    methodsOfServiceReturned: function (success, data) {
+        if (!success){
+            //there was an error
+            //wait a bit and try again.
+            console.log('Error Reading DynamoDB');
+            console.log(data);
+            setTimeout(function(){
+                awsDynamoDBConnector.fetchMethodsOfService(globals.theLocation.locationID, myQueuePage.methodsOfServiceReturned);
+            }, 2000);
+            return;
+        }
+
+
+        //save the methodsOfService for later usage
+        myQueuePage.methodsOfService = data;
+
+        //sort the Methods Of Service
+        myQueuePage.methodsOfService.sort(function(a, b){
+            var catA= a.methodOfServiceName.toLowerCase(), catB= b.methodOfServiceName.toLowerCase()
+            if (catA < catB) //sort string ascending
+                return -1
+            if (catA > catB)
+                return 1
+            return 0 //default return value (no sorting)
+        });
 
     },
 
